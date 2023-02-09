@@ -4,69 +4,47 @@ CashService Methods
 
 | Method       | Description    |
 | ------------- |-------------|
-| AddPersonalData()      | Function of add personal data |
-| GetPersonalDataById()      | Function of requesting personal data by user ID      |
-| UpdatePersonalData() | Function of updating personal data      |
-| AddDiscount()      | Function of add discount for profile |
-| GetDiscounts()      | Function of requesting personal discounts by user ID      |
-| UpdateDiscount() | Function of updating discount      |
+| GetBalance     | Balance receipt function |
+| Deposit      | Function for Deposit cash into the account     |
+| Withdraw | Function to Withdraw cash from account  |
+| DepositRange     | Function to Deposit cash to different accounts |
+| WithdrawRange     | Function to Withdraw cash from different accounts      |
 
 
 Business Models
 ```
- PersonalData {
-   id 
-   name 
-   surname 
-   phone 
-   email 
+message TransactionModel
+{
+	string profileid = 1;
+	repeated Transaction transactions = 2;
 }
 ```
 ```
-enum DiscountType {
-	DISCOUNT_TYPE_UNSPECIFIED = 0;
-	DISCOUNT_TYPE_AMOUNT = 1;
-	DISCOUNT_TYPE_DISCOUNT = 2;
+message Transaction
+{
+	string transactionid = 1; 
+	CashType cashtype = 2;
+	double amount = 3;
 }
 ```
 ```
- Discount{
-	 id
-	 personalid
-	 isalreadyused
-	 type 
-	 amount 
-	 discountvalue 	
+enum CashType
+{
+	CASH_TYPE_UNSPECIFIED = 0;
+	CASH_TYPE_CASH=1;
+	CASH_TYPE_BONUS=2;
 }
 ```
 
 
 Description of Methons of GRPC Service
 ```
-Function of add personal data
-	rpc AddPersonalData (AddPersonalDataRequest) 
-		returns (AddPersonalDataResponce);
-
-Function of requesting personal data by user ID
-	rpc GetPersonalDataById (GetPersonalDataByIdRequest) 
-		returns (GetPersonalDataByIdResponce);
-
-Function of updating personal data
-	rpc UpdatePersonalData (UpdatePersonalDataRequest) 
-		returns (UpdatePersonalDataResponce);
-
-Function of add discount
-	rpc AddDiscount (AddDiscountRequest) 
-		returns (AddDiscountResponce);
-
-Function of requesting personal discounts by user ID
-	rpc GetDiscounts (GetDiscountsRequest) 
-		returns (GetDiscountsResponce);
-  
-Function of updating discounts
-	rpc UpdateDiscount (UpdateDiscountRequest) 
-		returns (UpdateDiscountResponce);
-  ```
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponce);
+  rpc Deposit (DepositRequest) returns (DepositResponce);
+  rpc Withdraw (WithdrawRequest) returns (WithdrawResponce);
+  rpc DepositRange(DepositRangeRequest) returns (DepositRangeResponce);
+  rpc WithdrawRange (WithdrawRangeRequest) returns (WithdrawRangeResponce);
+```
   
    ```
   Examples of CashService proto-entity
