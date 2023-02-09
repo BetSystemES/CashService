@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["CashService.GRPC/CashService.GRPC.csproj", "CashService.GRPC/"]
-RUN dotnet restore "CashService.GRPC/CashService.GRPC.csproj"
+COPY ["src/CashService.GRPC/CashService.GRPC.csproj", "src/CashService.GRPC/"]
+RUN dotnet restore "src/CashService.GRPC/CashService.GRPC.csproj"
 COPY . .
-WORKDIR "/src/CashService.GRPC"
+WORKDIR "/src/src/CashService.GRPC"
 RUN dotnet build "CashService.GRPC.csproj" -c Release -o /app/build
 
 FROM build AS publish

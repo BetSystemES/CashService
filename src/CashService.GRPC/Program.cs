@@ -1,0 +1,47 @@
+using CashService.DataAccess;
+using CashService.DataAccess.EF;
+using CashService.GRPC.Configuration;
+using CashService.GRPC.Configuration.SeriLog;
+using CashService.GRPC.Interceptors;
+using CashService.GRPC.Services;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args)
+    .AddAppSettings()
+    .AddSerialLogger();
+
+// Additional configuration is required to successfully run gRPC on macOS.
+// For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
+
+var connectionString = builder.Configuration.GetConnectionString("PostgreSql");
+
+builder.Services.AddPostgreSqlContext(options =>
+{
+    options.UseNpgsql(connectionString);
+});
+
+builder.Services.AddDbContext<CashDbContext>(options => options.UseNpgsql(connectionString));
+
+// Add services to the container.
+builder.Services
+    .AddRepositories()
+    .AddProviders()
+    .AddInfrastructureServices()
+    .AddGrpc(options =>
+    {
+        options.Interceptors.Add<ErrorHandlingInterceptor>();
+        options.Interceptors.Add<ValidationInterceptor>();
+    });
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+app.MapGrpcService<CashService.GRPC.Services.CashService>();
+app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+
+app.Run();
+
+namespace CashService.Grpc
+{
+    public partial class Program { }
+}

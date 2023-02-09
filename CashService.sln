@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.GRPC", "CashService.GRPC\CashService.GRPC.csproj", "{39B4608E-E301-433D-9BF3-24A19F7ACEC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.GRPC", "src\CashService.GRPC\CashService.GRPC.csproj", "{4341206D-F45F-41B3-AC9C-EC797E77AC53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.BusinessLogic", "src\CashService.BusinessLogic\CashService.BusinessLogic.csproj", "{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.DataAccess", "src\CashService.DataAccess\CashService.DataAccess.csproj", "{8FA297B8-36F7-409F-8555-723F170CB923}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.IntegrationTests", "test\CashService.IntegrationTests\CashService.IntegrationTests.csproj", "{5EA2C5CB-DE35-49F2-9090-291107CB5495}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{39B4608E-E301-433D-9BF3-24A19F7ACEC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39B4608E-E301-433D-9BF3-24A19F7ACEC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39B4608E-E301-433D-9BF3-24A19F7ACEC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39B4608E-E301-433D-9BF3-24A19F7ACEC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4341206D-F45F-41B3-AC9C-EC797E77AC53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4341206D-F45F-41B3-AC9C-EC797E77AC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4341206D-F45F-41B3-AC9C-EC797E77AC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4341206D-F45F-41B3-AC9C-EC797E77AC53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FA297B8-36F7-409F-8555-723F170CB923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FA297B8-36F7-409F-8555-723F170CB923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FA297B8-36F7-409F-8555-723F170CB923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FA297B8-36F7-409F-8555-723F170CB923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F66C1F04-58F7-449F-89CD-85C14EA61B36}
+		SolutionGuid = {70609955-1665-4533-88E6-66EEFBDCCE4D}
 	EndGlobalSection
 EndGlobal
