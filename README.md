@@ -50,12 +50,23 @@ Description of Methons of GRPC Service
   Examples of CashService proto-entity
    ```
   
+  
+GetBalance
   ```
-
+{
+   "profileid" : "ececbe9f-6a4a-4f72-9dec-68912349e53c"
+}
 ```
-
+Deposit
 ```
-
+{
+	"ProfileId":"ececbe9f-6a4a-4f72-9dec-68912349e53c",
+	"Transactions":
+	[
+		{"TransactionId":"35ec2f77-d4b9-4e93-85bf-6b013d2ee838","TransactionProfileId":"ececbe9f-6a4a-4f72-9dec-68912349e53c","TransactionProfileEntity":null,"CashType":1,"Amount":95.0},
+		{"TransactionId":"9dca2d44-83b8-455a-88f6-d2abbe80ffd4","TransactionProfileId":"ececbe9f-6a4a-4f72-9dec-68912349e53c","TransactionProfileEntity":null,"CashType":2,"Amount":50.0}
+	]
+}
 ```
 
 ```
