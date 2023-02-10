@@ -76,7 +76,21 @@ Deposit
 }
 ```
 
+withdraw
 ```
-
+{
+	"withdrawrequest":
+	{
+		"profileid":"01e0c4c2-1842-4c8d-8bfc-a0ab6a646ec6","transactions":
+	 [
+		 {
+			 "transactionid":"186e1ae1-fd84-465e-962c-6fb4812a70dd","cashtype":1,"amount":140.0
+		 },
+		{
+			"transactionid":"bc218c4d-18ee-49db-80b6-e6d739e48134","cashtype":2,"amount":60.0
+		}
+	 ]
+	}
+}
 ```
 
