@@ -17,7 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("PostgreSql");
 
 builder.Services.AddPostgreSqlContext(options =>
 {
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(connectionString);                
 });
 
 builder.Services.AddDbContext<CashDbContext>(options => options.UseNpgsql(connectionString));
@@ -25,7 +25,7 @@ builder.Services.AddDbContext<CashDbContext>(options => options.UseNpgsql(connec
 // Add services to the container.
 builder.Services
     .AddRepositories()
-    .AddProviders()
+    .AddProviders()     
     .AddInfrastructureServices()
     .AddGrpc(options =>
     {

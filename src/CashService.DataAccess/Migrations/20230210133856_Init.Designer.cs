@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CashService.DataAccess.Migrations
 {
     [DbContext(typeof(CashDbContext))]
-    [Migration("20230209134619_Init")]
+    [Migration("20230210133856_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

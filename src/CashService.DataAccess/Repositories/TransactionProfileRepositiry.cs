@@ -23,6 +23,13 @@ namespace CashService.DataAccess.Repositories
             return Task.CompletedTask;
         }
 
+        public Task AddRange(IEnumerable<TransactionProfileEntity> items, CancellationToken token)
+        {
+            _entities.AddRange(items);
+            _logger.LogTrace("Add TransactionProfileEntitis to database, Count:{count}", items.Count());
+            return Task.CompletedTask;
+        }
+
         public async Task<TransactionProfileEntity> Get(Guid guid, CancellationToken cancellationToken)
         {
             var result = await _entities.FindAsync(guid);

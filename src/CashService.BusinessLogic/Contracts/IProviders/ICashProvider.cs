@@ -10,5 +10,7 @@ namespace CashService.BusinessLogic.Contracts.IProviders
     public interface ICashProvider
     {
         Task<TransactionProfileEntity> GetBalance(Guid profileid, CancellationToken token);
+
+        Task<TransactionProfileEntity> CalcBalance(Guid profileid, CancellationToken token);
     }
 }

@@ -2,6 +2,7 @@
 using CashService.BusinessLogic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using System.Threading;
 
 namespace CashService.DataAccess.Providers
@@ -22,10 +23,22 @@ namespace CashService.DataAccess.Providers
            _logger = logger;
         }
 
+
         public async Task<TransactionProfileEntity> GetBalance(Guid profileid, CancellationToken token)
+        {
+            var result = await _transactionProfileEntities
+                .AsNoTracking()
+                .Where(x => x.ProfileId == profileid)
+                .Include(y => y.Transactions)
+                .FirstOrDefaultAsync(cancellationToken: token);
+            return result;
+        }
+
+        public async Task<TransactionProfileEntity> CalcBalance(Guid profileid, CancellationToken token)
         {
             TransactionProfileEntity transactionProfile = new TransactionProfileEntity()
             {
+                //Id = Guid.NewGuid(),
                 ProfileId = profileid,
                 Transactions = new List<TransactionEntity>()
             };
@@ -44,6 +57,7 @@ namespace CashService.DataAccess.Providers
                     TransactionEntity transactionEntity = new TransactionEntity
                     {
                         CashType = cashType,
+                        TransactionId= Guid.NewGuid(),
                         TransactionProfileId = profileid,
                         TransactionProfileEntity = transactionProfile
                     };

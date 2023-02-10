@@ -3,6 +3,7 @@ using CashService.BusinessLogic.Contracts.IServices;
 using CashService.BusinessLogic.Models;
 using CashService.GRPC;
 using Grpc.Core;
+using static CashService.GRPC.Services.Support;
 
 namespace CashService.GRPC.Services
 {
@@ -46,11 +47,15 @@ namespace CashService.GRPC.Services
             //map
             TransactionProfileEntity depositTransactionProfile = _mapper.Map<TransactionProfileEntity>(request.Deposit);
 
+            //remap
+            EntityRemapper(depositTransactionProfile);
+
             //cashService
             await _cashService.Deposit(depositTransactionProfile, token);
 
             return new DepositResponce();
         }
+
 
         public override async Task<WithdrawResponce> Withdraw(WithdrawRequest request, ServerCallContext context)
         {
@@ -58,6 +63,10 @@ namespace CashService.GRPC.Services
 
             //map
             TransactionProfileEntity withdrawTransactionProfile = _mapper.Map<TransactionProfileEntity>(request.Withdrawrequest);
+
+            //remap
+            EntityRemapper(withdrawTransactionProfile);
+            WithdrawValueConverter(withdrawTransactionProfile);
 
             //cashService
             TransactionProfileEntity withdrawResult = await _cashService.Withdraw(withdrawTransactionProfile, token);
@@ -70,6 +79,8 @@ namespace CashService.GRPC.Services
                 Withdrawresponce = withdrawResponce
             };
         }
+
+       
 
         public override async Task<DepositRangeResponce> DepositRange(DepositRangeRequest request, ServerCallContext context)
         {

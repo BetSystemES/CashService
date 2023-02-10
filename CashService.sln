@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.DataAccess", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.IntegrationTests", "test\CashService.IntegrationTests\CashService.IntegrationTests.csproj", "{5EA2C5CB-DE35-49F2-9090-291107CB5495}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.FunctionalTests", "tests\CashService.FunctionalTests\CashService.FunctionalTests.csproj", "{607A3808-1F10-49EA-AE5E-E16FC7667264}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.UnitTests", "tests\CashService.UnitTests\CashService.UnitTests.csproj", "{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EA2C5CB-DE35-49F2-9090-291107CB5495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{607A3808-1F10-49EA-AE5E-E16FC7667264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{607A3808-1F10-49EA-AE5E-E16FC7667264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{607A3808-1F10-49EA-AE5E-E16FC7667264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{607A3808-1F10-49EA-AE5E-E16FC7667264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

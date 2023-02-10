@@ -35,8 +35,8 @@ namespace CashService.GRPC.Configuration
                     opt.MapFrom(src => src.Amount));
 
           
-            CreateMap<IEnumerable<Transaction>, IEnumerable<TransactionEntity>>();
-            CreateMap<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>();
+            //CreateMap<IEnumerable<Transaction>, IEnumerable<TransactionEntity>>();
+            //CreateMap<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>();
 
             //proto->Entity
             CreateMap<TransactionModel, TransactionProfileEntity>()
@@ -46,6 +46,7 @@ namespace CashService.GRPC.Configuration
                 .ForMember(dest => dest.Transactions,
                     opt =>
                         opt.MapFrom(src => src.Transactions));
+                //.ForMember(x=>x.Id, opt=>opt.Ignore());
 
             //Entity->proto
             CreateMap<TransactionProfileEntity, TransactionModel>()
