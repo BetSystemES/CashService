@@ -54,8 +54,9 @@ Description of Methons of GRPC Service
 GetBalance
   ```
 {
-   "profileid" : "ececbe9f-6a4a-4f72-9dec-68912349e53c"
+	"profileid":"01e0c4c2-1842-4c8d-8bfc-a0ab6a646ec6"
 }
+
 ```
 Deposit
 ```
