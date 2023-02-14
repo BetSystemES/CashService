@@ -2,6 +2,7 @@ using AutoMapper;
 using CashService.BusinessLogic.Contracts.IServices;
 using CashService.BusinessLogic.Models;
 using CashService.GRPC;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using static CashService.GRPC.Services.Support;
 
@@ -87,10 +88,8 @@ namespace CashService.GRPC.Services
             var token = context.CancellationToken;
 
             //map
-            var depositRange = _mapper.Map<IEnumerable<TransactionModel>, IEnumerable<TransactionEntity>>(request.Depositrangerequest);
-
-            List<TransactionProfileEntity> depositRangeTransactionProfileEntities =
-                new List<TransactionProfileEntity>(depositRange as IEnumerable<TransactionProfileEntity>);
+            //IEnumerable<TransactionProfileEntity> depositRange = _mapper.Map<IEnumerable<TransactionModel>, IEnumerable<TransactionProfileEntity>>(request.Depositrangerequest);
+            var depositRangeTransactionProfileEntities = ReMapRepeatedTransactionModel(_mapper, request.Depositrangerequest, OperationType.Deposit);
 
             //cashService
             await _cashService.DepositRange(depositRangeTransactionProfileEntities, token);
@@ -98,25 +97,26 @@ namespace CashService.GRPC.Services
             return new DepositRangeResponce();
         }
 
+       
+
         public override async Task<WithdrawRangeResponce> WithdrawRange(WithdrawRangeRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
             //map
-            var withdrawRange = _mapper.Map<IEnumerable<TransactionModel>, IEnumerable<TransactionEntity>>(request.Withdrawrangerequest);
-
-            List<TransactionProfileEntity> withdrawRangeTransactionProfileEntities =
-                new List<TransactionProfileEntity>(withdrawRange as IEnumerable<TransactionProfileEntity>);
+            //var withdrawRange = _mapper.Map<IEnumerable<TransactionModel>, IEnumerable<TransactionEntity>>(request.Withdrawrangerequest);
+            var withdrawRangeTransactionProfileEntities = ReMapRepeatedTransactionModel(_mapper, request.Withdrawrangerequest, OperationType.Withdraw);
 
             //profile service
             List<TransactionProfileEntity> withdrawRangeResult = await _cashService.WithdrawRange(withdrawRangeTransactionProfileEntities, token);
 
             //map back
-            IEnumerable<TransactionModel> discounts = _mapper.Map<IEnumerable<TransactionProfileEntity>, IEnumerable<TransactionModel>>(withdrawRangeResult);
+            //IEnumerable<TransactionModel> discounts = _mapper.Map<IEnumerable<TransactionProfileEntity>, IEnumerable<TransactionModel>>(withdrawRangeResult);
+            var rangesResonces = ReMapBackRepeatedTransactionModel(_mapper, withdrawRangeResult);
 
             WithdrawRangeResponce responce = new WithdrawRangeResponce();
 
-            responce.Withdrawrangeresponce.AddRange(discounts);
+            responce.Withdrawrangeresponce.AddRange(rangesResonces);
 
             return responce;
         }

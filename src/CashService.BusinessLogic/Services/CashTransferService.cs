@@ -11,7 +11,7 @@ using CashService.BusinessLogic.Models;
 
 namespace CashService.BusinessLogic.Services
 {
-    public class CashTransferService : ICashService
+    public partial class CashTransferService : ICashService
     {
         private readonly IRepository<TransactionEntity> _transactionEntityRepository;
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
@@ -58,15 +58,16 @@ namespace CashService.BusinessLogic.Services
             await _context.SaveChanges(token);
         }
 
-
         public async Task<TransactionProfileEntity> Withdraw(TransactionProfileEntity withdrawTransactionProfile, CancellationToken token)
         {
             var profileid = withdrawTransactionProfile.ProfileId;
 
-            TransactionProfileEntity balance = await _cashProvider.CalcBalance(profileid, token);
+            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileid, token);
 
             if (balance != null)
             {
+                balance = await _cashProvider.CalcBalance(profileid, token);
+
                 CheckForUnite(withdrawTransactionProfile);
 
                 var differenceList = DifferenceTransaction(withdrawTransactionProfile, balance);
@@ -77,124 +78,31 @@ namespace CashService.BusinessLogic.Services
                 await _transactionEntityRepository.AddRange(withdrawTransactionProfile.Transactions, token);
                 await _context.SaveChanges(token);
             }
+            else
+            {
+                balance = await _cashProvider.CalcBalance(profileid, token);
+            }
 
             return balance;
         }
 
-        private static void ReCalcBalanceAndWithDraw(TransactionProfileEntity withdrawTransactionProfile, List<TransactionEntity> differenceList,
-            TransactionProfileEntity balance)
+        public async Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token)
         {
-            foreach (var transaction in differenceList)
+            foreach (var transactionProfileEntity in depositRangeTransactionProfileEntities)
             {
-                if (transaction.Amount > 0)
-                {
-                    //update balance
-                    var balanceTransaction = balance.Transactions.FirstOrDefault(x => x.CashType == transaction.CashType);
-                    if (balanceTransaction != null)
-                    {
-                        balanceTransaction.Amount = transaction.Amount;
-                    }
-                }
-                else
-                {
-                    //update withdraw
-                    var withdrawTransaction =
-                        withdrawTransactionProfile.Transactions.FirstOrDefault(x => x.CashType == transaction.CashType);
-                    if (withdrawTransaction != null)
-                    {
-                        withdrawTransaction.Amount = withdrawTransaction.Amount - transaction.Amount;
-                    }
-                }
+               await Deposit(transactionProfileEntity, token);
             }
         }
 
-        private static List<TransactionEntity> DifferenceTransaction(TransactionProfileEntity withdrawTransactionProfile,
-            TransactionProfileEntity balance)
+        public async Task<List<TransactionProfileEntity>> WithdrawRange(List<TransactionProfileEntity> withdrawRangeTransactionProfileEntities, CancellationToken token)
         {
-            List<TransactionEntity> differenceList = new();
-
-            foreach (var withdrawTransaction in withdrawTransactionProfile.Transactions)
+            List<TransactionProfileEntity> transactionProfileEntities = new();
+            foreach (var transactionProfileEntity in withdrawRangeTransactionProfileEntities)
             {
-                var currentCashType = withdrawTransaction.CashType;
-                //Find balance with the same CashType
-                var currentBalanceTransaction = balance.Transactions.FirstOrDefault(x => x.CashType == currentCashType);
-
-                TransactionEntity difference = new TransactionEntity()
-                {
-                    CashType = currentCashType,
-                };
-
-                decimal differenceAmount = (currentBalanceTransaction != null)
-                    ? currentBalanceTransaction.Amount + withdrawTransaction.Amount
-                    : withdrawTransaction.Amount;
-
-                difference.Amount = differenceAmount;
-                differenceList.Add(difference);
+               var result = await Withdraw(transactionProfileEntity, token);
+               transactionProfileEntities.Add(result);
             }
-
-            return differenceList;
-        }
-
-        private void CheckForUnite(TransactionProfileEntity withdrawTransactionProfile)
-        {
-            bool isNeedTransactionsUnite = IsNeedTransactionsUnite(withdrawTransactionProfile);
-            if (isNeedTransactionsUnite) UniteTransactions(withdrawTransactionProfile);
-        }
-
-        private void UniteTransactions(TransactionProfileEntity withdrawTransactionProfile)
-        {
-            TransactionProfileEntity uniteTransactionProfile = new TransactionProfileEntity()
-            {
-                ProfileId = withdrawTransactionProfile.ProfileId,
-            };
-
-            foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
-            {
-                if (cashType != 0)
-                {
-                    var result = withdrawTransactionProfile
-                            .Transactions.Where(t => t.CashType == cashType)
-                        .Sum(transaction => transaction.Amount);
-
-                    uniteTransactionProfile.Transactions.Add(
-                        new TransactionEntity()
-                        {
-                            TransactionId = Guid.NewGuid(),
-                            TransactionProfileId = withdrawTransactionProfile.ProfileId,
-                            TransactionProfileEntity = uniteTransactionProfile,
-                            CashType = cashType,
-                            Amount = result,
-                        }
-                    );
-                }
-            }
-
-            withdrawTransactionProfile = uniteTransactionProfile;
-        }
-
-        private bool IsNeedTransactionsUnite(TransactionProfileEntity withdrawTransactionProfile)
-        {
-            List<int> countOfCurrentCashType = new();
-
-            foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
-            {
-                if (cashType != 0)
-                {
-                    countOfCurrentCashType.Add(withdrawTransactionProfile.Transactions.Count(el => el.CashType == cashType));
-                }
-            }
-
-            return (countOfCurrentCashType.Any(x => x>1)) ? true : false;
-        }
-
-        public Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<TransactionProfileEntity>> WithdrawRange(List<TransactionProfileEntity> withdrawRangeTransactionProfileEntities, CancellationToken token)
-        {
-            throw new NotImplementedException();
+            return transactionProfileEntities;
         }
     }
 }

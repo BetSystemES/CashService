@@ -24,20 +24,41 @@ namespace CashService.GRPC.ValidationRules
             return builderOptions;
         }
 
-        /// <summary>
-        /// Must the be valid dependent levels.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="ruleBuilder">The rule builder.</param>
-        /// <returns>IRuleBuilderOptions</returns>
-        public static IRuleBuilderOptions<T, IEnumerable<string>> MustBeValidDependentLevels<T>(this IRuleBuilder<T, IEnumerable<string>> ruleBuilder)
+        public static IRuleBuilderOptions<T, TransactionModel> MustBeValidGuidInTransactionModel<T>(this IRuleBuilder<T, TransactionModel> ruleBuilder)
         {
-            var builderOptions = ruleBuilder
-                .NotEmpty()
-                .Must(e => e.All(x => Guid.TryParse(x, out var guid)))
-                .WithMessage("Received guid in dependent levels");
+            var builderOptions = ruleBuilder.SetValidator(new TransactionModelGuidValidator());
+
+            return builderOptions;
+        }
+
+        public static IRuleBuilderOptions<T, Transaction> MustBeValidGuidInTransaction<T>(this IRuleBuilder<T, Transaction> ruleBuilder)
+        {
+            var builderOptions = ruleBuilder.SetValidator(new TransactionGuidValidator());
 
             return builderOptions;
         }
     }
+
+    public class TransactionGuidValidator : AbstractValidator<Transaction>
+    {
+        public TransactionGuidValidator()
+        {
+            RuleFor(x => x.Transactionid)
+                .MustBeValidGuid();
+        }
+    }
+
+    public class TransactionModelGuidValidator : AbstractValidator<TransactionModel>
+    {
+        public TransactionModelGuidValidator()
+        {
+            RuleFor(x => x.Profileid)
+                .MustBeValidGuid();
+
+            RuleForEach(x => x.Transactions)
+                .MustBeValidGuidInTransaction();
+        }
+    }
+
+    
 }

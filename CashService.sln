@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.FunctionalTests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.UnitTests", "tests\CashService.UnitTests\CashService.UnitTests.csproj", "{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.DatabaseMigrator", "src\CashService.DatabaseMigrator\CashService.DatabaseMigrator.csproj", "{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

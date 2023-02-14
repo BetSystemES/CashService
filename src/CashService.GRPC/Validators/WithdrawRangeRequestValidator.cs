@@ -14,7 +14,10 @@ namespace CashService.GRPC.Validators
         public WithdrawRangeRequestValidator()
         {
             RuleForEach(e => e.Withdrawrangerequest)
-                .MustBeValidCashTypeInTransaction();
+                .MustBeValidCashTypeInTransactionModel();
+
+            RuleForEach(e => e.Withdrawrangerequest)
+                .MustBeValidGuidInTransactionModel();
         }
     }
 }

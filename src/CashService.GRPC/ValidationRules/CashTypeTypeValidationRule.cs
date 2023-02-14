@@ -30,7 +30,7 @@ namespace CashService.GRPC.ValidationRules
             return builderOptions;
         }
 
-        public static IRuleBuilderOptions<T, TransactionModel> MustBeValidCashTypeInTransaction<T>(this IRuleBuilder<T, TransactionModel> ruleBuilder)
+        public static IRuleBuilderOptions<T, TransactionModel> MustBeValidCashTypeInTransactionModel<T>(this IRuleBuilder<T, TransactionModel> ruleBuilder)
         {
             var builderOptions = ruleBuilder.SetValidator(new TransactionModelCashTypeValidator());
 

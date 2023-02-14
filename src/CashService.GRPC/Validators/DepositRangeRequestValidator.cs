@@ -14,7 +14,10 @@ namespace CashService.GRPC.Validators
         public DepositRangeRequestValidator()
         {
             RuleForEach(e => e.Depositrangerequest)
-                .MustBeValidCashTypeInTransaction();
+                .MustBeValidCashTypeInTransactionModel();
+
+            RuleForEach(e => e.Depositrangerequest)
+                .MustBeValidGuidInTransactionModel();
         }
     }
 }

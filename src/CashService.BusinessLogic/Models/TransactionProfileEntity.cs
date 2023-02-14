@@ -12,7 +12,7 @@ namespace CashService.BusinessLogic.Models
     {
         //[Key] public Guid Id { get; set; }
         [Key] public Guid ProfileId { get; set; }
-        public List<TransactionEntity>  Transactions { get; set; }
+        public List<TransactionEntity> Transactions { get; set; }
     }
 
    
