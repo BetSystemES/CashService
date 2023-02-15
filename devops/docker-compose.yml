@@ -1,0 +1,50 @@
+﻿---
+version: "3"
+
+services:
+  cashservice_db_postgres:
+    container_name: Cashservice_db_postgres
+    image: postgres:13.3
+    env_file: compose.env
+    ports:
+      - 5070:5432
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d CashDb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - .\\volumes\\postgres-data\\:/var/lib/postgresql/data
+
+  cashservice_postgres_migrator:
+    container_name: CashService_Postgres_Migrator
+    build:
+      context: ./../
+      dockerfile: ./src/CashService.DatabaseMigrator/Dockerfile
+    env_file: compose.env
+    command:
+       [
+        "dotnet",
+        "CashService.DatabaseMigrator.dll",
+        "--connection-string-source=env",
+        "--connection-string-env-variable-name=CashService_ConnectionStrings__CashDb"
+      ]
+    depends_on:
+      cashservice_db_postgres:
+        condition: service_healthy
+
+  cashservice_grpc_service:
+    container_name: CashService_GRPC_Service
+    build:
+      context: ./../
+      dockerfile: ./src/CashService.Grpc/Dockerfile
+    env_file: compose.env
+    ports:
+      - 5067:80
+    depends_on:
+      cashservice_postgres_migrator:
+        condition: service_completed_successfully
+      cashservice_db_postgres:
+        condition: service_healthy
