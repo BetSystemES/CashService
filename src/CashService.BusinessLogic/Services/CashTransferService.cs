@@ -70,6 +70,8 @@ namespace CashService.BusinessLogic.Services
 
                 CheckForUnite(withdrawTransactionProfile);
 
+                RemoveUnnecessary(withdrawTransactionProfile, balance);
+
                 var differenceList = DifferenceTransaction(withdrawTransactionProfile, balance);
 
                 ReCalcBalanceAndWithDraw(withdrawTransactionProfile, differenceList, balance);
@@ -84,6 +86,27 @@ namespace CashService.BusinessLogic.Services
             }
 
             return balance;
+        }
+
+        private void RemoveUnnecessary(TransactionProfileEntity withdrawTransactionProfile,
+            TransactionProfileEntity balance)
+        {
+            foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
+            {
+                if (cashType != 0)
+                {
+                    var wFind = withdrawTransactionProfile.Transactions.FirstOrDefault(x => x.CashType == cashType);
+
+                    if (wFind == null)
+                    {
+                        var bFind = balance.Transactions.FirstOrDefault(x => x.CashType == cashType);
+                        if (bFind != null)
+                        {
+                            balance.Transactions.Remove(bFind);
+                        }
+                    }
+                }
+            }
         }
 
         public async Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token)

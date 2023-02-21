@@ -22,7 +22,7 @@ namespace CashService.GRPC.Services
             _cashService = cashService;
         }
 
-        public override async Task<GetBalanceResponce> GetBalance(GetBalanceRequest request, ServerCallContext context)
+        public override async Task<GetTransactionsHistoryResponce> GetTransactionsHistory(GetTransactionsHistoryRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
@@ -31,6 +31,25 @@ namespace CashService.GRPC.Services
 
             //cashService
             TransactionProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
+
+            //map back
+            TransactionModel balanceResponce = _mapper.Map<TransactionModel>(balanceResult);
+
+            return new GetTransactionsHistoryResponce
+            {
+                Balance = balanceResponce
+            };
+        }
+
+        public override async Task<GetBalanceResponce> GetBalance(GetBalanceRequest request, ServerCallContext context)
+        {
+            var token = context.CancellationToken;
+
+            //map
+            Guid profileid = _mapper.Map<Guid>(request.Profileid);
+
+            //cashService
+            TransactionProfileEntity balanceResult = await _cashService.CalcBalance(profileid, token);
 
             //map back
             TransactionModel balanceResponce = _mapper.Map<TransactionModel>(balanceResult);

@@ -7,6 +7,7 @@ package cash;
 // The CashService definition.
 service Casher {
 
+  rpc GetTransactionsHistory (GetTransactionsHistoryRequest) returns (GetTransactionsHistoryResponce);
   rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponce);
   rpc Deposit (DepositRequest) returns (DepositResponce);
   rpc Withdraw (WithdrawRequest) returns (WithdrawResponce);
@@ -14,6 +15,13 @@ service Casher {
   rpc WithdrawRange (WithdrawRangeRequest) returns (WithdrawRangeResponce);
 }
 
+
+message GetTransactionsHistoryRequest {
+	string profileid = 1;
+}
+message GetTransactionsHistoryResponce {
+	TransactionModel balance = 1;
+}
 
 message GetBalanceRequest {
 	string profileid = 1;
