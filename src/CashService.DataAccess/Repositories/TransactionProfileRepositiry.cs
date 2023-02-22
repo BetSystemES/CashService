@@ -18,6 +18,7 @@ namespace CashService.DataAccess.Repositories
 
         public Task Add(TransactionProfileEntity item, CancellationToken token)
         {
+            ArgumentNullException.ThrowIfNull(item, nameof(item));
             _entities.Add(item);
             _logger.LogTrace("Add TransactionProfileEntity item with ProfileId:{guid} to database", item.ProfileId );
             return Task.CompletedTask;
@@ -25,6 +26,7 @@ namespace CashService.DataAccess.Repositories
 
         public Task AddRange(IEnumerable<TransactionProfileEntity> items, CancellationToken token)
         {
+            ArgumentNullException.ThrowIfNull(items, nameof(items));
             _entities.AddRange(items);
             _logger.LogTrace("Add TransactionProfileEntitis to database, Count:{count}", items.Count());
             return Task.CompletedTask;
@@ -39,6 +41,7 @@ namespace CashService.DataAccess.Repositories
 
         public Task Update(TransactionProfileEntity item, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(item, nameof(item));
             _entities.Update(item);
             _logger.LogTrace("Update TransactionProfileEntity item  with ProfileId:{guid} in database", item.ProfileId);
             return Task.CompletedTask;
