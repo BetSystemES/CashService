@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CashService.BusinessLogic.Models;
+using CashService.EntityModels.Models;
 
 namespace CashService.GRPC.Configuration
 {
@@ -63,7 +63,7 @@ namespace CashService.GRPC.Configuration
                 .ConvertUsing(s => Guid.Parse(s));
 
 
-            CreateMap<CashType, BusinessLogic.Models.CashType>();
+            CreateMap<CashType, EntityModels.Models.CashType>();
             CreateMap<CashType, CashType>().ReverseMap();
         }
 

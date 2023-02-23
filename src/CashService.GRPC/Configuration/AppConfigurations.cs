@@ -1,5 +1,6 @@
 ﻿using CashService.BusinessLogic.Contracts.IServices;
 using CashService.BusinessLogic.Services;
+using FluentValidation;
 
 namespace CashService.GRPC.Configuration
 {
@@ -13,6 +14,8 @@ namespace CashService.GRPC.Configuration
             });
 
             services.AddScoped<ICashService, CashTransferService>();
+
+            services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
             return services;
         }

@@ -5,17 +5,19 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.GRPC", "src\CashService.GRPC\CashService.GRPC.csproj", "{4341206D-F45F-41B3-AC9C-EC797E77AC53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.BusinessLogic", "src\CashService.BusinessLogic\CashService.BusinessLogic.csproj", "{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.BusinessLogic", "src\CashService.BusinessLogic\CashService.BusinessLogic.csproj", "{49EAAB95-49EE-4A1C-B8A9-28E9D9AD1455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.DataAccess", "src\CashService.DataAccess\CashService.DataAccess.csproj", "{8FA297B8-36F7-409F-8555-723F170CB923}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.DataAccess", "src\CashService.DataAccess\CashService.DataAccess.csproj", "{8FA297B8-36F7-409F-8555-723F170CB923}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.FunctionalTests", "tests\CashService.FunctionalTests\CashService.FunctionalTests.csproj", "{607A3808-1F10-49EA-AE5E-E16FC7667264}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.FunctionalTests", "tests\CashService.FunctionalTests\CashService.FunctionalTests.csproj", "{607A3808-1F10-49EA-AE5E-E16FC7667264}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.UnitTests", "tests\CashService.UnitTests\CashService.UnitTests.csproj", "{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.UnitTests", "tests\CashService.UnitTests\CashService.UnitTests.csproj", "{0DCC6623-7290-4CAB-8B5E-9882AF9602F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.DatabaseMigrator", "src\CashService.DatabaseMigrator\CashService.DatabaseMigrator.csproj", "{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.DatabaseMigrator", "src\CashService.DatabaseMigrator\CashService.DatabaseMigrator.csproj", "{583DB69E-AF72-4A92-A9CB-2E7D0CD51108}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.IntegrationTests", "tests\CashService.IntegrationTests\CashService.IntegrationTests.csproj", "{63A0742A-CC4E-4084-AE0E-658C09398E0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.EntityModels", "src\CashService.EntityModels\CashService.EntityModels.csproj", "{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{63A0742A-CC4E-4084-AE0E-658C09398E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63A0742A-CC4E-4084-AE0E-658C09398E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A0742A-CC4E-4084-AE0E-658C09398E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

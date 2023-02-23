@@ -1,4 +1,4 @@
-﻿using CashService.BusinessLogic.Models;
+﻿using CashService.EntityModels.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

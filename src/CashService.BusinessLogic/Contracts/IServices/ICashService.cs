@@ -1,4 +1,4 @@
-﻿using CashService.BusinessLogic.Models;
+﻿using CashService.EntityModels.Models;
 
 namespace CashService.BusinessLogic.Contracts.IServices
 {

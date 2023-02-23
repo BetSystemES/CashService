@@ -1,17 +1,11 @@
 ﻿using CashService.BusinessLogic.Contracts.IRepositories;
 using CashService.BusinessLogic.Contracts.IServices;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CashService.BusinessLogic.Contracts.IProviders;
-using CashService.BusinessLogic.Models;
+using CashService.EntityModels.Models;
 
 namespace CashService.BusinessLogic.Services
 {
-    public partial class CashTransferService : ICashService
+    public class CashTransferService : ICashService
     {
         private readonly IRepository<TransactionEntity> _transactionEntityRepository;
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
@@ -47,7 +41,7 @@ namespace CashService.BusinessLogic.Services
         {
             TransactionProfileEntity balance = await _cashProvider.GetBalance(depositTransactionProfile.ProfileId, token);
 
-            if (balance == null)
+            if (balance is null)
             {
                 await _transactionProfileRepository.Add(depositTransactionProfile, token);
             }
@@ -64,17 +58,17 @@ namespace CashService.BusinessLogic.Services
 
             TransactionProfileEntity balance = await _cashProvider.GetBalance(profileid, token);
 
-            if (balance != null)
+            if (balance is not null)
             {
                 balance = await _cashProvider.CalcBalance(profileid, token);
 
-                CheckForUnite(withdrawTransactionProfile);
+                withdrawTransactionProfile.CheckForUnite();
 
-                RemoveUnnecessary(withdrawTransactionProfile, balance);
+                balance.CalsIntersectionByCashType(withdrawTransactionProfile);
 
-                var differenceList = DifferenceTransaction(withdrawTransactionProfile, balance);
+                var differenceList = withdrawTransactionProfile.DifferenceTransaction(balance);
 
-                ReCalcBalanceAndWithDraw(withdrawTransactionProfile, differenceList, balance);
+                withdrawTransactionProfile.ReCalcBalanceAndWithDraw(differenceList, balance);
 
                 //await _transactionProfileRepository.Add(withdrawTransactionProfile, token);
                 await _transactionEntityRepository.AddRange(withdrawTransactionProfile.Transactions, token);
@@ -88,26 +82,6 @@ namespace CashService.BusinessLogic.Services
             return balance;
         }
 
-        private void RemoveUnnecessary(TransactionProfileEntity withdrawTransactionProfile,
-            TransactionProfileEntity balance)
-        {
-            foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
-            {
-                if (cashType != 0)
-                {
-                    var wFind = withdrawTransactionProfile.Transactions.FirstOrDefault(x => x.CashType == cashType);
-
-                    if (wFind == null)
-                    {
-                        var bFind = balance.Transactions.FirstOrDefault(x => x.CashType == cashType);
-                        if (bFind != null)
-                        {
-                            balance.Transactions.Remove(bFind);
-                        }
-                    }
-                }
-            }
-        }
 
         public async Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token)
         {

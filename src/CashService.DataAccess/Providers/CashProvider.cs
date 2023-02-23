@@ -1,9 +1,7 @@
 ﻿using CashService.BusinessLogic.Contracts.IProviders;
-using CashService.BusinessLogic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using System.Threading;
+using CashService.EntityModels.Models;
 
 namespace CashService.DataAccess.Providers
 {

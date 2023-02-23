@@ -1,8 +1,6 @@
 using AutoMapper;
 using CashService.BusinessLogic.Contracts.IServices;
-using CashService.BusinessLogic.Models;
-using CashService.GRPC;
-using Google.Protobuf.Collections;
+using CashService.EntityModels.Models;
 using Grpc.Core;
 using static CashService.GRPC.Services.Support;
 

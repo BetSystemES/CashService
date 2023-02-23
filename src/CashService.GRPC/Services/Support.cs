@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CashService.BusinessLogic.Models;
+using CashService.EntityModels.Models;
 using Google.Protobuf.Collections;
 
 namespace CashService.GRPC.Services

@@ -1,8 +1,8 @@
 ﻿using CashService.BusinessLogic.Contracts.IProviders;
 using CashService.BusinessLogic.Contracts.IRepositories;
 using CashService.BusinessLogic.Contracts.IServices;
-using CashService.BusinessLogic.Models;
 using CashService.BusinessLogic.Services;
+using CashService.EntityModels.Models;
 using Moq;
 
 using static CashService.UnitTests.Support.TestTransactionProfileEntityGenerator;

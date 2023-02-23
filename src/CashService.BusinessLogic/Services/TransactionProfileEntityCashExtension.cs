@@ -1,16 +1,10 @@
-﻿using CashService.BusinessLogic.Contracts.IServices;
-using CashService.BusinessLogic.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CashService.EntityModels.Models;
 
 namespace CashService.BusinessLogic.Services
 {
-    public partial class CashTransferService : ICashService
+    public static class TransactionProfileEntityCashExtension
     {
-        private static void ReCalcBalanceAndWithDraw(TransactionProfileEntity withdrawTransactionProfile, List<TransactionEntity> differenceList,
+        public static void ReCalcBalanceAndWithDraw(this TransactionProfileEntity transactionProfile, List<TransactionEntity> differenceList,
          TransactionProfileEntity balance)
         {
             foreach (var transaction in differenceList)
@@ -19,7 +13,7 @@ namespace CashService.BusinessLogic.Services
                 {
                     //update balance
                     var balanceTransaction = balance.Transactions.FirstOrDefault(x => x.CashType == transaction.CashType);
-                    if (balanceTransaction != null)
+                    if (balanceTransaction is not null)
                     {
                         balanceTransaction.Amount -= transaction.Amount;
                     }
@@ -28,8 +22,8 @@ namespace CashService.BusinessLogic.Services
                 {
                     //update withdraw
                     var withdrawTransaction =
-                        withdrawTransactionProfile.Transactions.FirstOrDefault(x => x.CashType == transaction.CashType);
-                    if (withdrawTransaction != null)
+                        transactionProfile.Transactions.FirstOrDefault(x => x.CashType == transaction.CashType);
+                    if (withdrawTransaction is not null)
                     {
                         withdrawTransaction.Amount = withdrawTransaction.Amount - transaction.Amount;
                     }
@@ -37,12 +31,12 @@ namespace CashService.BusinessLogic.Services
             }
         }
 
-        private static List<TransactionEntity> DifferenceTransaction(TransactionProfileEntity withdrawTransactionProfile,
+        public static List<TransactionEntity> DifferenceTransaction(this TransactionProfileEntity transactionProfile,
             TransactionProfileEntity balance)
         {
             List<TransactionEntity> differenceList = new();
 
-            foreach (var withdrawTransaction in withdrawTransactionProfile.Transactions)
+            foreach (var withdrawTransaction in transactionProfile.Transactions)
             {
                 var currentCashType = withdrawTransaction.CashType;
                 //Find balance with the same CashType
@@ -53,7 +47,7 @@ namespace CashService.BusinessLogic.Services
                     CashType = currentCashType,
                 };
 
-                decimal differenceAmount = (currentBalanceTransaction != null)
+                decimal differenceAmount = (currentBalanceTransaction is not null)
                     ? currentBalanceTransaction.Amount + withdrawTransaction.Amount
                     : withdrawTransaction.Amount;
 
@@ -64,24 +58,24 @@ namespace CashService.BusinessLogic.Services
             return differenceList;
         }
 
-        private void CheckForUnite(TransactionProfileEntity withdrawTransactionProfile)
+        public static void CheckForUnite(this TransactionProfileEntity transactionProfile)
         {
-            bool isNeedTransactionsUnite = IsNeedTransactionsUnite(withdrawTransactionProfile);
-            if (isNeedTransactionsUnite) UniteTransactions(withdrawTransactionProfile);
+            bool isNeedTransactionsUnite = IsNeedTransactionsUnite(transactionProfile);
+            if (isNeedTransactionsUnite) UniteTransactions(transactionProfile);
         }
 
-        private void UniteTransactions(TransactionProfileEntity withdrawTransactionProfile)
+        public static void UniteTransactions(this TransactionProfileEntity transactionProfile)
         {
             TransactionProfileEntity uniteTransactionProfile = new TransactionProfileEntity()
             {
-                ProfileId = withdrawTransactionProfile.ProfileId,
+                ProfileId = transactionProfile.ProfileId,
             };
 
             foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
             {
                 if (cashType != 0)
                 {
-                    var result = withdrawTransactionProfile
+                    var result = transactionProfile
                             .Transactions.Where(t => t.CashType == cashType)
                         .Sum(transaction => transaction.Amount);
 
@@ -89,7 +83,7 @@ namespace CashService.BusinessLogic.Services
                         new TransactionEntity()
                         {
                             TransactionId = Guid.NewGuid(),
-                            TransactionProfileId = withdrawTransactionProfile.ProfileId,
+                            TransactionProfileId = transactionProfile.ProfileId,
                             TransactionProfileEntity = uniteTransactionProfile,
                             CashType = cashType,
                             Amount = result,
@@ -98,10 +92,10 @@ namespace CashService.BusinessLogic.Services
                 }
             }
 
-            withdrawTransactionProfile = uniteTransactionProfile;
+            transactionProfile = uniteTransactionProfile;
         }
 
-        private bool IsNeedTransactionsUnite(TransactionProfileEntity withdrawTransactionProfile)
+        public static bool IsNeedTransactionsUnite(this TransactionProfileEntity transactionProfile)
         {
             List<int> countOfCurrentCashType = new();
 
@@ -109,11 +103,32 @@ namespace CashService.BusinessLogic.Services
             {
                 if (cashType != 0)
                 {
-                    countOfCurrentCashType.Add(withdrawTransactionProfile.Transactions.Count(el => el.CashType == cashType));
+                    countOfCurrentCashType.Add(transactionProfile.Transactions.Count(el => el.CashType == cashType));
                 }
             }
 
             return (countOfCurrentCashType.Any(x => x>1)) ? true : false;
         }
+
+        public static void CalsIntersectionByCashType(this TransactionProfileEntity transactionProfile, TransactionProfileEntity withdrawTransactionProfile)
+        {
+            foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
+            {
+                if (cashType != 0)
+                {
+                    var wFind = withdrawTransactionProfile.Transactions.FirstOrDefault(x => x.CashType == cashType);
+
+                    if (wFind is null)
+                    {
+                        var bFind = transactionProfile.Transactions.FirstOrDefault(x => x.CashType == cashType);
+                        if (bFind is not null)
+                        {
+                            transactionProfile.Transactions.Remove(bFind);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

@@ -1,17 +1,10 @@
-﻿using System.Collections;
-using CashService.FunctionalTests;
-using CashService.FunctionalTests.Adapters;
+﻿using CashService.FunctionalTests.Adapters;
 using Xunit.Abstractions;
-
 using FluentAssertions;
 using NScenario;
-using CashService.BusinessLogic;
-using CashService.BusinessLogic.Models;
 using CashService.GRPC;
 using Newtonsoft.Json;
 using static CashService.GRPC.Casher;
-using CashType = CashService.GRPC.CashType;
-using System.Security.Policy;
 using static CashService.FunctionalTests.Scenaries.DataGenerator;
 
 

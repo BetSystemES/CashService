@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CashService.BusinessLogic.Contracts.IProviders;
-using CashService.BusinessLogic.Models;
+using CashService.EntityModels.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
