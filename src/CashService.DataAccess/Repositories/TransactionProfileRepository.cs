@@ -5,12 +5,12 @@ using Microsoft.Extensions.Logging;
 
 namespace CashService.DataAccess.Repositories
 {
-    public class TransactionProfileRepositiry : IRepository<TransactionProfileEntity>
+    public class TransactionProfileRepository : IRepository<TransactionProfileEntity>
     {
         private readonly DbSet<TransactionProfileEntity> _entities;
-        private readonly ILogger<TransactionProfileRepositiry> _logger;
+        private readonly ILogger<TransactionProfileRepository> _logger;
 
-        public TransactionProfileRepositiry(DbSet<TransactionProfileEntity> entities, ILogger<TransactionProfileRepositiry> logger )
+        public TransactionProfileRepository(DbSet<TransactionProfileEntity> entities, ILogger<TransactionProfileRepository> logger )
         {
             _entities = entities;
             _logger = logger;
@@ -30,13 +30,6 @@ namespace CashService.DataAccess.Repositories
             _entities.AddRange(items);
             _logger.LogTrace("Add TransactionProfileEntitis to database, Count:{count}", items.Count());
             return Task.CompletedTask;
-        }
-
-        public async Task<TransactionProfileEntity> Get(Guid guid, CancellationToken cancellationToken)
-        {
-            var result = await _entities.FindAsync(guid);
-            _logger.LogTrace("Get TransactionProfileEntity item from database by ProfileId:{guid}", guid);
-            return result;
         }
 
         public Task Update(TransactionProfileEntity item, CancellationToken cancellationToken)

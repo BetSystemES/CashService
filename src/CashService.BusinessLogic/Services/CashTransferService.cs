@@ -11,17 +11,26 @@ namespace CashService.BusinessLogic.Services
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
         private readonly ICashProvider _cashProvider;
 
+        private readonly IProvider<TransactionEntity> _transactionEntityProvider;
+        private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
+
         private readonly IDataContext _context;
 
         public CashTransferService(
             IRepository<TransactionEntity> transactionEntityRepository,
             IRepository<TransactionProfileEntity> transactionProfileRepository,
             ICashProvider cashProvider,
+            IProvider<TransactionEntity> transactionEntityProvider,
+            IProvider<TransactionProfileEntity> transactionProfileProvider,
             IDataContext context)
         {
             _transactionEntityRepository=transactionEntityRepository;
             _transactionProfileRepository=transactionProfileRepository;
             _cashProvider=cashProvider;
+
+            _transactionEntityProvider = transactionEntityProvider;
+            _transactionProfileProvider = transactionProfileProvider;
+
             _context=context;
         }
 

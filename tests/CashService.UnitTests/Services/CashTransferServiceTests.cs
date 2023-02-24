@@ -16,9 +16,12 @@ namespace CashService.UnitTests.Services
         private readonly ICashService _cashService;
 
         private readonly Mock<IRepository<TransactionEntity>> _mockTransactionRepository;
-
         private readonly Mock<IRepository<TransactionProfileEntity>> _mockTransactionProfileRepository;
+
         private readonly Mock<ICashProvider> _mockCashProvider;
+
+        private readonly Mock<IProvider<TransactionEntity>> _mockTransactionProvider;
+        private readonly Mock<IProvider<TransactionProfileEntity>> _mockTransactionProfileProvider;
 
         private readonly Mock<IDataContext> _mockContext;
 
@@ -26,9 +29,12 @@ namespace CashService.UnitTests.Services
         {
             //Init moqs for IRepository IRepository IProvider IDataContext
             _mockTransactionRepository = new();
-
             _mockTransactionProfileRepository = new();
+
             _mockCashProvider = new ();
+
+            _mockTransactionProvider = new();
+            _mockTransactionProfileProvider = new();
 
             _mockContext = new ();
 
@@ -37,6 +43,8 @@ namespace CashService.UnitTests.Services
                 _mockTransactionRepository.Object,
                 _mockTransactionProfileRepository.Object,
                 _mockCashProvider.Object,
+                _mockTransactionProvider.Object,
+                _mockTransactionProfileProvider.Object,
                 _mockContext.Object);
         }
 

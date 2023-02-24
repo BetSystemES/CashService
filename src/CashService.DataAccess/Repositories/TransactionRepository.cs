@@ -5,12 +5,12 @@ using Microsoft.Extensions.Logging;
 
 namespace CashService.DataAccess.Repositories
 {
-    public class TransactionRepositiry : IRepository<TransactionEntity>
+    public class TransactionRepository : IRepository<TransactionEntity>
     {
         private readonly DbSet<TransactionEntity> _entities;
-        private readonly ILogger<TransactionRepositiry> _logger;
+        private readonly ILogger<TransactionRepository> _logger;
 
-        public TransactionRepositiry(DbSet<TransactionEntity> entities, ILogger<TransactionRepositiry> logger)
+        public TransactionRepository(DbSet<TransactionEntity> entities, ILogger<TransactionRepository> logger)
         {
             _entities = entities;
             _logger = logger;
@@ -30,14 +30,6 @@ namespace CashService.DataAccess.Repositories
             _entities.AddRange(items);
             _logger.LogTrace("Add TransactionEntity  to database, Count:{count}", items.Count());
             return Task.CompletedTask;
-        }
-
-
-        public async Task<TransactionEntity> Get(Guid guid, CancellationToken cancellationToken)
-        {
-              var result=await _entities.FindAsync(guid);
-              _logger.LogTrace("Get TransactionEntity item from database by Id:{guid}", guid);
-              return result;
         }
 
         public Task Update(TransactionEntity item, CancellationToken cancellationToken)

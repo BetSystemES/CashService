@@ -4,7 +4,6 @@
     {
         Task Add(T item, CancellationToken token);
         Task AddRange(IEnumerable<T> items, CancellationToken token);
-        Task<T> Get(Guid guid, CancellationToken cancellationToken);
         Task Update(T item, CancellationToken cancellationToken);
     }
 }

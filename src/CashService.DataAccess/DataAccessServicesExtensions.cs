@@ -41,8 +41,8 @@ namespace CashService.DataAccess
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services
-                .AddScoped<IRepository<TransactionProfileEntity>, TransactionProfileRepositiry>()
-                .AddScoped<IRepository<TransactionEntity>, TransactionRepositiry>();
+                .AddScoped<IRepository<TransactionProfileEntity>, TransactionProfileRepository>()
+                .AddScoped<IRepository<TransactionEntity>, TransactionRepository>();
             return services;
         }
 
@@ -54,6 +54,9 @@ namespace CashService.DataAccess
         public static IServiceCollection AddProviders(this IServiceCollection services)
         {
             services.AddScoped<ICashProvider, CashProvider>();
+
+            services.AddScoped<IProvider<TransactionProfileEntity>, TransactionProfileProvider>();
+            services.AddScoped<IProvider<TransactionEntity>, TransactionProvider>();
 
             return services;
         }

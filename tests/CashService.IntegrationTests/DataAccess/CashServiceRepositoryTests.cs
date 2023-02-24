@@ -22,7 +22,12 @@ namespace CashService.IntegrationTests.DataAccess
 
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
         private readonly IRepository<TransactionEntity> _transactionRepository;
+
         private readonly ICashProvider _cashProvider;
+
+        private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
+        private readonly IProvider<TransactionEntity> _transactionProvider;
+
 
         private readonly IDataContext _context;
         public CashServiceRepositoryTests(GrpcAppFactory factory)
@@ -32,6 +37,9 @@ namespace CashService.IntegrationTests.DataAccess
             _transactionProfileRepository = _scope.ServiceProvider.GetRequiredService<IRepository<TransactionProfileEntity>>();
             _transactionRepository = _scope.ServiceProvider.GetRequiredService<IRepository<TransactionEntity>>();
             _cashProvider = _scope.ServiceProvider.GetRequiredService<ICashProvider>();
+
+            _transactionProfileProvider = _scope.ServiceProvider.GetRequiredService<IProvider<TransactionProfileEntity>>();
+            _transactionProvider = _scope.ServiceProvider.GetRequiredService<IProvider<TransactionEntity>>();
 
             _context = _scope.ServiceProvider.GetRequiredService<IDataContext>();
         }
@@ -74,7 +82,7 @@ namespace CashService.IntegrationTests.DataAccess
             await _transactionProfileRepository.Add(expectedResult, _ctoken);
             await _context.SaveChanges(_ctoken);
 
-            var actualResult = await _transactionProfileRepository.Get(profileId, _ctoken);
+            var actualResult = await _transactionProfileProvider.Get(profileId, _ctoken);
 
             // Assert
             actualResult.Should()
@@ -120,7 +128,7 @@ namespace CashService.IntegrationTests.DataAccess
             await _transactionProfileRepository.Add(expectedResult, _ctoken);
             await _context.SaveChanges(_ctoken);
 
-            var actualResult = await _transactionProfileRepository.Get(profileId, _ctoken);
+            var actualResult = await _transactionProfileProvider.Get(profileId, _ctoken);
 
             // Assert
             actualResult.Should()
