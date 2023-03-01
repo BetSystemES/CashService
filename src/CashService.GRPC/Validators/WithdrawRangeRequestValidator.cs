@@ -3,6 +3,7 @@ using FluentValidation;
 
 namespace CashService.GRPC.Validators
 {
+    // TODO: Change file location to CashService.Grpc.Infrastructure.Validators
     /// <summary>
     /// Validation rules for <seealso cref="WithdrawRangeRequest"/>
     /// </summary>

@@ -5,6 +5,7 @@ using FluentValidation;
 namespace CashService.GRPC.Configuration
 {
     // TODO: Rename class from AppConfiguration to AppConfigurations
+    // TODO: Change file location to CashService.Grpc.Infrastructure.Configurations
     public static partial class AppConfiguration
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)

@@ -1,6 +1,7 @@
 ﻿namespace CashService.GRPC.Configuration
 {
     // TODO: Rename class from AppConfiguration to AppConfigurations
+    // TODO: Change file location to CashService.Grpc.Infrastructure.Configurations
     /// <summary>
     ///   Add environment variables to <seealso cref="WebApplicationBuilder"/>
     /// </summary>

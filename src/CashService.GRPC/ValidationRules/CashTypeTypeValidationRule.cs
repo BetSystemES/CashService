@@ -44,7 +44,7 @@ namespace CashService.GRPC.ValidationRules
     }
 
     // TODO: each validator class should have it's own cs file
-    // TODO: change file location to CashService.GRPC.Validators
+    // TODO: Change file location to CashService.Grpc.Infrastructure.Validators
     public class TransactionModelCashTypeValidator : AbstractValidator<TransactionModel>
     {
         public TransactionModelCashTypeValidator()
@@ -55,7 +55,7 @@ namespace CashService.GRPC.ValidationRules
     }
 
     // TODO: each validator class should have it's own cs file
-    // TODO: change file location to CashService.GRPC.Validators
+    // TODO: Change file location to CashService.Grpc.Infrastructure.Validators
     public class TransactionCashTypeValidator : AbstractValidator<Transaction>
     {
         public TransactionCashTypeValidator()
