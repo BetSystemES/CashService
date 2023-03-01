@@ -1,4 +1,5 @@
-﻿using System;
+﻿// TODO: remove unused/sort usings
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CashService.BusinessLogic.Contracts.IProviders
 {
+    // TODO: change file location to CashService.DataAccess.Contracts.Providers
     public interface IProvider<T> where T : class
     {
         Task<T> Get(Guid id, CancellationToken cancellationToken);

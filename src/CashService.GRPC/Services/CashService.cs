@@ -6,6 +6,7 @@ using static CashService.GRPC.Services.Support;
 
 namespace CashService.GRPC.Services
 {
+    // TODO: remove all empty lines
     public class CashService : Casher.CasherBase
     {
         private readonly ILogger<CashService> _logger;
@@ -24,12 +25,14 @@ namespace CashService.GRPC.Services
         {
             var token = context.CancellationToken;
 
+            // TODO: typo in profileid. Should be profileId
             //map
             Guid profileid = _mapper.Map<Guid>(request.Profileid);
 
             //cashService
             TransactionProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
 
+            // TODO: typo in balanceResponce. Should be balanceResponse
             //map back
             TransactionModel balanceResponce = _mapper.Map<TransactionModel>(balanceResult);
 
@@ -43,12 +46,14 @@ namespace CashService.GRPC.Services
         {
             var token = context.CancellationToken;
 
+            // TODO: typo in profileid. Should be profileId
             //map
             Guid profileid = _mapper.Map<Guid>(request.Profileid);
 
             //cashService
             TransactionProfileEntity balanceResult = await _cashService.CalcBalance(profileid, token);
 
+            // TODO: typo in balanceResponce. Should be balanceResponse
             //map back
             TransactionModel balanceResponce = _mapper.Map<TransactionModel>(balanceResult);
 
@@ -89,6 +94,7 @@ namespace CashService.GRPC.Services
             //cashService
             TransactionProfileEntity withdrawResult = await _cashService.Withdraw(withdrawTransactionProfile, token);
 
+            // TODO: typo in withdrawResponce. Should be withdrawResponse
             //map back
             TransactionModel withdrawResponce = _mapper.Map<TransactionModel>(withdrawResult);
 
@@ -127,10 +133,13 @@ namespace CashService.GRPC.Services
             //profile service
             List<TransactionProfileEntity> withdrawRangeResult = await _cashService.WithdrawRange(withdrawRangeTransactionProfileEntities, token);
 
+            // TODO: typo in rangesResonces. Should be rangesResponse
+            // TODO: remove comment
             //map back
             //IEnumerable<TransactionModel> discounts = _mapper.Map<IEnumerable<TransactionProfileEntity>, IEnumerable<TransactionModel>>(withdrawRangeResult);
             var rangesResonces = ReMapBackRepeatedTransactionModel(_mapper, withdrawRangeResult);
 
+            // TODO: typo in responce. Should be response
             WithdrawRangeResponce responce = new WithdrawRangeResponce();
 
             responce.Withdrawrangeresponce.AddRange(rangesResonces);

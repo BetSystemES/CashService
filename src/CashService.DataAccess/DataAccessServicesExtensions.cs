@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CashService.DataAccess
 {
+    // TODO: change file location to CashService.DataAccess.Extensions
+    // TODO: Remove all empty lines
     public static class DataAccessServicesExtensions
     {
         /// <summary>Register the PostgreSql context.</summary>

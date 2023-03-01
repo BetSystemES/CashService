@@ -2,6 +2,8 @@
 
 namespace CashService.GRPC.ValidationRules
 {
+    // TODO: remove all empty lines
+    // TODO: move functionality to ValidationRulesExtensions.cs file (description in CashTypeTypeValidationRule.cs)
     /// <summary>
     /// Validation rule for guid
     /// </summary>
@@ -39,6 +41,8 @@ namespace CashService.GRPC.ValidationRules
         }
     }
 
+    // TODO: each validator class should have it's own cs file
+    // TODO: change file location to CashService.GRPC.Validators
     public class TransactionGuidValidator : AbstractValidator<Transaction>
     {
         public TransactionGuidValidator()
@@ -48,6 +52,8 @@ namespace CashService.GRPC.ValidationRules
         }
     }
 
+    // TODO: each validator class should have it's own cs file
+    // TODO: change file location to CashService.GRPC.Validators
     public class TransactionModelGuidValidator : AbstractValidator<TransactionModel>
     {
         public TransactionModelGuidValidator()

@@ -1,5 +1,6 @@
 ﻿namespace CashService.BusinessLogic.Contracts.IRepositories
 {
+    // TODO: change file location to CashService.DataAccess.Contracts
     public interface IDataContext
     {
         /// <summary>Saves the changes.</summary>

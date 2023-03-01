@@ -3,6 +3,8 @@ using CashService.EntityModels.Models;
 
 namespace CashService.GRPC.Configuration
 {
+    // TODO: Change file location to CashService.Grpc.Infrastructure.Mappings
+    // TODO: Rename cs file from AutoMapperConfiguration.cs to DataAccessProfile.cs
     public class DataAccessProfile : Profile
     {
         /// <summary>Initializes a new instance of the <see cref="DataAccessProfile" /> class.</summary>

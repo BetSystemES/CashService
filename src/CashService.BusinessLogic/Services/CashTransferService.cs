@@ -5,12 +5,14 @@ using CashService.EntityModels.Models;
 
 namespace CashService.BusinessLogic.Services
 {
+    // TODO: Remove all empty lines
     public class CashTransferService : ICashService
     {
         private readonly IRepository<TransactionEntity> _transactionEntityRepository;
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
         private readonly ICashProvider _cashProvider;
 
+        // TODO: unused variables _transactionEntityProvider, _transactionProfileProvider
         private readonly IProvider<TransactionEntity> _transactionEntityProvider;
         private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
 
@@ -34,12 +36,14 @@ namespace CashService.BusinessLogic.Services
             _context=context;
         }
 
+        // TODO: typo in profileid. Should be profileId
         public async Task<TransactionProfileEntity> GetBalance(Guid profileid, CancellationToken token)
         {
             TransactionProfileEntity balance = await _cashProvider.GetBalance(profileid, token);
             return balance;
         }
 
+        // TODO: typo in profileid. Should be profileId
         public async Task<TransactionProfileEntity> CalcBalance(Guid profileid, CancellationToken token)
         {
             TransactionProfileEntity balance = await _cashProvider.CalcBalance(profileid, token);
@@ -63,6 +67,7 @@ namespace CashService.BusinessLogic.Services
 
         public async Task<TransactionProfileEntity> Withdraw(TransactionProfileEntity withdrawTransactionProfile, CancellationToken token)
         {
+            // TODO: typo in profileid. Should be profileId
             var profileid = withdrawTransactionProfile.ProfileId;
 
             TransactionProfileEntity balance = await _cashProvider.GetBalance(profileid, token);

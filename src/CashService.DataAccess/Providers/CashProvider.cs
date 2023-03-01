@@ -5,8 +5,11 @@ using CashService.EntityModels.Models;
 
 namespace CashService.DataAccess.Providers
 {
+    // TODO: remove all empty lines
+    // TODO: make service public
     internal class CashProvider : ICashProvider
     {
+        // TODO: unused variable _transactionEntities
         private readonly DbSet<TransactionEntity> _transactionEntities;
         private readonly DbSet<TransactionProfileEntity> _transactionProfileEntities;
 
@@ -22,6 +25,7 @@ namespace CashService.DataAccess.Providers
         }
 
 
+        // TODO: typo in profileid. Should be profileId
         public async Task<TransactionProfileEntity> GetBalance(Guid profileid, CancellationToken token)
         {
             var result = await _transactionProfileEntities
@@ -32,6 +36,7 @@ namespace CashService.DataAccess.Providers
             return result;
         }
 
+        // TODO: typo in profileid. Should be profileId
         public async Task<TransactionProfileEntity> CalcBalance(Guid profileid, CancellationToken token)
         {
             TransactionProfileEntity transactionProfile = new TransactionProfileEntity()
@@ -46,6 +51,7 @@ namespace CashService.DataAccess.Providers
             return transactionProfile;
         }
 
+        // TODO: typo in profileid. Should be profileId
         private async Task FillTransactionProfileByCashTypeWithSumAmount(Guid profileid, CancellationToken token, TransactionProfileEntity transactionProfile)
         {
             foreach (CashType cashType in Enum.GetValues(typeof(CashType)))
@@ -62,6 +68,7 @@ namespace CashService.DataAccess.Providers
 
                     var sumAmount = await SumAmountByCashType(profileid, cashType, token);
 
+                    // TODO: typo in profileid. Should be profileId
                     _logger.LogTrace("SumAmount={sumAmount} with CashType:{cashType}  from database by profile Id:{profileid}", sumAmount, cashType, profileid);
 
                     transactionEntity.Amount = sumAmount;
@@ -70,6 +77,7 @@ namespace CashService.DataAccess.Providers
             }
         }
 
+        // TODO: typo in profileid. Should be profileId
         private async Task<decimal> SumAmountByCashType(Guid profileid, CashType cashType, CancellationToken token)
         {
             var result = await _transactionProfileEntities

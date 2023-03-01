@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace CashService.DataAccess.EF
 {
+    // TODO: Move file to CashService.DataAccess
     /// <summary>
     /// Auction service context factory
     /// </summary>

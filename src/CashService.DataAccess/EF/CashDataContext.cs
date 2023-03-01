@@ -2,6 +2,8 @@
 
 namespace CashService.DataAccess.EF
 {
+    // TODO: Remove all empty lines
+    // TODO: Move file to CashService.DataAccess
     public class CashDataContext : IDataContext
     {
         private readonly CashDbContext _profileDbContext;

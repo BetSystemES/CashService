@@ -3,6 +3,7 @@ using CashService.DataAccess.EF;
 using CashService.GRPC.Configuration;
 using CashService.GRPC.Configuration.SeriLog;
 using CashService.GRPC.Interceptors;
+// TODO: remove unused/sort usings
 using CashService.GRPC.Services;
 using Microsoft.EntityFrameworkCore;
 

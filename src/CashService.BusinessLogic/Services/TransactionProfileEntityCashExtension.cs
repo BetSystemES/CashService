@@ -2,6 +2,8 @@
 
 namespace CashService.BusinessLogic.Services
 {
+    // TODO: remove all empty lines
+    // TODO: move file into CashService.BusinessLogic.Extensions
     public static class TransactionProfileEntityCashExtension
     {
         public static void ReCalcBalanceAndWithDraw(this TransactionProfileEntity transactionProfile, List<TransactionEntity> differenceList,

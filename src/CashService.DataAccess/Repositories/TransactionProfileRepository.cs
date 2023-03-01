@@ -28,6 +28,7 @@ namespace CashService.DataAccess.Repositories
         {
             ArgumentNullException.ThrowIfNull(items, nameof(items));
             _entities.AddRange(items);
+            // TODO: typo in TransactionProfileEntitis. Should be TransactionProfileEntities
             _logger.LogTrace("Add TransactionProfileEntitis to database, Count:{count}", items.Count());
             return Task.CompletedTask;
         }

@@ -4,6 +4,7 @@ using FluentValidation;
 
 namespace CashService.GRPC.Configuration
 {
+    // TODO: Rename class from AppConfiguration to AppConfigurations
     public static partial class AppConfiguration
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
@@ -15,6 +16,7 @@ namespace CashService.GRPC.Configuration
 
             services.AddScoped<ICashService, CashTransferService>();
 
+            // TODO: Add new AppConfigurations partial class for fluent validation
             services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
             return services;

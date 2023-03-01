@@ -4,19 +4,24 @@ using Google.Protobuf.Collections;
 
 namespace CashService.GRPC.Services
 {
+    // TODO: class can be converted to Extension class. (e.g. ConvertExtensions)
+    // TODO: change file location to CashService.GRPC.Extensions
     public static class Support
     {
         public static void EntityRemapper(TransactionProfileEntity transactionProfileEntity)
         {
+            // TODO: remove comment
             //transactionProfileEntity.Id = Guid.NewGuid();
             foreach (var transactionEntity in transactionProfileEntity.Transactions)
             {
                 transactionEntity.TransactionProfileId = transactionProfileEntity.ProfileId;
+                // TODO: remove comment
                 //transactionEntity.TransactionProfileEntity = transactionProfileEntity;
             }
         }
         public static void WithdrawValueConverter(TransactionProfileEntity transactionProfileEntity)
         {
+            // TODO: remove comment
             //transactionProfileEntity.Id = Guid.NewGuid();
             foreach (var transactionEntity in transactionProfileEntity.Transactions)
             {
@@ -55,6 +60,7 @@ namespace CashService.GRPC.Services
         }
     }
 
+    // TODO: Change file location to CashService.GRPC.Enums
     public enum OperationType
     {
         Deposit = 0,
