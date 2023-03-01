@@ -13,12 +13,14 @@ namespace CashService.FunctionalTests.Scenaries
         {
             TransactionModel transactionModel = new();
 
+            // TODO: use NBuilder library for data preparation
             Transaction transaction1 = new()
             {
                 Transactionid = Guid.NewGuid().ToString(),
                 Cashtype = CashType.Cash,
                 Amount = cashAmout,
             };
+            // TODO: use NBuilder library for data preparation
             Transaction transaction2 = new()
             {
                 Transactionid = Guid.NewGuid().ToString(),

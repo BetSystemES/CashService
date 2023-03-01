@@ -9,6 +9,7 @@ using static CashService.UnitTests.Support.TestTransactionProfileEntityGenerator
 
 namespace CashService.UnitTests.Services
 {
+    // TODO: remove empty lines
     public class CashTransferServiceTests
     {
         private static readonly CancellationToken _ctoken = CancellationToken.None;

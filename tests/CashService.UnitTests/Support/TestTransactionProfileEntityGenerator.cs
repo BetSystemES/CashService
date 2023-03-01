@@ -1,4 +1,5 @@
-﻿using System;
+﻿// TODO: remove unused/sort usings
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace CashService.UnitTests.Support
     {
         public static TransactionProfileEntity GenerateTransactionProfile()
         {
+            // TODO: use NBuilder library for data preparation
             var profileId = Guid.NewGuid();
 
             TransactionProfileEntity expectedResult = new TransactionProfileEntity();

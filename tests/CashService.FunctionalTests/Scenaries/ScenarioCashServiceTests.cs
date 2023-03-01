@@ -10,6 +10,7 @@ using static CashService.FunctionalTests.Scenaries.DataGenerator;
 
 namespace CashService.FunctionalTests.Scenaries
 {
+    // TODO: remove all empty lines
     public class ScenarioCashServiceTests : IClassFixture<TestServerFixture>
     {
         private readonly ITestOutputHelper _outputHelper;
@@ -41,11 +42,13 @@ namespace CashService.FunctionalTests.Scenaries
                         Deposit = transactionModel,
                     };
 
+                    // TODO: unused variable
                     string json = JsonConvert.SerializeObject(request);
 
                     return await _client.DepositAsync(request);
                 });
 
+            // TODO: typo getBalanceResponce. Should be getBalanceResponse
             var getBalanceResponce = await scenario
                 .Step($"GetBalance",
                 async () =>
@@ -77,6 +80,7 @@ namespace CashService.FunctionalTests.Scenaries
                 new XUnitOutputAdapter(_outputHelper),
                 testMethodName: $"WithDraw0");
 
+            // TODO: typo withdrawResponce. Should be withdrawResponse
             var withdrawResponce = await scenario
                 .Step($"WithDraw",
                     async () =>
@@ -86,6 +90,7 @@ namespace CashService.FunctionalTests.Scenaries
                             Withdrawrequest = withDrawModel,
                         };
 
+                        // TODO: unused variable
                         string json = JsonConvert.SerializeObject(request);
 
                         return await _client.WithdrawAsync(request);
@@ -124,11 +129,13 @@ namespace CashService.FunctionalTests.Scenaries
                             Deposit = transactionModel,
                         };
 
+                        // TODO: unused variable
                         string json = JsonConvert.SerializeObject(request);
 
                         return await _client.DepositAsync(request);
                     });
 
+            // TODO: typo withdrawResponce. Should be withdrawResponse
             var withdrawResponce = await scenario
                 .Step($"WithDraw",
                     async () =>
@@ -138,6 +145,7 @@ namespace CashService.FunctionalTests.Scenaries
                             Withdrawrequest = withDrawModel,
                         };
 
+                        // TODO: unused variable
                         string json = JsonConvert.SerializeObject(request);
 
                         return await _client.WithdrawAsync(request);
@@ -176,11 +184,13 @@ namespace CashService.FunctionalTests.Scenaries
                             Deposit = transactionModel,
                         };
 
+                        // TODO: unused variable
                         string json = JsonConvert.SerializeObject(request);
 
                         return await _client.DepositAsync(request);
                     });
 
+            // TODO: typo withdrawResponce. Should be withdrawResponse
             var withdrawResponce = await scenario
                 .Step($"WithDraw",
                     async () =>
@@ -190,12 +200,14 @@ namespace CashService.FunctionalTests.Scenaries
                             Withdrawrequest = withDrawModel,
                         };
 
+                        // TODO: unused variable
                         string json = JsonConvert.SerializeObject(request);
 
                         return await _client.WithdrawAsync(request);
                     });
 
             var result = withdrawResponce.Withdrawresponce;
+            // TODO: remove comment
             //int result = 50;
 
             result.Transactions[0].Amount
@@ -240,6 +252,7 @@ namespace CashService.FunctionalTests.Scenaries
                         return await _client.DepositRangeAsync(request);
                     });
 
+            // TODO: typo getBalanceResponce. Should be getBalanceResponse
             var getBalanceResponce = await scenario
                 .Step($"GetBalance",
                     async () =>
@@ -251,6 +264,7 @@ namespace CashService.FunctionalTests.Scenaries
                         return await _client.GetBalanceAsync(request);
                     });
 
+            // TODO: typo getBalanceResponce2. Should be getBalanceResponse2
             var getBalanceResponce2 = await scenario
                 .Step($"GetBalance2",
                     async () =>
@@ -322,6 +336,7 @@ namespace CashService.FunctionalTests.Scenaries
                         return await _client.DepositRangeAsync(request);
                     });
 
+            // TODO: typo withdrawRangeResponce. Should be withdrawRangeResponse
             var withdrawRangeResponce = await scenario
                 .Step($"WithDrawRange",
                     async () =>

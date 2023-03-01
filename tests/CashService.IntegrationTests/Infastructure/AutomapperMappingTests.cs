@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
+// TODO: typo in CashService.IntegrationTests.Infastructure. Should be CashService.IntegrationTests.Infrastructure
 namespace CashService.IntegrationTests.Infastructure
 {
     public class AutomapperMappingTests : IClassFixture<GrpcAppFactory>, IDisposable

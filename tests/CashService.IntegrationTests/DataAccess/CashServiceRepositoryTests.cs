@@ -1,5 +1,6 @@
 ﻿using CashService.BusinessLogic.Contracts.IRepositories;
 using Microsoft.Extensions.DependencyInjection;
+// TODO: remove unused/sort usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace CashService.IntegrationTests.DataAccess
 {
+    // TODO: remove empty lines
     public class CashServiceRepositoryTests : IClassFixture<GrpcAppFactory>, IDisposable
     {
         private static readonly CancellationToken _ctoken = CancellationToken.None;
@@ -21,15 +23,18 @@ namespace CashService.IntegrationTests.DataAccess
         private readonly IServiceScope _scope;
 
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
+        // TODO: unused variable
         private readonly IRepository<TransactionEntity> _transactionRepository;
 
         private readonly ICashProvider _cashProvider;
 
         private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
+        // TODO: unused variable
         private readonly IProvider<TransactionEntity> _transactionProvider;
 
 
         private readonly IDataContext _context;
+        
         public CashServiceRepositoryTests(GrpcAppFactory factory)
         {
             _scope = factory.Services.CreateScope();
@@ -52,18 +57,22 @@ namespace CashService.IntegrationTests.DataAccess
 
             TransactionProfileEntity expectedResult = new TransactionProfileEntity();
 
+            // TODO: use NBuilder library for data preparation
             TransactionEntity transaction1 = new ()
             {
                 TransactionId = Guid.NewGuid(),
                 TransactionProfileId = profileId,
+                // TODO: remove comment
                 //TransactionProfileEntity = expectedResult,
                 CashType = CashType.Cash,
                 Amount = 95,
             };
+            // TODO: use NBuilder library for data preparation
             TransactionEntity transaction2 = new()
             {
                 TransactionId = Guid.NewGuid(),
                 TransactionProfileId = profileId,
+                // TODO: remove comment
                 //TransactionProfileEntity = expectedResult,
                 CashType = CashType.Bonus,
                 Amount = 50,
@@ -76,6 +85,7 @@ namespace CashService.IntegrationTests.DataAccess
                 transaction2
             };
 
+            // TODO: remove comment
             //string json = JsonConvert.SerializeObject(expectedResult);
 
             // Act
@@ -98,18 +108,22 @@ namespace CashService.IntegrationTests.DataAccess
 
             TransactionProfileEntity expectedResult = new TransactionProfileEntity();
 
+            // TODO: use NBuilder library for data preparation
             TransactionEntity transaction1 = new()
             {
                 TransactionId = Guid.NewGuid(),
                 TransactionProfileId = profileId,
+                // TODO: remove comment
                 //TransactionProfileEntity = expectedResult,
                 CashType = CashType.Cash,
                 Amount = 95,
             };
+            // TODO: use NBuilder library for data preparation
             TransactionEntity transaction2 = new()
             {
                 TransactionId = Guid.NewGuid(),
                 TransactionProfileId = profileId,
+                // TODO: remove comment
                 //TransactionProfileEntity = expectedResult,
                 CashType = CashType.Bonus,
                 Amount = 50,
@@ -122,6 +136,7 @@ namespace CashService.IntegrationTests.DataAccess
                 transaction2
             };
 
+            // TODO: remove comment
             //string json = JsonConvert.SerializeObject(expectedResult);
 
             // Act
@@ -144,6 +159,7 @@ namespace CashService.IntegrationTests.DataAccess
 
             TransactionProfileEntity expectedResult = new TransactionProfileEntity();
 
+            // TODO: use NBuilder library for data preparation
             TransactionEntity transaction1 = new()
             {
                 TransactionId = Guid.NewGuid(),
@@ -151,6 +167,7 @@ namespace CashService.IntegrationTests.DataAccess
                 CashType = CashType.Cash,
                 Amount = 100,
             };
+            // TODO: use NBuilder library for data preparation
             TransactionEntity transaction2 = new()
             {
                 TransactionId = Guid.NewGuid(),

@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.Collections;
 
+// TODO: wrong namespace name CashService.UnitTests.Validators. Should be CashService.UnitTests.Validators.TestData
 namespace CashService.UnitTests.Validators
 {
    public static class RepeatedTransactionModelRequestData
     {
         public static IEnumerable<object[]> RepeatedTransactionModelRequestDataValid()
         {
+            // TODO: use NBuilder library for data preparation
             yield return new object[]
             {
                 new RepeatedField<TransactionModel>()
@@ -56,6 +58,7 @@ namespace CashService.UnitTests.Validators
 
         public static IEnumerable<object[]> RepeatedTransactionModelRequestDataInvalid()
         {
+            // TODO: use NBuilder library for data preparation
             yield return new object[]
             {
                 new RepeatedField<TransactionModel>()
