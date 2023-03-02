@@ -3,7 +3,7 @@
 namespace CashService.EntityModels.Models
 {
     // TODO: Remove empty lines
-    // TODO: Change file location to CashService.DataAccess.Entities
+    // TODO: Change file location to CashService.BusinessLogic.Entities
     public class TransactionProfileEntity
     {
         // TODO: remove comment

@@ -1,6 +1,7 @@
 ﻿namespace CashService.BusinessLogic.Contracts.IRepositories
 {
-    // TODO: change file location to CashService.DataAccess.Contracts.Repositories
+    // TODO: change folder name from IRepositories to Repositories
+    // TODO: change file location to CashService.BusinessLogic.Contracts.Repositories
     public interface IRepository<T> where T : class
     {
         Task Add(T item, CancellationToken token);

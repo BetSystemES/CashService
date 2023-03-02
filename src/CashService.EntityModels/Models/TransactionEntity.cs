@@ -2,7 +2,7 @@
 
 namespace CashService.EntityModels.Models
 {
-    // TODO: Change file location to CashService.DataAccess.Entities
+    // TODO: Change file location to CashService.BusinessLogic.Entities
     public class TransactionEntity
     {
         [Key] public Guid TransactionId { get; set; }
@@ -14,7 +14,7 @@ namespace CashService.EntityModels.Models
         public decimal Amount { get; set; }
     }
 
-    // TODO: Change file location to CashService.DataAccess.Enums
+    // TODO: Change file location to CashService.BusinessLogic.Models.Enums
     public enum CashType
     {
         Unspecified = 0,

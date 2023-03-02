@@ -8,8 +8,8 @@ using CashService.EntityModels.Models;
 
 namespace CashService.BusinessLogic.Contracts.IProviders
 {
-    // TODO: change file location to CashService.DataAccess.Contracts.Providers
-    // TODO: inherit ICashProvider from IProvider
+    // TODO: change folder name from IProviders to Providers
+    // TODO: change file location to CashService.BusinessLogic.Contracts.Providers
     public interface ICashProvider
     {
         // TODO: typo in profileid. Should be profileId
