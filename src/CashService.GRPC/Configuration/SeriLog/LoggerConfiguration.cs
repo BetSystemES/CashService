@@ -2,6 +2,7 @@
 
 namespace CashService.GRPC.Configuration.SeriLog
 {
+    // TODO: Change file location to CashService.GRPC.Infrastructure.Configurations.SeriLog
     public static class LoggerConfiguration
     {
         /// <summary>Adds the serilog logger to service collection.</summary>
