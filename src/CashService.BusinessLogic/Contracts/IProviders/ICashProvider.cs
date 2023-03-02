@@ -9,7 +9,7 @@ using CashService.EntityModels.Models;
 namespace CashService.BusinessLogic.Contracts.IProviders
 {
     // TODO: change folder name from IProviders to Providers
-    // TODO: change file location to CashService.BusinessLogic.Contracts.Providers
+    // TODO: change file location to CashService.BusinessLogic.Contracts.DataAccess.Providers
     public interface ICashProvider
     {
         // TODO: typo in profileid. Should be profileId
