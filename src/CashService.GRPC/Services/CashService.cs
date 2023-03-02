@@ -7,7 +7,7 @@ using static CashService.GRPC.Services.Support;
 namespace CashService.GRPC.Services
 {
     // TODO: remove all empty lines
-    public class CashService : Casher.CasherBase
+    public class CashService : GRPC.CashService.CashServiceBase
     {
         private readonly ILogger<CashService> _logger;
 

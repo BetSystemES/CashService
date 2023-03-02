@@ -4,7 +4,7 @@ using FluentAssertions;
 using NScenario;
 using CashService.GRPC;
 using Newtonsoft.Json;
-using static CashService.GRPC.Casher;
+using static CashService.GRPC.CashService;
 using static CashService.FunctionalTests.Scenaries.DataGenerator;
 
 
@@ -14,13 +14,13 @@ namespace CashService.FunctionalTests.Scenaries
     public class ScenarioCashServiceTests : IClassFixture<TestServerFixture>
     {
         private readonly ITestOutputHelper _outputHelper;
-        private readonly CasherClient _client;
+        private readonly CashServiceClient _client;
 
         public ScenarioCashServiceTests(TestServerFixture factory,
             ITestOutputHelper outputHelper)
         {
             _outputHelper = outputHelper;
-            _client = new CasherClient(factory.GrpcChannel);
+            _client = new CashServiceClient(factory.GrpcChannel);
         }
 
         [Fact()]
