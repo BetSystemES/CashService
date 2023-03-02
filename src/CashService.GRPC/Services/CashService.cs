@@ -1,12 +1,12 @@
 using AutoMapper;
-using CashService.BusinessLogic.Contracts.IServices;
-using CashService.EntityModels.Models;
+using CashService.BusinessLogic.Contracts.Services;
+using CashService.BusinessLogic.Entities;
+using CashService.GRPC.Enums;
+using CashService.GRPC.Extensions;
 using Grpc.Core;
-using static CashService.GRPC.Services.Support;
 
 namespace CashService.GRPC.Services
 {
-    // TODO: remove all empty lines
     public class CashService : GRPC.CashService.CashServiceBase
     {
         private readonly ILogger<CashService> _logger;
@@ -21,49 +21,45 @@ namespace CashService.GRPC.Services
             _cashService = cashService;
         }
 
-        public override async Task<GetTransactionsHistoryResponce> GetTransactionsHistory(GetTransactionsHistoryRequest request, ServerCallContext context)
+        public override async Task<GetTransactionsHistoryResponse> GetTransactionsHistory(GetTransactionsHistoryRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
-            // TODO: typo in profileid. Should be profileId
             //map
-            Guid profileid = _mapper.Map<Guid>(request.Profileid);
+            Guid profileid = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
             TransactionProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
 
-            // TODO: typo in balanceResponce. Should be balanceResponse
             //map back
-            TransactionModel balanceResponce = _mapper.Map<TransactionModel>(balanceResult);
+            TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
 
-            return new GetTransactionsHistoryResponce
+            return new GetTransactionsHistoryResponse
             {
-                Balance = balanceResponce
+                Balance = balanceResponse
             };
         }
 
-        public override async Task<GetBalanceResponce> GetBalance(GetBalanceRequest request, ServerCallContext context)
+        public override async Task<GetBalanceResponse> GetBalance(GetBalanceRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
-            // TODO: typo in profileid. Should be profileId
             //map
-            Guid profileid = _mapper.Map<Guid>(request.Profileid);
+            Guid profileId = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
-            TransactionProfileEntity balanceResult = await _cashService.CalcBalance(profileid, token);
+            TransactionProfileEntity balanceResult = await _cashService.CalcBalance(profileId, token);
 
-            // TODO: typo in balanceResponce. Should be balanceResponse
             //map back
-            TransactionModel balanceResponce = _mapper.Map<TransactionModel>(balanceResult);
+            TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
 
-            return new GetBalanceResponce
+            return new GetBalanceResponse
             {
-                Balance = balanceResponce
+                Balance = balanceResponse
             };
         }
 
-        public override async Task<DepositResponce> Deposit(DepositRequest request, ServerCallContext context)
+        public override async Task<DepositResponse> Deposit(DepositRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
@@ -71,16 +67,15 @@ namespace CashService.GRPC.Services
             TransactionProfileEntity depositTransactionProfile = _mapper.Map<TransactionProfileEntity>(request.Deposit);
 
             //remap
-            EntityRemapper(depositTransactionProfile);
+            depositTransactionProfile.EntityRemapper();
 
             //cashService
             await _cashService.Deposit(depositTransactionProfile, token);
 
-            return new DepositResponce();
+            return new DepositResponse();
         }
 
-
-        public override async Task<WithdrawResponce> Withdraw(WithdrawRequest request, ServerCallContext context)
+        public override async Task<WithdrawResponse> Withdraw(WithdrawRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
@@ -88,64 +83,52 @@ namespace CashService.GRPC.Services
             TransactionProfileEntity withdrawTransactionProfile = _mapper.Map<TransactionProfileEntity>(request.Withdrawrequest);
 
             //remap
-            EntityRemapper(withdrawTransactionProfile);
-            WithdrawValueConverter(withdrawTransactionProfile);
+            withdrawTransactionProfile.EntityRemapper();
+            withdrawTransactionProfile.WithdrawValueConverter();
 
             //cashService
             TransactionProfileEntity withdrawResult = await _cashService.Withdraw(withdrawTransactionProfile, token);
 
-            // TODO: typo in withdrawResponce. Should be withdrawResponse
             //map back
-            TransactionModel withdrawResponce = _mapper.Map<TransactionModel>(withdrawResult);
+            TransactionModel withdrawResponse = _mapper.Map<TransactionModel>(withdrawResult);
 
-            return new WithdrawResponce()
+            return new WithdrawResponse()
             {
-                Withdrawresponce = withdrawResponce
+                Withdrawresponse = withdrawResponse
             };
         }
 
-       
-
-        public override async Task<DepositRangeResponce> DepositRange(DepositRangeRequest request, ServerCallContext context)
+        public override async Task<DepositRangeResponse> DepositRange(DepositRangeRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
             //map
-            //IEnumerable<TransactionProfileEntity> depositRange = _mapper.Map<IEnumerable<TransactionModel>, IEnumerable<TransactionProfileEntity>>(request.Depositrangerequest);
-            var depositRangeTransactionProfileEntities = ReMapRepeatedTransactionModel(_mapper, request.Depositrangerequest, OperationType.Deposit);
+            var depositRangeTransactionProfileEntities = request.DepositRangeRequests.ReMapRepeatedTransactionModel(_mapper, OperationType.Deposit);
 
             //cashService
             await _cashService.DepositRange(depositRangeTransactionProfileEntities, token);
 
-            return new DepositRangeResponce();
+            return new DepositRangeResponse();
         }
 
-       
-
-        public override async Task<WithdrawRangeResponce> WithdrawRange(WithdrawRangeRequest request, ServerCallContext context)
+        public override async Task<WithdrawRangeResponse> WithdrawRange(WithdrawRangeRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
 
             //map
-            //var withdrawRange = _mapper.Map<IEnumerable<TransactionModel>, IEnumerable<TransactionEntity>>(request.Withdrawrangerequest);
-            var withdrawRangeTransactionProfileEntities = ReMapRepeatedTransactionModel(_mapper, request.Withdrawrangerequest, OperationType.Withdraw);
+            var withdrawRangeTransactionProfileEntities = request.WithdrawRangeRequests.ReMapRepeatedTransactionModel(_mapper,  OperationType.Withdraw);
 
             //profile service
             List<TransactionProfileEntity> withdrawRangeResult = await _cashService.WithdrawRange(withdrawRangeTransactionProfileEntities, token);
 
-            // TODO: typo in rangesResonces. Should be rangesResponse
-            // TODO: remove comment
             //map back
-            //IEnumerable<TransactionModel> discounts = _mapper.Map<IEnumerable<TransactionProfileEntity>, IEnumerable<TransactionModel>>(withdrawRangeResult);
-            var rangesResonces = ReMapBackRepeatedTransactionModel(_mapper, withdrawRangeResult);
+            var rangesResponses = withdrawRangeResult.ReMapBackRepeatedTransactionModel(_mapper);
 
-            // TODO: typo in responce. Should be response
-            WithdrawRangeResponce responce = new WithdrawRangeResponce();
+            WithdrawRangeResponse response = new ();
 
-            responce.Withdrawrangeresponce.AddRange(rangesResonces);
+            response.WithdrawRangeResponses.AddRange(rangesResponses);
 
-            return responce;
+            return response;
         }
-
     }
 }

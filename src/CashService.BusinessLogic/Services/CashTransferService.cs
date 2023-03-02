@@ -1,18 +1,18 @@
-﻿using CashService.BusinessLogic.Contracts.IRepositories;
-using CashService.BusinessLogic.Contracts.IServices;
-using CashService.BusinessLogic.Contracts.IProviders;
-using CashService.EntityModels.Models;
+﻿using CashService.BusinessLogic.Contracts;
+using CashService.BusinessLogic.Contracts.Providers;
+using CashService.BusinessLogic.Contracts.Repositories;
+using CashService.BusinessLogic.Contracts.Services;
+using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Extensions;
 
 namespace CashService.BusinessLogic.Services
 {
-    // TODO: Remove all empty lines
     public class CashTransferService : ICashService
     {
         private readonly IRepository<TransactionEntity> _transactionEntityRepository;
         private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
         private readonly ICashProvider _cashProvider;
 
-        // TODO: unused variables _transactionEntityProvider, _transactionProfileProvider
         private readonly IProvider<TransactionEntity> _transactionEntityProvider;
         private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
 
@@ -36,17 +36,15 @@ namespace CashService.BusinessLogic.Services
             _context=context;
         }
 
-        // TODO: typo in profileid. Should be profileId
-        public async Task<TransactionProfileEntity> GetBalance(Guid profileid, CancellationToken token)
+        public async Task<TransactionProfileEntity> GetBalance(Guid profileId, CancellationToken token)
         {
-            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileid, token);
+            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileId, token);
             return balance;
         }
 
-        // TODO: typo in profileid. Should be profileId
-        public async Task<TransactionProfileEntity> CalcBalance(Guid profileid, CancellationToken token)
+        public async Task<TransactionProfileEntity> CalcBalance(Guid profileId, CancellationToken token)
         {
-            TransactionProfileEntity balance = await _cashProvider.CalcBalance(profileid, token);
+            TransactionProfileEntity balance = await _cashProvider.CalcBalance(profileId, token);
             return balance;
         }
 
@@ -67,14 +65,13 @@ namespace CashService.BusinessLogic.Services
 
         public async Task<TransactionProfileEntity> Withdraw(TransactionProfileEntity withdrawTransactionProfile, CancellationToken token)
         {
-            // TODO: typo in profileid. Should be profileId
-            var profileid = withdrawTransactionProfile.ProfileId;
+            var profileId = withdrawTransactionProfile.ProfileId;
 
-            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileid, token);
+            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileId, token);
 
             if (balance is not null)
             {
-                balance = await _cashProvider.CalcBalance(profileid, token);
+                balance = await _cashProvider.CalcBalance(profileId, token);
 
                 withdrawTransactionProfile.CheckForUnite();
 
@@ -90,12 +87,11 @@ namespace CashService.BusinessLogic.Services
             }
             else
             {
-                balance = await _cashProvider.CalcBalance(profileid, token);
+                balance = await _cashProvider.CalcBalance(profileId, token);
             }
 
             return balance;
         }
-
 
         public async Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token)
         {

@@ -1,8 +1,4 @@
 ﻿using Grpc.Net.Client;
-// TODO: remove unused usings
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-
 
 namespace CashService.FunctionalTests
 {

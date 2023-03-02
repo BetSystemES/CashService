@@ -1,11 +1,5 @@
-﻿// TODO: remove unused usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CashService.GRPC;
-using CashService.GRPC.Validators;
+﻿using CashService.GRPC;
+using CashService.GRPC.Infrastructure.Validators;
 using FluentAssertions;
 using FluentValidation;
 
@@ -27,7 +21,7 @@ namespace CashService.UnitTests.Validators
             // Arrange
             var model = new GetBalanceRequest()
             {
-                Profileid = profileId
+                ProfileId = profileId
             };
 
             // Act
@@ -47,7 +41,7 @@ namespace CashService.UnitTests.Validators
             // Arrange
             var model = new GetBalanceRequest()
             {
-                Profileid = profileId
+                ProfileId = profileId
             };
 
             // Act

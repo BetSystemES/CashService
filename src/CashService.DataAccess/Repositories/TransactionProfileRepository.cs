@@ -1,5 +1,5 @@
-﻿using CashService.BusinessLogic.Contracts.IRepositories;
-using CashService.EntityModels.Models;
+﻿using CashService.BusinessLogic.Contracts.Repositories;
+using CashService.BusinessLogic.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -28,8 +28,7 @@ namespace CashService.DataAccess.Repositories
         {
             ArgumentNullException.ThrowIfNull(items, nameof(items));
             _entities.AddRange(items);
-            // TODO: typo in TransactionProfileEntitis. Should be TransactionProfileEntities
-            _logger.LogTrace("Add TransactionProfileEntitis to database, Count:{count}", items.Count());
+            _logger.LogTrace("Add TransactionProfileEntities to database, Count:{count}", items.Count());
             return Task.CompletedTask;
         }
 

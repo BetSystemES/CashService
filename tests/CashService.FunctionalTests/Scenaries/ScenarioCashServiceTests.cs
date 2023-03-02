@@ -7,10 +7,8 @@ using Newtonsoft.Json;
 using static CashService.GRPC.CashService;
 using static CashService.FunctionalTests.Scenaries.DataGenerator;
 
-
 namespace CashService.FunctionalTests.Scenaries
 {
-    // TODO: remove all empty lines
     public class ScenarioCashServiceTests : IClassFixture<TestServerFixture>
     {
         private readonly ITestOutputHelper _outputHelper;
@@ -42,25 +40,21 @@ namespace CashService.FunctionalTests.Scenaries
                         Deposit = transactionModel,
                     };
 
-                    // TODO: unused variable
-                    string json = JsonConvert.SerializeObject(request);
-
                     return await _client.DepositAsync(request);
                 });
 
-            // TODO: typo getBalanceResponce. Should be getBalanceResponse
-            var getBalanceResponce = await scenario
+            var getBalanceResponse = await scenario
                 .Step($"GetBalance",
                 async () =>
                 {
                     var request = new GetBalanceRequest()
                     { 
-                        Profileid = profileId
+                        ProfileId = profileId
                     };
                     return await _client.GetBalanceAsync(request);
                 });
 
-            var result = getBalanceResponce.Balance;
+            var result = getBalanceResponse.Balance;
 
             result
                 .Should()
@@ -80,8 +74,7 @@ namespace CashService.FunctionalTests.Scenaries
                 new XUnitOutputAdapter(_outputHelper),
                 testMethodName: $"WithDraw0");
 
-            // TODO: typo withdrawResponce. Should be withdrawResponse
-            var withdrawResponce = await scenario
+            var withdrawResponse = await scenario
                 .Step($"WithDraw",
                     async () =>
                     {
@@ -90,13 +83,10 @@ namespace CashService.FunctionalTests.Scenaries
                             Withdrawrequest = withDrawModel,
                         };
 
-                        // TODO: unused variable
-                        string json = JsonConvert.SerializeObject(request);
-
                         return await _client.WithdrawAsync(request);
                     });
 
-            var result = withdrawResponce.Withdrawresponce;
+            var result = withdrawResponse.Withdrawresponse;
 
             result.Transactions[0].Amount
                 .Should()
@@ -129,14 +119,10 @@ namespace CashService.FunctionalTests.Scenaries
                             Deposit = transactionModel,
                         };
 
-                        // TODO: unused variable
-                        string json = JsonConvert.SerializeObject(request);
-
                         return await _client.DepositAsync(request);
                     });
 
-            // TODO: typo withdrawResponce. Should be withdrawResponse
-            var withdrawResponce = await scenario
+            var withdrawResponse = await scenario
                 .Step($"WithDraw",
                     async () =>
                     {
@@ -145,13 +131,10 @@ namespace CashService.FunctionalTests.Scenaries
                             Withdrawrequest = withDrawModel,
                         };
 
-                        // TODO: unused variable
-                        string json = JsonConvert.SerializeObject(request);
-
                         return await _client.WithdrawAsync(request);
                     });
 
-            var result = withdrawResponce.Withdrawresponce;
+            var result = withdrawResponse.Withdrawresponse;
 
             result.Transactions[0].Amount
                 .Should()
@@ -184,14 +167,10 @@ namespace CashService.FunctionalTests.Scenaries
                             Deposit = transactionModel,
                         };
 
-                        // TODO: unused variable
-                        string json = JsonConvert.SerializeObject(request);
-
                         return await _client.DepositAsync(request);
                     });
 
-            // TODO: typo withdrawResponce. Should be withdrawResponse
-            var withdrawResponce = await scenario
+            var withdrawResponse = await scenario
                 .Step($"WithDraw",
                     async () =>
                     {
@@ -200,15 +179,10 @@ namespace CashService.FunctionalTests.Scenaries
                             Withdrawrequest = withDrawModel,
                         };
 
-                        // TODO: unused variable
-                        string json = JsonConvert.SerializeObject(request);
-
                         return await _client.WithdrawAsync(request);
                     });
 
-            var result = withdrawResponce.Withdrawresponce;
-            // TODO: remove comment
-            //int result = 50;
+            var result = withdrawResponse.Withdrawresponse;
 
             result.Transactions[0].Amount
                 .Should()
@@ -245,40 +219,38 @@ namespace CashService.FunctionalTests.Scenaries
                             transactionModel2
                         };
 
-                        request.Depositrangerequest.AddRange(transactionModels);
+                        request.DepositRangeRequests.AddRange(transactionModels);
 
                         string json = JsonConvert.SerializeObject(request).ToLower();
 
                         return await _client.DepositRangeAsync(request);
                     });
 
-            // TODO: typo getBalanceResponce. Should be getBalanceResponse
-            var getBalanceResponce = await scenario
+            var getBalanceResponse = await scenario
                 .Step($"GetBalance",
                     async () =>
                     {
                         var request = new GetBalanceRequest()
                         {
-                            Profileid = profileId
+                            ProfileId = profileId
                         };
                         return await _client.GetBalanceAsync(request);
                     });
 
-            // TODO: typo getBalanceResponce2. Should be getBalanceResponse2
-            var getBalanceResponce2 = await scenario
+            var getBalanceResponse2 = await scenario
                 .Step($"GetBalance2",
                     async () =>
                     {
                         var request = new GetBalanceRequest()
                         {
-                            Profileid = profileId2
+                            ProfileId = profileId2
                         };
                         return await _client.GetBalanceAsync(request);
                     });
 
-            var result = getBalanceResponce.Balance;
+            var result = getBalanceResponse.Balance;
 
-            var result2 = getBalanceResponce2.Balance;
+            var result2 = getBalanceResponse2.Balance;
 
             result.Transactions.Count
                 .Should()
@@ -329,21 +301,20 @@ namespace CashService.FunctionalTests.Scenaries
                             transactionModel2
                         };
 
-                        request.Depositrangerequest.AddRange(transactionModels);
+                        request.DepositRangeRequests.AddRange(transactionModels);
 
                         string json = JsonConvert.SerializeObject(request).ToLower();
 
                         return await _client.DepositRangeAsync(request);
                     });
 
-            // TODO: typo withdrawRangeResponce. Should be withdrawRangeResponse
-            var withdrawRangeResponce = await scenario
+            var withdrawRangeResponse = await scenario
                 .Step($"WithDrawRange",
                     async () =>
                     {
                         var request = new WithdrawRangeRequest()
                         {
-                           Withdrawrangerequest =
+                           WithdrawRangeRequests =
                            {
                                withDrawModel,
                                withDrawModel2
@@ -356,8 +327,8 @@ namespace CashService.FunctionalTests.Scenaries
                     });
 
          
-            var result = withdrawRangeResponce.Withdrawrangeresponce[0];
-            var result2 = withdrawRangeResponce.Withdrawrangeresponce[1];
+            var result = withdrawRangeResponse.WithdrawRangeResponses[0];
+            var result2 = withdrawRangeResponse.WithdrawRangeResponses[1];
 
             result.Transactions.Count
                 .Should()

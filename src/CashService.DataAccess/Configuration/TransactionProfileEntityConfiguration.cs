@@ -1,4 +1,4 @@
-﻿using CashService.EntityModels.Models;
+﻿using CashService.BusinessLogic.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,10 +10,6 @@ namespace CashService.DataAccess.Configuration
         /// <param name="builder">The builder to be used to configure the entity type.</param>
         public void Configure(EntityTypeBuilder<TransactionProfileEntity> builder)
         {
-            // TODO: Remove comments
-            //builder.HasKey(x => x.Id);
-            //builder.Property(x => x.Id).ValueGeneratedNever();
-
             builder.HasKey(x => x.ProfileId);
             builder.Property(x => x.ProfileId).ValueGeneratedNever();
 

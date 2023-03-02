@@ -1,36 +1,51 @@
 ﻿using CashService.GRPC;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FizzWare.NBuilder;
 
 namespace CashService.FunctionalTests.Scenaries
 {
     public static class DataGenerator
     {
-        public static TransactionModel TransactionModelGenerator(string profileId, double cashAmout, double bonusAmount)
+        public static TransactionModel TransactionModelGenerator0(string profileId, double cashAmout, double bonusAmount)
         {
             TransactionModel transactionModel = new();
-
-            // TODO: use NBuilder library for data preparation
             Transaction transaction1 = new()
             {
-                Transactionid = Guid.NewGuid().ToString(),
-                Cashtype = CashType.Cash,
+                TransactionId = Guid.NewGuid().ToString(),
+                CashType = CashType.Cash,
                 Amount = cashAmout,
             };
-            // TODO: use NBuilder library for data preparation
             Transaction transaction2 = new()
             {
-                Transactionid = Guid.NewGuid().ToString(),
-                Cashtype = CashType.Bonus,
+                TransactionId = Guid.NewGuid().ToString(),
+                CashType = CashType.Bonus,
                 Amount = bonusAmount,
             };
-
-            transactionModel.Profileid = profileId;
+            transactionModel.ProfileId = profileId;
             transactionModel.Transactions.Add(transaction1);
             transactionModel.Transactions.Add(transaction2);
+            return transactionModel;
+        }
+
+        public static TransactionModel TransactionModelGenerator(string profileId, double cashAmout, double bonusAmount)
+        {
+            var transaction1 = Builder<Transaction>
+                .CreateNew()
+                .With(x=>x.TransactionId = Guid.NewGuid().ToString())
+                .With(x => x.CashType = CashType.Cash)
+                .And(x => x.Amount = cashAmout)
+                .Build();
+            var transaction2 = Builder<Transaction>
+                .CreateNew()
+                .With(x => x.TransactionId = Guid.NewGuid().ToString())
+                .With(x => x.CashType = CashType.Bonus)
+                .And(x => x.Amount = bonusAmount)
+                .Build();
+            TransactionModel transactionModel =  Builder<TransactionModel>
+                .CreateNew()
+                .With(x => x.ProfileId = profileId)
+                .Do(x => x.Transactions.Add(transaction1))
+                .And(x => x.Transactions.Add(transaction2))
+                .Build();
             return transactionModel;
         }
     }

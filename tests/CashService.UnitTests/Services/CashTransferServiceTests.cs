@@ -1,15 +1,14 @@
-﻿using CashService.BusinessLogic.Contracts.IProviders;
-using CashService.BusinessLogic.Contracts.IRepositories;
-using CashService.BusinessLogic.Contracts.IServices;
+﻿using CashService.BusinessLogic.Contracts;
+using CashService.BusinessLogic.Contracts.Providers;
+using CashService.BusinessLogic.Contracts.Repositories;
+using CashService.BusinessLogic.Contracts.Services;
+using CashService.BusinessLogic.Entities;
 using CashService.BusinessLogic.Services;
-using CashService.EntityModels.Models;
 using Moq;
-
 using static CashService.UnitTests.Support.TestTransactionProfileEntityGenerator;
 
 namespace CashService.UnitTests.Services
 {
-    // TODO: remove empty lines
     public class CashTransferServiceTests
     {
         private static readonly CancellationToken _ctoken = CancellationToken.None;

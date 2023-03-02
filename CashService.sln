@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.DatabaseMigrato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.IntegrationTests", "tests\CashService.IntegrationTests\CashService.IntegrationTests.csproj", "{63A0742A-CC4E-4084-AE0E-658C09398E0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashService.EntityModels", "src\CashService.EntityModels\CashService.EntityModels.csproj", "{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{63A0742A-CC4E-4084-AE0E-658C09398E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63A0742A-CC4E-4084-AE0E-658C09398E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A0742A-CC4E-4084-AE0E-658C09398E0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E4AF5F5-2DF4-47E7-A559-0CB346F60A01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

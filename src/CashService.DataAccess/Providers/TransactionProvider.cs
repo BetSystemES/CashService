@@ -1,18 +1,11 @@
-﻿using CashService.BusinessLogic.Contracts.IProviders;
-using CashService.EntityModels.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-// TODO: remove unused/sort usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CashService.BusinessLogic.Contracts.Providers;
+using CashService.BusinessLogic.Entities;
 
 namespace CashService.DataAccess.Providers
 {
-    // TODO: make service public
-    internal class TransactionProvider : IProvider<TransactionEntity>
+    public class TransactionProvider : IProvider<TransactionEntity>
     {
         private readonly DbSet<TransactionEntity> _entities;
 

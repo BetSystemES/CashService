@@ -1,18 +1,13 @@
-﻿// TODO: remove unused/sort usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CashService.EntityModels.Models;
+﻿using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Models.Enums;
+using FizzWare.NBuilder;
 
 namespace CashService.UnitTests.Support
 {
     public static class TestTransactionProfileEntityGenerator
     {
-        public static TransactionProfileEntity GenerateTransactionProfile()
+        public static TransactionProfileEntity GenerateTransactionProfile0()
         {
-            // TODO: use NBuilder library for data preparation
             var profileId = Guid.NewGuid();
 
             TransactionProfileEntity expectedResult = new TransactionProfileEntity();
@@ -40,6 +35,36 @@ namespace CashService.UnitTests.Support
                 transaction1,
                 transaction2
             };
+
+            return expectedResult;
+        }
+        public static TransactionProfileEntity GenerateTransactionProfile()
+        {
+            var profileId = Guid.NewGuid();
+
+            var transaction1 = Builder<TransactionEntity>
+                .CreateNew()
+                .With(x => x.TransactionId = Guid.NewGuid())
+                .With(x => x.TransactionProfileId=profileId)
+                .With(x => x.CashType = CashType.Cash)
+                .And(x => x.Amount = 95)
+                .Build();
+
+            var transaction2 = Builder<TransactionEntity>
+                .CreateNew()
+                .With(x => x.TransactionId = Guid.NewGuid())
+                .With(x => x.TransactionProfileId=profileId)
+                .With(x => x.CashType = CashType.Bonus)
+                .And(x => x.Amount = 50)
+                .Build();
+
+            var expectedResult = Builder<TransactionProfileEntity>
+                .CreateNew()
+                .With(x => x.ProfileId = profileId)
+                .With(x=>x.Transactions = new List<TransactionEntity>())
+                .Do(x => x.Transactions.Add(transaction1))
+                .And(x => x.Transactions.Add(transaction2))
+                .Build();
 
             return expectedResult;
         }

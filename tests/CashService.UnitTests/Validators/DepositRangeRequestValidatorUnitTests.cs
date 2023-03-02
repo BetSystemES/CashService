@@ -1,11 +1,6 @@
-﻿// TODO: remove unused usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CashService.GRPC;
-using CashService.GRPC.Validators;
+﻿using CashService.GRPC;
+using CashService.GRPC.Infrastructure.Validators;
+using CashService.UnitTests.Validators.TestData;
 using FluentAssertions;
 using FluentValidation;
 using Google.Protobuf.Collections;
@@ -28,7 +23,7 @@ namespace CashService.UnitTests.Validators
             // Arrange
             var model = new DepositRangeRequest()
             {
-                Depositrangerequest = { transactionModels }
+                DepositRangeRequests = { transactionModels }
             };
 
             // Act
@@ -47,7 +42,7 @@ namespace CashService.UnitTests.Validators
             // Arrange
             var model = new DepositRangeRequest()
             {
-                Depositrangerequest =  { transactionModels }
+                DepositRangeRequests =  { transactionModels }
             };
 
             // Act

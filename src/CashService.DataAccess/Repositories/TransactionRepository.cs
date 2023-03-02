@@ -1,5 +1,5 @@
-﻿using CashService.BusinessLogic.Contracts.IRepositories;
-using CashService.EntityModels.Models;
+﻿using CashService.BusinessLogic.Contracts.Repositories;
+using CashService.BusinessLogic.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
