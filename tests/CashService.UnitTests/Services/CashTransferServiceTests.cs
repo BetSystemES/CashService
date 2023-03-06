@@ -15,13 +15,13 @@ namespace CashService.UnitTests.Services
 
         private readonly ICashService _cashService;
 
-        private readonly Mock<IRepository<TransactionEntity>> _mockTransactionRepository;
-        private readonly Mock<IRepository<TransactionProfileEntity>> _mockTransactionProfileRepository;
+        private readonly Mock<ITransactionRepository> _mockTransactionRepository;
+        private readonly Mock<ITransactionProfileRepository> _mockTransactionProfileRepository;
 
         private readonly Mock<ICashProvider> _mockCashProvider;
 
-        private readonly Mock<IProvider<TransactionEntity>> _mockTransactionProvider;
-        private readonly Mock<IProvider<TransactionProfileEntity>> _mockTransactionProfileProvider;
+        private readonly Mock<ITransactionProvider> _mockTransactionProvider;
+        private readonly Mock<ITransactionProfileProvider> _mockTransactionProfileProvider;
 
         private readonly Mock<IDataContext> _mockContext;
 

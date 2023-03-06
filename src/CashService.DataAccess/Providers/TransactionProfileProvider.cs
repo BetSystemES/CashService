@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CashService.DataAccess.Providers
 {
-    public class TransactionProfileProvider : IProvider<TransactionProfileEntity>
+    public class TransactionProfileProvider : ITransactionProfileProvider
     {
         private readonly DbSet<TransactionProfileEntity> _entities;
 

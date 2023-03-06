@@ -5,7 +5,7 @@ using CashService.BusinessLogic.Entities;
 
 namespace CashService.DataAccess.Providers
 {
-    public class TransactionProvider : IProvider<TransactionEntity>
+    public class TransactionProvider : ITransactionProvider
     {
         private readonly DbSet<TransactionEntity> _entities;
 

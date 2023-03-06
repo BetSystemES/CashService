@@ -16,7 +16,7 @@ var connectionString = builder.Configuration.GetConnectionString("CashDb");
 
 builder.Services.AddPostgreSqlContext(options =>
 {
-    options.UseNpgsql(connectionString);                
+    options.UseNpgsql(connectionString);
 });
 
 builder.Services.AddDbContext<CashDbContext>(options => options.UseNpgsql(connectionString));

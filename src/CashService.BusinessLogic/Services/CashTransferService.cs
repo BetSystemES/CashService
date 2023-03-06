@@ -9,21 +9,21 @@ namespace CashService.BusinessLogic.Services
 {
     public class CashTransferService : ICashService
     {
-        private readonly IRepository<TransactionEntity> _transactionEntityRepository;
-        private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
+        private readonly ITransactionRepository _transactionEntityRepository;
+        private readonly ITransactionProfileRepository _transactionProfileRepository;
         private readonly ICashProvider _cashProvider;
 
-        private readonly IProvider<TransactionEntity> _transactionEntityProvider;
-        private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
+        private readonly ITransactionProvider _transactionEntityProvider;
+        private readonly ITransactionProfileProvider _transactionProfileProvider;
 
         private readonly IDataContext _context;
 
         public CashTransferService(
-            IRepository<TransactionEntity> transactionEntityRepository,
-            IRepository<TransactionProfileEntity> transactionProfileRepository,
+            ITransactionRepository transactionEntityRepository,
+            ITransactionProfileRepository transactionProfileRepository,
             ICashProvider cashProvider,
-            IProvider<TransactionEntity> transactionEntityProvider,
-            IProvider<TransactionProfileEntity> transactionProfileProvider,
+            ITransactionProvider transactionEntityProvider,
+            ITransactionProfileProvider transactionProfileProvider,
             IDataContext context)
         {
             _transactionEntityRepository=transactionEntityRepository;

@@ -41,8 +41,8 @@ namespace CashService.DataAccess.Extensions
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services
-                .AddScoped<IRepository<TransactionProfileEntity>, TransactionProfileRepository>()
-                .AddScoped<IRepository<TransactionEntity>, TransactionRepository>();
+                .AddScoped<ITransactionProfileRepository, TransactionProfileRepository>()
+                .AddScoped<ITransactionRepository, TransactionRepository>();
             return services;
         }
 
@@ -55,8 +55,8 @@ namespace CashService.DataAccess.Extensions
         {
             services.AddScoped<ICashProvider, CashProvider>();
 
-            services.AddScoped<IProvider<TransactionProfileEntity>, TransactionProfileProvider>();
-            services.AddScoped<IProvider<TransactionEntity>, TransactionProvider>();
+            services.AddScoped<ITransactionProfileProvider, TransactionProfileProvider>();
+            services.AddScoped<ITransactionProvider, TransactionProvider>();
 
             return services;
         }
