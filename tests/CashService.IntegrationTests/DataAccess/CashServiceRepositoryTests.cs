@@ -15,13 +15,13 @@ namespace CashService.IntegrationTests.DataAccess
 
         private readonly IServiceScope _scope;
 
-        private readonly IRepository<TransactionProfileEntity> _transactionProfileRepository;
-        private readonly IRepository<TransactionEntity> _transactionRepository;
+        private readonly ITransactionProfileRepository _transactionProfileRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
         private readonly ICashProvider _cashProvider;
 
-        private readonly IProvider<TransactionProfileEntity> _transactionProfileProvider;
-        private readonly IProvider<TransactionEntity> _transactionProvider;
+        private readonly ITransactionProfileProvider _transactionProfileProvider;
+        private readonly ITransactionProvider _transactionProvider;
 
         private readonly IDataContext _context;
         
@@ -29,12 +29,12 @@ namespace CashService.IntegrationTests.DataAccess
         {
             _scope = factory.Services.CreateScope();
 
-            _transactionProfileRepository = _scope.ServiceProvider.GetRequiredService<IRepository<TransactionProfileEntity>>();
-            _transactionRepository = _scope.ServiceProvider.GetRequiredService<IRepository<TransactionEntity>>();
+            _transactionProfileRepository = _scope.ServiceProvider.GetRequiredService<ITransactionProfileRepository>();
+            _transactionRepository = _scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
             _cashProvider = _scope.ServiceProvider.GetRequiredService<ICashProvider>();
 
-            _transactionProfileProvider = _scope.ServiceProvider.GetRequiredService<IProvider<TransactionProfileEntity>>();
-            _transactionProvider = _scope.ServiceProvider.GetRequiredService<IProvider<TransactionEntity>>();
+            _transactionProfileProvider = _scope.ServiceProvider.GetRequiredService<ITransactionProfileProvider>();
+            _transactionProvider = _scope.ServiceProvider.GetRequiredService<ITransactionProvider>();
 
             _context = _scope.ServiceProvider.GetRequiredService<IDataContext>();
         }
