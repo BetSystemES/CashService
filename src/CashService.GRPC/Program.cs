@@ -1,7 +1,6 @@
 using CashService.DataAccess;
 using CashService.DataAccess.Extensions;
 using CashService.GRPC.Infrastructure.Configurations;
-using CashService.GRPC.Infrastructure.Configurations.SeriLog;
 using CashService.GRPC.Interceptors;
 using Microsoft.EntityFrameworkCore;
 

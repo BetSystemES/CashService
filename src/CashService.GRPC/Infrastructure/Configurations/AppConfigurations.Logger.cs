@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace CashService.GRPC.Infrastructure.Configurations.SeriLog
+namespace CashService.GRPC.Infrastructure.Configurations
 {
     public static class LoggerConfiguration
     {
