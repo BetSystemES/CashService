@@ -13,13 +13,8 @@ namespace CashService.GRPC.Infrastructure.Configurations
             {
                 config.AddProfile<DataAccessProfile>();
             });
-
             services.AddScoped<ICashService, CashTransferService>();
-
-            services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-
             return services;
         }
-
     }
 }

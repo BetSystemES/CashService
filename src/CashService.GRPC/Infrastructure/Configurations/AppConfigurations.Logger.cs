@@ -18,7 +18,6 @@ namespace CashService.GRPC.Infrastructure.Configurations
                     ? config.MinimumLevel.Debug()
                     : config.MinimumLevel.Warning();
             });
-
             return appBuilder;
         }
     }
