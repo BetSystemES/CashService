@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.DatabaseMigrato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashService.IntegrationTests", "tests\CashService.IntegrationTests\CashService.IntegrationTests.csproj", "{63A0742A-CC4E-4084-AE0E-658C09398E0A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{843C4267-48C8-4F20-B539-E7BA3ECB75E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{607A3808-1F10-49EA-AE5E-E16FC7667264} = {843C4267-48C8-4F20-B539-E7BA3ECB75E8}
+		{0DCC6623-7290-4CAB-8B5E-9882AF9602F9} = {843C4267-48C8-4F20-B539-E7BA3ECB75E8}
+		{63A0742A-CC4E-4084-AE0E-658C09398E0A} = {843C4267-48C8-4F20-B539-E7BA3ECB75E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70609955-1665-4533-88E6-66EEFBDCCE4D}
