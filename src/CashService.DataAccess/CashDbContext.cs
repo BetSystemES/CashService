@@ -12,7 +12,7 @@ namespace CashService.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .ApplyConfiguration(new TransactionProfileEntityConfiguration())
+                .ApplyConfiguration(new ProfileEntityConfiguration())
                 .ApplyConfiguration(new TransactionConfiguration());
 
             base.OnModelCreating(modelBuilder);

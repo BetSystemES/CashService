@@ -4,11 +4,11 @@ namespace CashService.BusinessLogic.Contracts.Services
 {
     public interface ICashService
     {
-        Task<TransactionProfileEntity> GetBalance(Guid profileId, CancellationToken token);
-        Task<TransactionProfileEntity> CalcBalance(Guid profileId, CancellationToken token);
-        Task Deposit(TransactionProfileEntity depositTransactionProfile, CancellationToken token);
-        Task<TransactionProfileEntity> Withdraw(TransactionProfileEntity withdrawTransactionProfile, CancellationToken token);
-        Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token);
-        Task<List<TransactionProfileEntity>> WithdrawRange(List<TransactionProfileEntity> withdrawRangeTransactionProfileEntities, CancellationToken token);
+        Task<ProfileEntity> GetBalance(Guid profileId, CancellationToken token);
+        Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token);
+        Task Deposit(ProfileEntity depositProfile, CancellationToken token);
+        Task<ProfileEntity> Withdraw(ProfileEntity withdrawProfile, CancellationToken token);
+        Task DepositRange(List<ProfileEntity> depositRangeProfileEntities, CancellationToken token);
+        Task<List<ProfileEntity>> WithdrawRange(List<ProfileEntity> withdrawRangeProfileEntities, CancellationToken token);
     }
 }

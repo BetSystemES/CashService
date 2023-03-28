@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CashService.DataAccess.Configuration
 {
-    public class TransactionProfileEntityConfiguration : IEntityTypeConfiguration<TransactionProfileEntity>
+    public class ProfileEntityConfiguration : IEntityTypeConfiguration<ProfileEntity>
     {
         /// <summary>Configures the entity of type <span class="typeparameter">TEntity</span>.</summary>
         /// <param name="builder">The builder to be used to configure the entity type.</param>
-        public void Configure(EntityTypeBuilder<TransactionProfileEntity> builder)
+        public void Configure(EntityTypeBuilder<ProfileEntity> builder)
         {
-            builder.HasKey(x => x.ProfileId);
-            builder.Property(x => x.ProfileId).ValueGeneratedNever();
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.HasMany(x => x.Transactions)
-                .WithOne(y => y.TransactionProfileEntity)
-                .HasForeignKey(z => z.TransactionProfileId);
+                .WithOne(y => y.ProfileEntity)
+                .HasForeignKey(z => z.ProfileId);
 
             builder.ToTable("TransactionProfile");
         }

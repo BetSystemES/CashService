@@ -10,79 +10,78 @@ namespace CashService.BusinessLogic.Services
     public class CashTransferService : ICashService
     {
         private readonly ITransactionRepository _transactionEntityRepository;
-        private readonly ITransactionProfileRepository _transactionProfileRepository;
+        private readonly IProfileRepository _profileRepository;
         private readonly ICashProvider _cashProvider;
 
         private readonly ITransactionProvider _transactionEntityProvider;
-        private readonly ITransactionProfileProvider _transactionProfileProvider;
+        private readonly IProfileProvider _profileProvider;
 
         private readonly IDataContext _context;
 
         public CashTransferService(
             ITransactionRepository transactionEntityRepository,
-            ITransactionProfileRepository transactionProfileRepository,
+            IProfileRepository profileRepository,
             ICashProvider cashProvider,
             ITransactionProvider transactionEntityProvider,
-            ITransactionProfileProvider transactionProfileProvider,
+            IProfileProvider profileProvider,
             IDataContext context)
         {
             _transactionEntityRepository=transactionEntityRepository;
-            _transactionProfileRepository=transactionProfileRepository;
+            _profileRepository=profileRepository;
             _cashProvider=cashProvider;
 
             _transactionEntityProvider = transactionEntityProvider;
-            _transactionProfileProvider = transactionProfileProvider;
+            _profileProvider = profileProvider;
 
             _context=context;
         }
 
-        public async Task<TransactionProfileEntity> GetBalance(Guid profileId, CancellationToken token)
+        public async Task<ProfileEntity> GetBalance(Guid profileId, CancellationToken token)
         {
-            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileId, token);
+            ProfileEntity balance = await _cashProvider.GetBalance(profileId, token);
             return balance;
         }
 
-        public async Task<TransactionProfileEntity> CalcBalance(Guid profileId, CancellationToken token)
+        public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
-            TransactionProfileEntity balance = await _cashProvider.CalcBalance(profileId, token);
+            ProfileEntity balance = await _cashProvider.CalcBalance(profileId, token);
             return balance;
         }
 
-        public async Task Deposit(TransactionProfileEntity depositTransactionProfile, CancellationToken token)
+        public async Task Deposit(ProfileEntity depositProfile, CancellationToken token)
         {
-            TransactionProfileEntity balance = await _cashProvider.GetBalance(depositTransactionProfile.ProfileId, token);
+            ProfileEntity balance = await _cashProvider.GetBalance(depositProfile.Id, token);
 
             if (balance is null)
             {
-                await _transactionProfileRepository.Add(depositTransactionProfile, token);
+                await _profileRepository.Add(depositProfile, token);
             }
             else
             {
-                await _transactionEntityRepository.AddRange(depositTransactionProfile.Transactions, token);
+                await _transactionEntityRepository.AddRange(depositProfile.Transactions, token);
             }
             await _context.SaveChanges(token);
         }
 
-        public async Task<TransactionProfileEntity> Withdraw(TransactionProfileEntity withdrawTransactionProfile, CancellationToken token)
+        public async Task<ProfileEntity> Withdraw(ProfileEntity withdrawProfile, CancellationToken token)
         {
-            var profileId = withdrawTransactionProfile.ProfileId;
+            var profileId = withdrawProfile.Id;
 
-            TransactionProfileEntity balance = await _cashProvider.GetBalance(profileId, token);
+            ProfileEntity balance = await _cashProvider.GetBalance(profileId, token);
 
             if (balance is not null)
             {
                 balance = await _cashProvider.CalcBalance(profileId, token);
 
-                withdrawTransactionProfile.CheckForUnite();
+                withdrawProfile.CheckForUnite();
 
-                balance.CalsIntersectionByCashType(withdrawTransactionProfile);
+                balance.CalsIntersectionByCashType(withdrawProfile);
 
-                var differenceList = withdrawTransactionProfile.DifferenceTransaction(balance);
+                var differenceList = withdrawProfile.DifferenceTransaction(balance);
 
-                withdrawTransactionProfile.ReCalcBalanceAndWithDraw(differenceList, balance);
+                withdrawProfile.ReCalcBalanceAndWithDraw(differenceList, balance);
 
-                //await _transactionProfileRepository.Add(withdrawTransactionProfile, token);
-                await _transactionEntityRepository.AddRange(withdrawTransactionProfile.Transactions, token);
+                await _transactionEntityRepository.AddRange(withdrawProfile.Transactions, token);
                 await _context.SaveChanges(token);
             }
             else
@@ -93,20 +92,20 @@ namespace CashService.BusinessLogic.Services
             return balance;
         }
 
-        public async Task DepositRange(List<TransactionProfileEntity> depositRangeTransactionProfileEntities, CancellationToken token)
+        public async Task DepositRange(List<ProfileEntity> depositRangeProfileEntities, CancellationToken token)
         {
-            foreach (var transactionProfileEntity in depositRangeTransactionProfileEntities)
+            foreach (var profileEntity in depositRangeProfileEntities)
             {
-               await Deposit(transactionProfileEntity, token);
+               await Deposit(profileEntity, token);
             }
         }
 
-        public async Task<List<TransactionProfileEntity>> WithdrawRange(List<TransactionProfileEntity> withdrawRangeTransactionProfileEntities, CancellationToken token)
+        public async Task<List<ProfileEntity>> WithdrawRange(List<ProfileEntity> withdrawRangeProfileEntities, CancellationToken token)
         {
-            List<TransactionProfileEntity> transactionProfileEntities = new();
-            foreach (var transactionProfileEntity in withdrawRangeTransactionProfileEntities)
+            List<ProfileEntity> transactionProfileEntities = new();
+            foreach (var profileEntity in withdrawRangeProfileEntities)
             {
-               var result = await Withdraw(transactionProfileEntity, token);
+               var result = await Withdraw(profileEntity, token);
                transactionProfileEntities.Add(result);
             }
             return transactionProfileEntities;

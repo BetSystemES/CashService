@@ -5,7 +5,7 @@ using CashService.BusinessLogic.Contracts.Services;
 using CashService.BusinessLogic.Entities;
 using CashService.BusinessLogic.Services;
 using Moq;
-using static CashService.UnitTests.Support.TestTransactionProfileEntityGenerator;
+using static CashService.UnitTests.Support.TestProfileEntityGenerator;
 
 namespace CashService.UnitTests.Services
 {
@@ -16,12 +16,12 @@ namespace CashService.UnitTests.Services
         private readonly ICashService _cashService;
 
         private readonly Mock<ITransactionRepository> _mockTransactionRepository;
-        private readonly Mock<ITransactionProfileRepository> _mockTransactionProfileRepository;
+        private readonly Mock<IProfileRepository> _mockProfileRepository;
 
         private readonly Mock<ICashProvider> _mockCashProvider;
 
         private readonly Mock<ITransactionProvider> _mockTransactionProvider;
-        private readonly Mock<ITransactionProfileProvider> _mockTransactionProfileProvider;
+        private readonly Mock<IProfileProvider> _mockProfileProvider;
 
         private readonly Mock<IDataContext> _mockContext;
 
@@ -29,22 +29,22 @@ namespace CashService.UnitTests.Services
         {
             //Init moqs for IRepository IRepository IProvider IDataContext
             _mockTransactionRepository = new();
-            _mockTransactionProfileRepository = new();
+            _mockProfileRepository = new();
 
             _mockCashProvider = new ();
 
             _mockTransactionProvider = new();
-            _mockTransactionProfileProvider = new();
+            _mockProfileProvider = new();
 
             _mockContext = new ();
 
             //Create Service
             _cashService = new CashTransferService(
                 _mockTransactionRepository.Object,
-                _mockTransactionProfileRepository.Object,
+                _mockProfileRepository.Object,
                 _mockCashProvider.Object,
                 _mockTransactionProvider.Object,
-                _mockTransactionProfileProvider.Object,
+                _mockProfileProvider.Object,
                 _mockContext.Object);
         }
 
@@ -52,7 +52,7 @@ namespace CashService.UnitTests.Services
         public async Task GetBalanceTest_Should_Call_GetBalance_and_Return_Result()
         {
             // Arrange
-            var expectedResult = GenerateTransactionProfile();
+            var expectedResult = GenerateProfile();
 
             //Init methods for mocks
             _mockCashProvider
@@ -75,7 +75,7 @@ namespace CashService.UnitTests.Services
         public async Task CalcBalanceTest_Should_Call_CalcBalance_and_Return_Result()
         {
             // Arrange
-            var expectedResult = GenerateTransactionProfile();
+            var expectedResult = GenerateProfile();
 
             //Init methods for mocks
 
@@ -86,7 +86,7 @@ namespace CashService.UnitTests.Services
 
             //Act
             //Call Service method
-            var actualResult = await _cashService.CalcBalance(new Guid(), _ctoken);
+            var actualResult = await _cashService.CalcBalanceWithinCashtype(new Guid(), _ctoken);
 
             //Assert
             //Verify method use
@@ -100,15 +100,15 @@ namespace CashService.UnitTests.Services
         public async Task DepositTest_IfNotExist_Should_Call_GetBalance_Add_ProfileRepository_and_SaveChanges()
         {
             // Arrange
-            var expectedResult = GenerateTransactionProfile();
+            var expectedResult = GenerateProfile();
 
             //Init methods for mocks
             _mockCashProvider
                 .Setup(_ => _.GetBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult<TransactionProfileEntity>(null));
+                .Returns(Task.FromResult<ProfileEntity>(null));
 
-            _mockTransactionProfileRepository
-                .Setup(_ => _.Add(It.IsAny<TransactionProfileEntity>(), It.IsAny<CancellationToken>()))
+            _mockProfileRepository
+                .Setup(_ => _.Add(It.IsAny<ProfileEntity>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             _mockContext
@@ -123,8 +123,8 @@ namespace CashService.UnitTests.Services
             //Verify method use
             _mockCashProvider
                 .Verify(_ => _.GetBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
-            _mockTransactionProfileRepository
-                .Verify(_ => _.Add(It.IsAny<TransactionProfileEntity>(), It.IsAny<CancellationToken>()), Times.Once());
+            _mockProfileRepository
+                .Verify(_ => _.Add(It.IsAny<ProfileEntity>(), It.IsAny<CancellationToken>()), Times.Once());
             _mockContext
                 .Verify(_ => _.SaveChanges(It.IsAny<CancellationToken>()), Times.Once());
         }
@@ -133,7 +133,7 @@ namespace CashService.UnitTests.Services
         public async Task DepositTest_IfExist_Should_Call_GetBalance_Add_TransactionRepository_and_SaveChanges()
         {
             // Arrange
-            var expectedResult = GenerateTransactionProfile();
+            var expectedResult = GenerateProfile();
 
             //Init methods for mocks
             _mockCashProvider
@@ -167,7 +167,7 @@ namespace CashService.UnitTests.Services
         public async Task WithDrawTest_Should_Call_GetBalance_AndIfNotNull_Call_CalcBalance_Add_EntityRepository_and_SaveChanges()
         {
             // Arrange
-            var expectedResult = GenerateTransactionProfile();
+            var expectedResult = GenerateProfile();
 
             //Init methods for mocks
             _mockCashProvider
@@ -207,12 +207,12 @@ namespace CashService.UnitTests.Services
         public async Task WithDrawTest_Should_Call_GetBalance_AndIfNull_Call_CalcBalance()
         {
             // Arrange
-            var expectedResult = GenerateTransactionProfile();
+            var expectedResult = GenerateProfile();
 
             //Init methods for mocks
             _mockCashProvider
                 .Setup(_ => _.GetBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult<TransactionProfileEntity>(null));
+                .Returns(Task.FromResult<ProfileEntity>(null));
 
             _mockCashProvider
                 .Setup(_ => _.CalcBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))

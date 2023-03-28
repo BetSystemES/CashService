@@ -5,10 +5,11 @@ namespace CashService.BusinessLogic.Entities
 {
     public class TransactionEntity
     {
-        [Key] public Guid TransactionId { get; set; }
-        [Required] public Guid TransactionProfileId { get; set; }
-        public TransactionProfileEntity TransactionProfileEntity { get; set; }
+        [Key] public Guid Id { get; set; }
+        [Required] public Guid ProfileId { get; set; }
+        public ProfileEntity ProfileEntity { get; set; }
         public CashType CashType { get; set; }
         public decimal Amount { get; set; }
+        public DateTimeOffset Date { get; set; }
     }
 }

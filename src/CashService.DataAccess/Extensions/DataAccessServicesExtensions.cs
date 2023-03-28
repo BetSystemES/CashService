@@ -28,7 +28,7 @@ namespace CashService.DataAccess.Extensions
                     .Set<TransactionEntity>());
             services.AddScoped(serviceProvider =>
                 serviceProvider.GetRequiredService<CashDbContext>()
-                    .Set<TransactionProfileEntity>());
+                    .Set<ProfileEntity>());
 
             return services;
         }
@@ -41,7 +41,7 @@ namespace CashService.DataAccess.Extensions
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services
-                .AddScoped<ITransactionProfileRepository, TransactionProfileRepository>()
+                .AddScoped<IProfileRepository, ProfileRepository>()
                 .AddScoped<ITransactionRepository, TransactionRepository>();
             return services;
         }
@@ -55,7 +55,7 @@ namespace CashService.DataAccess.Extensions
         {
             services.AddScoped<ICashProvider, CashProvider>();
 
-            services.AddScoped<ITransactionProfileProvider, TransactionProfileProvider>();
+            services.AddScoped<IProfileProvider, ProfileProvider>();
             services.AddScoped<ITransactionProvider, TransactionProvider>();
 
             return services;

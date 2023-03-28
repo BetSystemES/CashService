@@ -1,4 +1,3 @@
-using CashService.DataAccess;
 using CashService.DataAccess.Extensions;
 using CashService.GRPC.Infrastructure.Configurations;
 using CashService.GRPC.Interceptors;

@@ -2,7 +2,7 @@
 
 namespace CashService.BusinessLogic.Contracts.Repositories;
 
-public interface ITransactionProfileRepository : IDataRepository<TransactionProfileEntity>
+public interface IProfileRepository : IDataRepository<ProfileEntity>
 {
     
 }
