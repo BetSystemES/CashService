@@ -70,6 +70,7 @@ namespace CashService.BusinessLogic.Extensions
             ProfileEntity uniteProfile = new ()
             {
                 Id = profile.Id,
+                Transactions = new List<TransactionEntity>()
             };
 
             foreach (CashType cashType in Enum.GetValues(typeof(CashType)))

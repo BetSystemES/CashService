@@ -7,6 +7,7 @@ using Grpc.Core;
 using System.Security.Claims;
 using CashService.BusinessLogic.Models.Enums;
 using CashService.BusinessLogic.Models.Enums.Extensions;
+using CashService.BusinessLogic.Models.Criterias;
 
 namespace CashService.GRPC.Services
 {
@@ -41,6 +42,29 @@ namespace CashService.GRPC.Services
             {
                 Balance = balanceResponse
             };
+        }
+
+        public override async Task<GetPagedTransactionsHistoryResponse> GetPagedTransactionHistory(GetTransactionHistoryWithFilterRequest request, ServerCallContext context)
+        {
+            var token = context.CancellationToken;
+
+            //map
+            FilterCriteria filterCriteria = _mapper.Map<FilterCriteria>(request.TransactionHistoryFilter);
+
+            //profile service
+            var items = await _cashService.GetPagedTransactions(filterCriteria, token);
+
+            //map back
+            IEnumerable<Transaction> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>(items.Data);
+
+            GetPagedTransactionsHistoryResponse response = new GetPagedTransactionsHistoryResponse()
+            {
+                TotalCount = items.TotalCount
+            };
+
+            response.Transactions.AddRange(transactionEntities);
+
+            return response;
         }
 
         public override async Task<GetBalanceResponse> GetBalance(GetBalanceRequest request, ServerCallContext context)

@@ -6,9 +6,10 @@ namespace CashService.BusinessLogic.Models.Criterias
     {
         public List<Guid>? UserIds { get; set; }
         public CashType? CashType { get; set; }
-        public Equals? EqualsAmount { get; set; }
-        public decimal? Amount { get; set; }
-        public Equals? EqualsDate{ get; set; }
-        public DateTimeOffset? Date { get; set; }
+        public decimal? StartAmount { get; set; }
+        public decimal? EndAmount { get; set; }
+        public DateTimeOffset? StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
+        public string? SearchCriteria { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Models.Criterias;
 
 namespace CashService.GRPC.Infrastructure.Mappings
 {
@@ -19,6 +21,9 @@ namespace CashService.GRPC.Infrastructure.Mappings
                 .ForMember(dest => dest.Amount,
                     opt =>
                         opt.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.Date,
+                    opt =>
+                        opt.MapFrom(src => src.Date.ToDateTimeOffset()))
                 .ForMember(x => x.ProfileId, opt => opt.Ignore())
                 .ForMember(x => x.ProfileEntity, opt => opt.Ignore());
 
@@ -32,7 +37,10 @@ namespace CashService.GRPC.Infrastructure.Mappings
                         opt.MapFrom(src => src.CashType))
                 .ForMember(dest => dest.Amount,
                 opt =>
-                    opt.MapFrom(src => src.Amount));
+                    opt.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.Date,
+                    opt =>
+                        opt.MapFrom(src => Timestamp.FromDateTimeOffset(src.Date)));
 
 
             //CreateMap<IEnumerable<Transaction>, IEnumerable<TransactionEntity>>();
@@ -64,6 +72,40 @@ namespace CashService.GRPC.Infrastructure.Mappings
 
 
             CreateMap<CashType, BusinessLogic.Models.Enums.CashType>().ReverseMap();
+
+            CreateMap<FilterCriteria, TransactionHistoryFilter>()
+                .ForMember(dest => dest.UserIds,
+                    opt =>
+                        opt.MapFrom(src => src.UserIds.Select(x => x.ToString())))
+                .ForMember(dest => dest.StartDate,
+                    opt =>
+                        opt.MapFrom(src => src.StartDate != null ? Timestamp.FromDateTimeOffset((DateTimeOffset)src.StartDate!) : Timestamp.FromDateTimeOffset(DateTimeOffset.MinValue)))
+                .ForMember(dest => dest.EndDate,
+                    opt =>
+                        opt.MapFrom(src => src.EndDate != null ? Timestamp.FromDateTimeOffset((DateTimeOffset)src.EndDate!) : Timestamp.FromDateTimeOffset(DateTimeOffset.MinValue)));
+
+            CreateMap<TransactionHistoryFilter, FilterCriteria>()
+                .ForMember(dest => dest.UserIds,
+                    opt =>
+                        opt.MapFrom(src => src.UserIds.Select(Guid.Parse).ToList()))
+                .ForMember(dest => dest.PageSize,
+                    opt =>
+                        opt.MapFrom(src => src.PageSize == -1 ? (int?)null : src.PageSize))
+                .ForMember(dest => dest.PageNumber,
+                    opt =>
+                        opt.MapFrom(src => src.PageNumber == -1 ? (int?)null : src.PageNumber))
+                .ForMember(dest => dest.StartAmount,
+                    opt =>
+                        opt.MapFrom(src => src.StartAmount == -1 ? (decimal?)null : (decimal)src.StartAmount))
+                .ForMember(dest => dest.EndAmount,
+                    opt =>
+                        opt.MapFrom(src => src.EndAmount == -1 ? (decimal?)null : (decimal)src.EndAmount))
+                .ForMember(dest => dest.StartDate,
+                    opt =>
+                        opt.MapFrom(src => src.StartDate == Timestamp.FromDateTimeOffset(DateTimeOffset.MinValue) ? (DateTimeOffset?)null : src.StartDate.ToDateTimeOffset()))
+                .ForMember(dest => dest.EndDate,
+                    opt =>
+                        opt.MapFrom(src => src.EndDate == Timestamp.FromDateTimeOffset(DateTimeOffset.MinValue) ? (DateTimeOffset?)null : src.EndDate.ToDateTimeOffset()));
         }
     }
 }
