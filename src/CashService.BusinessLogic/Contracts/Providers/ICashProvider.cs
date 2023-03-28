@@ -7,5 +7,7 @@ namespace CashService.BusinessLogic.Contracts.Providers
         Task<ProfileEntity> GetBalance(Guid profileId, CancellationToken token);
 
         Task<ProfileEntity> CalcBalance(Guid profileId, CancellationToken token);
+
+      
     }
 }

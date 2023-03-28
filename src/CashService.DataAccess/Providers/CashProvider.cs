@@ -9,22 +9,22 @@ namespace CashService.DataAccess.Providers
     public class CashProvider : ICashProvider
     {
         private readonly DbSet<TransactionEntity> _transactionEntities;
-        private readonly DbSet<ProfileEntity> _transactionProfileEntities;
+        private readonly DbSet<ProfileEntity> _profileEntities;
 
         private readonly ILogger<CashProvider> _logger;
 
         public CashProvider(DbSet<TransactionEntity> transactionEntities,
-            DbSet<ProfileEntity> transactionProfileEntities,
+            DbSet<ProfileEntity> profileEntities,
             ILogger<CashProvider> logger)
         {
            _transactionEntities = transactionEntities;
-           _transactionProfileEntities = transactionProfileEntities;
+           _profileEntities = profileEntities;
            _logger = logger;
         }
 
         public async Task<ProfileEntity> GetBalance(Guid profileId, CancellationToken token)
         {
-            var result = await _transactionProfileEntities
+            var result = await _profileEntities
                 .AsNoTracking()
                 .Where(x => x.Id == profileId)
                 .Include(y => y.Transactions)
@@ -72,7 +72,7 @@ namespace CashService.DataAccess.Providers
 
         private async Task<decimal> SumAmountByCashType(Guid profileId, CashType cashType, CancellationToken token)
         {
-            var result = await _transactionProfileEntities
+            var result = await _profileEntities
                 .Where(x => x.Id == profileId)
                 .Include(y => y.Transactions)
                 .SelectMany(z => z.Transactions.Where(t => t.CashType == cashType))

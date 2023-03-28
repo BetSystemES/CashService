@@ -1,4 +1,6 @@
 ﻿using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Models.Criterias;
+using CashService.BusinessLogic.Models;
 
 namespace CashService.BusinessLogic.Contracts.Services
 {
@@ -10,5 +12,6 @@ namespace CashService.BusinessLogic.Contracts.Services
         Task<ProfileEntity> Withdraw(ProfileEntity withdrawProfile, CancellationToken token);
         Task DepositRange(List<ProfileEntity> depositRangeProfileEntities, CancellationToken token);
         Task<List<ProfileEntity>> WithdrawRange(List<ProfileEntity> withdrawRangeProfileEntities, CancellationToken token);
+        Task<PagedResponse<TransactionEntity>> GetPagedTransactions(FilterCriteria filterCriteria, CancellationToken token);
     }
 }
