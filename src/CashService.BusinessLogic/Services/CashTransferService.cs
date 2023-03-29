@@ -9,7 +9,6 @@ using CashService.BusinessLogic.Models.Criterias;
 using CashService.BusinessLogic.Models.Enums;
 using System.Linq.Expressions;
 using CashService.BusinessLogic.Helpers;
-using static CashService.BusinessLogic.Models.Enums.Equals;
 
 namespace CashService.BusinessLogic.Services
 {
@@ -77,7 +76,7 @@ namespace CashService.BusinessLogic.Services
 
         public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
-            ProfileEntity balance = await _cashProvider.CalcBalance(profileId, token);
+            ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
             return balance;
         }
 
@@ -104,7 +103,7 @@ namespace CashService.BusinessLogic.Services
 
             if (balance is not null)
             {
-                balance = await _cashProvider.CalcBalance(profileId, token);
+                balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
 
                 withdrawProfile.CheckForUnite();
 
@@ -119,7 +118,7 @@ namespace CashService.BusinessLogic.Services
             }
             else
             {
-                balance = await _cashProvider.CalcBalance(profileId, token);
+                balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
             }
 
             return balance;
@@ -170,27 +169,15 @@ namespace CashService.BusinessLogic.Services
                 predicate = predicate.And(x => x.CashType == filter.CashType.Value);
             }
 
-            if (filter.EqualsAmount.HasValue && filter.Amount.HasValue)
+            if (!string.IsNullOrEmpty(filter.SearchCriteria))
             {
-                predicate = filter.EqualsAmount.Value switch
-                {
-                    LessThan => predicate.And(x => x.Amount <= filter.Amount.Value),
-                    MoreThan => predicate.And(x => x.Amount >= filter.Amount.Value),
-                    Equal => predicate.And(x => x.Amount == filter.Amount.Value),
-                    _ => predicate
-                };
+                predicate = predicate.And(x => x.Id.ToString().ToLower().Contains(filter.SearchCriteria.ToLower()))
+                    .Or(x => x.ProfileId.ToString().ToLower().Contains(filter.SearchCriteria.ToLower()));
             }
 
-            if (filter.EqualsDate.HasValue && filter.Date.HasValue)
-            {
-                predicate = filter.EqualsDate.Value switch
-                {
-                    LessThan => predicate.And(x => x.Date <= filter.Date.Value),
-                    MoreThan => predicate.And(x => x.Date >= filter.Date.Value),
-                    Equal => predicate.And(x => x.Date == filter.Date.Value),
-                    _ => predicate
-                };
-            }
+            predicate = predicate.FilterPredicateByAmount(filter);
+
+            predicate = predicate.FilterPredicateByDate(filter);
 
             return predicate;
         }

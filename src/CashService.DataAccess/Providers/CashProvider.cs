@@ -32,7 +32,7 @@ namespace CashService.DataAccess.Providers
             return result;
         }
 
-        public async Task<ProfileEntity> CalcBalance(Guid profileId, CancellationToken token)
+        public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
             ProfileEntity profile = new ProfileEntity()
             {

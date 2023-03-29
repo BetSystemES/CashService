@@ -87,7 +87,7 @@ namespace CashService.IntegrationTests.DataAccess
             await _profileRepository.Add(expectedResult, _ctoken);
             await _context.SaveChanges(_ctoken);
 
-            var actualResult = await _cashProvider.CalcBalance(profileId, _ctoken);
+            var actualResult = await _cashProvider.CalcBalanceWithinCashtype(profileId, _ctoken);
 
             // Assert
             actualResult.Transactions[0].Amount.Should()
