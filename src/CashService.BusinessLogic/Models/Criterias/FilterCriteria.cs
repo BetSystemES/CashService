@@ -10,6 +10,5 @@ namespace CashService.BusinessLogic.Models.Criterias
         public decimal? EndAmount { get; set; }
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
-        public string? SearchCriteria { get; set; }
     }
 }

@@ -169,12 +169,6 @@ namespace CashService.BusinessLogic.Services
                 predicate = predicate.And(x => x.CashType == filter.CashType.Value);
             }
 
-            if (!string.IsNullOrEmpty(filter.SearchCriteria))
-            {
-                predicate = predicate.And(x => x.Id.ToString().ToLower().Contains(filter.SearchCriteria.ToLower()))
-                    .Or(x => x.ProfileId.ToString().ToLower().Contains(filter.SearchCriteria.ToLower()));
-            }
-
             predicate = predicate.FilterPredicateByAmount(filter);
 
             predicate = predicate.FilterPredicateByDate(filter);
