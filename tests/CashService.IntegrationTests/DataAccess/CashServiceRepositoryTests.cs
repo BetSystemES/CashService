@@ -4,7 +4,6 @@ using FluentAssertions;
 using CashService.BusinessLogic.Contracts;
 using CashService.BusinessLogic.Contracts.Repositories;
 using CashService.BusinessLogic.Entities;
-using CashService.BusinessLogic.Models.Enums;
 using static CashService.IntegrationTests.DataAccess.DataGenerator;
 
 namespace CashService.IntegrationTests.DataAccess
@@ -15,12 +14,12 @@ namespace CashService.IntegrationTests.DataAccess
 
         private readonly IServiceScope _scope;
 
-        private readonly ITransactionProfileRepository _transactionProfileRepository;
+        private readonly IProfileRepository _profileRepository;
         private readonly ITransactionRepository _transactionRepository;
 
         private readonly ICashProvider _cashProvider;
 
-        private readonly ITransactionProfileProvider _transactionProfileProvider;
+        private readonly IProfileProvider _profileProvider;
         private readonly ITransactionProvider _transactionProvider;
 
         private readonly IDataContext _context;
@@ -29,11 +28,11 @@ namespace CashService.IntegrationTests.DataAccess
         {
             _scope = factory.Services.CreateScope();
 
-            _transactionProfileRepository = _scope.ServiceProvider.GetRequiredService<ITransactionProfileRepository>();
+            _profileRepository = _scope.ServiceProvider.GetRequiredService<IProfileRepository>();
             _transactionRepository = _scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
             _cashProvider = _scope.ServiceProvider.GetRequiredService<ICashProvider>();
 
-            _transactionProfileProvider = _scope.ServiceProvider.GetRequiredService<ITransactionProfileProvider>();
+            _profileProvider = _scope.ServiceProvider.GetRequiredService<IProfileProvider>();
             _transactionProvider = _scope.ServiceProvider.GetRequiredService<ITransactionProvider>();
 
             _context = _scope.ServiceProvider.GetRequiredService<IDataContext>();
@@ -44,13 +43,13 @@ namespace CashService.IntegrationTests.DataAccess
         {
             // Arrange
             var profileId = Guid.NewGuid();
-            TransactionProfileEntity expectedResult = GenerateTransactionProfileEntity(profileId, 95,50);
+            ProfileEntity expectedResult = GenerateProfileEntity(profileId, 95,50);
 
             // Act
-            await _transactionProfileRepository.Add(expectedResult, _ctoken);
+            await _profileRepository.Add(expectedResult, _ctoken);
             await _context.SaveChanges(_ctoken);
 
-            var actualResult = await _transactionProfileProvider.Get(profileId, _ctoken);
+            var actualResult = await _profileProvider.Get(profileId, _ctoken);
 
             // Assert
             actualResult.Should()
@@ -63,13 +62,13 @@ namespace CashService.IntegrationTests.DataAccess
         {
             // Arrange
             var profileId = Guid.NewGuid();
-            TransactionProfileEntity expectedResult = GenerateTransactionProfileEntity(profileId, 95, 50);
+            ProfileEntity expectedResult = GenerateProfileEntity(profileId, 95, 50);
 
             // Act
-            await _transactionProfileRepository.Add(expectedResult, _ctoken);
+            await _profileRepository.Add(expectedResult, _ctoken);
             await _context.SaveChanges(_ctoken);
 
-            var actualResult = await _transactionProfileProvider.Get(profileId, _ctoken);
+            var actualResult = await _profileProvider.Get(profileId, _ctoken);
 
             // Assert
             actualResult.Should()
@@ -82,13 +81,13 @@ namespace CashService.IntegrationTests.DataAccess
         {
             // Arrange
             var profileId = Guid.NewGuid();
-            TransactionProfileEntity expectedResult = GenerateCashProfileEntity(profileId, 100, 50);
+            ProfileEntity expectedResult = GenerateCashProfileEntity(profileId, 100, 50);
 
             // Act
-            await _transactionProfileRepository.Add(expectedResult, _ctoken);
+            await _profileRepository.Add(expectedResult, _ctoken);
             await _context.SaveChanges(_ctoken);
 
-            var actualResult = await _cashProvider.CalcBalance(profileId, _ctoken);
+            var actualResult = await _cashProvider.CalcBalanceWithinCashtype(profileId, _ctoken);
 
             // Assert
             actualResult.Transactions[0].Amount.Should()

@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CashService.DataAccess.Repositories
 {
-    public class TransactionRepository : SqlRepository<TransactionEntity>, ITransactionRepository
+    public class ProfileRepository : SqlRepository<ProfileEntity>, IProfileRepository
     {
 
-        public TransactionRepository(DbSet<TransactionEntity> entities) : base(entities)
+        public ProfileRepository(DbSet<ProfileEntity> entities) : base(entities)
         {
         }
     }

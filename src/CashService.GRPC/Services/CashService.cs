@@ -4,6 +4,7 @@ using CashService.BusinessLogic.Entities;
 using CashService.GRPC.Enums;
 using CashService.GRPC.Extensions;
 using Grpc.Core;
+using CashService.BusinessLogic.Models.Criterias;
 
 namespace CashService.GRPC.Services
 {
@@ -29,7 +30,7 @@ namespace CashService.GRPC.Services
             Guid profileid = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
-            TransactionProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
+            ProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
 
             //map back
             TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
@@ -40,6 +41,31 @@ namespace CashService.GRPC.Services
             };
         }
 
+        public override async Task<GetPagedTransactionsHistoryResponse> GetPagedTransactionHistory(GetTransactionHistoryWithFilterRequest request, ServerCallContext context)
+        {
+            var token = context.CancellationToken;
+
+            //map
+            FilterCriteria filterCriteria = _mapper.Map<FilterCriteria>(request.TransactionHistoryFilter);
+
+            AccessCheck.CheckIds(filterCriteria.UserIds, context.GetHttpContext().User);
+
+            //profile service
+            var items = await _cashService.GetPagedTransactions(filterCriteria, token);
+
+            //map back
+            IEnumerable<Transaction> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>(items.Data);
+
+            GetPagedTransactionsHistoryResponse response = new GetPagedTransactionsHistoryResponse()
+            {
+                TotalCount = items.TotalCount
+            };
+
+            response.Transactions.AddRange(transactionEntities);
+
+            return response;
+        }
+
         public override async Task<GetBalanceResponse> GetBalance(GetBalanceRequest request, ServerCallContext context)
         {
             var token = context.CancellationToken;
@@ -48,7 +74,7 @@ namespace CashService.GRPC.Services
             Guid profileId = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
-            TransactionProfileEntity balanceResult = await _cashService.CalcBalance(profileId, token);
+            ProfileEntity balanceResult = await _cashService.CalcBalanceWithinCashtype(profileId, token);
 
             //map back
             TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
@@ -64,13 +90,13 @@ namespace CashService.GRPC.Services
             var token = context.CancellationToken;
 
             //map
-            TransactionProfileEntity depositTransactionProfile = _mapper.Map<TransactionProfileEntity>(request.Deposit);
+            ProfileEntity depositProfile = _mapper.Map<ProfileEntity>(request.Deposit);
 
             //remap
-            depositTransactionProfile.EntityRemapper();
+            depositProfile.EntityRemapper();
 
             //cashService
-            await _cashService.Deposit(depositTransactionProfile, token);
+            await _cashService.Deposit(depositProfile, token);
 
             return new DepositResponse();
         }
@@ -80,14 +106,14 @@ namespace CashService.GRPC.Services
             var token = context.CancellationToken;
 
             //map
-            TransactionProfileEntity withdrawTransactionProfile = _mapper.Map<TransactionProfileEntity>(request.Withdrawrequest);
+            ProfileEntity withdrawProfile = _mapper.Map<ProfileEntity>(request.Withdrawrequest);
 
             //remap
-            withdrawTransactionProfile.EntityRemapper();
-            withdrawTransactionProfile.WithdrawValueConverter();
+            withdrawProfile.EntityRemapper();
+            withdrawProfile.WithdrawValueConverter();
 
             //cashService
-            TransactionProfileEntity withdrawResult = await _cashService.Withdraw(withdrawTransactionProfile, token);
+            ProfileEntity withdrawResult = await _cashService.Withdraw(withdrawProfile, token);
 
             //map back
             TransactionModel withdrawResponse = _mapper.Map<TransactionModel>(withdrawResult);
@@ -119,7 +145,7 @@ namespace CashService.GRPC.Services
             var withdrawRangeTransactionProfileEntities = request.WithdrawRangeRequests.ReMapRepeatedTransactionModel(_mapper,  OperationType.Withdraw);
 
             //profile service
-            List<TransactionProfileEntity> withdrawRangeResult = await _cashService.WithdrawRange(withdrawRangeTransactionProfileEntities, token);
+            List<ProfileEntity> withdrawRangeResult = await _cashService.WithdrawRange(withdrawRangeTransactionProfileEntities, token);
 
             //map back
             var rangesResponses = withdrawRangeResult.ReMapBackRepeatedTransactionModel(_mapper);

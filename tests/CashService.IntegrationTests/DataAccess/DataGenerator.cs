@@ -6,16 +6,16 @@ namespace CashService.IntegrationTests.DataAccess
 {
     public static class DataGenerator
     {
-        public static TransactionProfileEntity GenerateTransactionProfileEntity(Guid profileId, decimal cashAmount,
+        public static ProfileEntity GenerateProfileEntity(Guid profileId, decimal cashAmount,
             decimal bonusAmount)
         {
             var transaction1 = GenerateCashTransactionEntity(profileId, cashAmount);
 
             var transaction2 = GenerateBonusTransactionEntity(profileId, bonusAmount);
 
-            var expectedResult = Builder<TransactionProfileEntity>
+            var expectedResult = Builder<ProfileEntity>
                 .CreateNew()
-                .With(x => x.ProfileId = profileId)
+                .With(x => x.Id = profileId)
                 .With(x => x.Transactions = new List<TransactionEntity>())
                 .Do(x => x.Transactions.Add(transaction1))
                 .And(x => x.Transactions.Add(transaction2))
@@ -28,8 +28,8 @@ namespace CashService.IntegrationTests.DataAccess
         {
             var transaction2 = Builder<TransactionEntity>
                 .CreateNew()
-                .With(x => x.TransactionId = Guid.NewGuid())
-                .With(x => x.TransactionProfileId = profileId)
+                .With(x => x.Id = Guid.NewGuid())
+                .With(x => x.ProfileId = profileId)
                 .With(x => x.CashType = CashType.Bonus)
                 .And(x => x.Amount = bonusAmount)
                 .Build();
@@ -40,24 +40,24 @@ namespace CashService.IntegrationTests.DataAccess
         {
             var transaction1 = Builder<TransactionEntity>
                 .CreateNew()
-                .With(x => x.TransactionId = Guid.NewGuid())
-                .With(x => x.TransactionProfileId = profileId)
+                .With(x => x.Id = Guid.NewGuid())
+                .With(x => x.ProfileId = profileId)
                 .With(x => x.CashType = CashType.Cash)
                 .And(x => x.Amount = cashAmount)
                 .Build();
             return transaction1;
         }
 
-        public static TransactionProfileEntity GenerateCashProfileEntity(Guid profileId, decimal cashAmount,
+        public static ProfileEntity GenerateCashProfileEntity(Guid profileId, decimal cashAmount,
             decimal cashAmount2)
         {
             var transaction1 = GenerateCashTransactionEntity(profileId, cashAmount);
 
             var transaction2 = GenerateCashTransactionEntity(profileId, cashAmount2);
 
-            var expectedResult = Builder<TransactionProfileEntity>
+            var expectedResult = Builder<ProfileEntity>
                 .CreateNew()
-                .With(x => x.ProfileId = profileId)
+                .With(x => x.Id = profileId)
                 .With(x => x.Transactions = new List<TransactionEntity>())
                 .Do(x => x.Transactions.Add(transaction1))
                 .And(x => x.Transactions.Add(transaction2))

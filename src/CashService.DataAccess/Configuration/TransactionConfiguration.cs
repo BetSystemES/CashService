@@ -10,17 +10,18 @@ namespace CashService.DataAccess.Configuration
         /// <param name="builder">The builder to be used to configure the entity type.</param>
         public void Configure(EntityTypeBuilder<TransactionEntity> builder)
         {
-            builder.HasKey(x => x.TransactionId);
-            builder.Property(x => x.TransactionId).ValueGeneratedNever();
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
-            builder.Property(x => x.TransactionProfileId).IsRequired();
+            builder.Property(x => x.ProfileId).IsRequired();
 
-            builder.HasOne(x => x.TransactionProfileEntity)
+            builder.HasOne(x => x.ProfileEntity)
                 .WithMany(y => y.Transactions)
-                .HasForeignKey(z => z.TransactionProfileId);
+                .HasForeignKey(z => z.ProfileId);
 
             builder.Property(x => x.CashType);
             builder.Property(x => x.Amount);
+            builder.Property(x => x.Date);
 
             builder.ToTable("Transaction");
         }

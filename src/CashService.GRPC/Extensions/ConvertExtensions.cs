@@ -7,44 +7,44 @@ namespace CashService.GRPC.Extensions
 {
     public static class ConvertExtensions
     {
-        public static void EntityRemapper(this TransactionProfileEntity transactionProfileEntity)
+        public static void EntityRemapper(this ProfileEntity profileEntity)
         {
-            foreach (var transactionEntity in transactionProfileEntity.Transactions)
+            foreach (var transactionEntity in profileEntity.Transactions)
             {
-                transactionEntity.TransactionProfileId = transactionProfileEntity.ProfileId;
+                transactionEntity.ProfileId = profileEntity.Id;
             }
         }
-        public static void WithdrawValueConverter(this TransactionProfileEntity transactionProfileEntity)
+        public static void WithdrawValueConverter(this ProfileEntity profileEntity)
         {
-            foreach (var transactionEntity in transactionProfileEntity.Transactions)
+            foreach (var transactionEntity in profileEntity.Transactions)
             {
                 transactionEntity.Amount *=  (-1);
             }
         }
 
-        public static List<TransactionProfileEntity> ReMapRepeatedTransactionModel(this RepeatedField<TransactionModel> transactionModels, IMapper mapper,  OperationType operationType)
+        public static List<ProfileEntity> ReMapRepeatedTransactionModel(this RepeatedField<TransactionModel> transactionModels, IMapper mapper,  OperationType operationType)
         {
-            List<TransactionProfileEntity> rangeTransactionProfileEntities = new();
+            List<ProfileEntity> rangeTransactionProfileEntities = new();
             foreach (var transactionModel in transactionModels)
             {
-                TransactionProfileEntity transactionProfile = mapper.Map<TransactionProfileEntity>(transactionModel);
-                EntityRemapper(transactionProfile);
+                ProfileEntity profile = mapper.Map<ProfileEntity>(transactionModel);
+                EntityRemapper(profile);
                 if (operationType == OperationType.Withdraw)
                 {
-                    WithdrawValueConverter(transactionProfile);
+                    WithdrawValueConverter(profile);
                 }
-                rangeTransactionProfileEntities.Add(transactionProfile);
+                rangeTransactionProfileEntities.Add(profile);
             }
 
             return rangeTransactionProfileEntities;
         }
 
-        public static RepeatedField<TransactionModel> ReMapBackRepeatedTransactionModel(this IEnumerable<TransactionProfileEntity> transactionProfileEntities, IMapper mapper)
+        public static RepeatedField<TransactionModel> ReMapBackRepeatedTransactionModel(this IEnumerable<ProfileEntity> profileEntities, IMapper mapper)
         {
             RepeatedField<TransactionModel> transactionModels = new();
-            foreach (var transactionProfileEntity in transactionProfileEntities)
+            foreach (var profileEntity in profileEntities)
             {
-                TransactionModel transactionModel = mapper.Map<TransactionModel>(transactionProfileEntity);
+                TransactionModel transactionModel = mapper.Map<TransactionModel>(profileEntity);
                 transactionModels.Add(transactionModel);
             }
 

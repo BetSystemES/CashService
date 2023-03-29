@@ -1,9 +1,9 @@
 ﻿namespace CashService.BusinessLogic.Models.Enums
 {
-    public enum CashType
+    public enum OrderDirection
     {
         Unspecified = 0,
-        Cash = 1,
-        Bonus = 2
+        Ascending = 1,
+        Descending = 2
     }
 }

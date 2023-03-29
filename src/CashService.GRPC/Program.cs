@@ -1,12 +1,14 @@
-using CashService.DataAccess;
 using CashService.DataAccess.Extensions;
 using CashService.GRPC.Infrastructure.Configurations;
+using CashService.GRPC.Infrastructure.Configurations.Jwt;
 using CashService.GRPC.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args)
     .AddAppSettings()
     .AddSerialLogger();
+
+var jwtConfig = builder.GetAppSettings<JwtConfig>();
 
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
@@ -20,6 +22,8 @@ builder.Services.AddPostgreSqlContext(options =>
 
 // Add services to the container.
 builder.Services
+    .AddJwtAuthentication(jwtConfig)
+    .AddAuthorization()
     .AddRepositories()
     .AddProviders()     
     .AddInfrastructureServices()
@@ -31,6 +35,9 @@ builder.Services
     });
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<CashService.GRPC.Services.CashService>();

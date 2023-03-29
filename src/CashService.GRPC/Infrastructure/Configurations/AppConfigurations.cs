@@ -1,7 +1,6 @@
 ﻿using CashService.BusinessLogic.Contracts.Services;
 using CashService.BusinessLogic.Services;
 using CashService.GRPC.Infrastructure.Mappings;
-using FluentValidation;
 
 namespace CashService.GRPC.Infrastructure.Configurations
 {
