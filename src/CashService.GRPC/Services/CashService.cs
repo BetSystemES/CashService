@@ -4,9 +4,6 @@ using CashService.BusinessLogic.Entities;
 using CashService.GRPC.Enums;
 using CashService.GRPC.Extensions;
 using Grpc.Core;
-using System.Security.Claims;
-using CashService.BusinessLogic.Models.Enums;
-using CashService.BusinessLogic.Models.Enums.Extensions;
 using CashService.BusinessLogic.Models.Criterias;
 
 namespace CashService.GRPC.Services
@@ -50,6 +47,8 @@ namespace CashService.GRPC.Services
 
             //map
             FilterCriteria filterCriteria = _mapper.Map<FilterCriteria>(request.TransactionHistoryFilter);
+
+            AccessCheck.CheckIds(filterCriteria.UserIds, context.GetHttpContext().User);
 
             //profile service
             var items = await _cashService.GetPagedTransactions(filterCriteria, token);
@@ -157,38 +156,5 @@ namespace CashService.GRPC.Services
 
             return response;
         }
-
-        private bool IsEnabledFilterByProfileIds(ClaimsPrincipal user)
-        {
-            var authRoles = user
-                .FindFirst(ClaimTypes.Role)?.Value.Split(',')
-                .Select(x => x.GetEnumItem<AuthRole>());
-
-            return authRoles is not null && authRoles.Contains(AuthRole.Admin);
-        }
-
-        private (bool isCorrect, Guid id) GetCurrentId(ClaimsPrincipal user)
-        {
-            var userId = user.FindFirstValue("id");
-            return (Guid.TryParse(userId, out Guid guid), guid);
-        }
-
-        private void CheckIds(List<Guid> ids, ClaimsPrincipal user)
-        {
-            (bool isCorrect, Guid id) = GetCurrentId(user);
-            if (isCorrect)
-            {
-                var isAdmin = IsEnabledFilterByProfileIds(user);
-                if (!isAdmin)
-                {
-                    ids.RemoveAll(x => x != id);
-                }
-            }
-            else
-            {
-                ids.Clear();
-            }
-        }
-
     }
 }

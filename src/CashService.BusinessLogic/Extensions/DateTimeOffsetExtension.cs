@@ -4,7 +4,7 @@
     {
         public static bool Between(this DateTimeOffset date, DateTimeOffset startDate, DateTimeOffset endDate)
         {
-            return startDate.CompareTo(date) == -1 && date.CompareTo(endDate) == -1;
+            return startDate <= date && date <= endDate;
         }
     }
 }

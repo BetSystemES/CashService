@@ -21,12 +21,12 @@ namespace CashService.BusinessLogic.Extensions
 
             if (filter.StartDate.HasValue && filter.EndDate == null)
             {
-                return predicate.And(x => x.Date > filter.StartDate.Value);
+                return predicate.And(x => x.Date >= filter.StartDate.Value);
             }
 
             if (filter.EndDate.HasValue && filter.StartDate == null)
             {
-                return predicate.And(x => x.Date < filter.EndDate.Value);
+                return predicate.And(x => x.Date <= filter.EndDate.Value);
             }
 
             return predicate;
@@ -41,18 +41,18 @@ namespace CashService.BusinessLogic.Extensions
                     return predicate.And(x => x.Amount == filter.StartAmount.Value);
                 }
 
-                return predicate.And(x => x.Amount > filter.StartAmount.Value)
-                    .And(x => x.Amount < filter.EndAmount.Value);
+                return predicate.And(x => x.Amount >= filter.StartAmount.Value)
+                    .And(x => x.Amount <= filter.EndAmount.Value);
             }
 
             if (filter.StartAmount.HasValue && filter.EndAmount == null)
             {
-                return predicate.And(x => x.Amount > filter.StartAmount.Value);
+                return predicate.And(x => x.Amount >= filter.StartAmount.Value);
             }
 
             if (filter.EndAmount.HasValue && filter.StartAmount == null)
             {
-                return predicate.And(x => x.Amount < filter.EndAmount.Value);
+                return predicate.And(x => x.Amount <= filter.EndAmount.Value);
             }
 
             return predicate;
