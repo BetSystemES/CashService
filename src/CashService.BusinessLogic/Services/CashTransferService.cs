@@ -147,7 +147,7 @@ namespace CashService.BusinessLogic.Services
         {
             var predicate = PredicateBuilderHelper.True<ProfileEntity>();
 
-            if (filter.UserIds != null && filter.UserIds.Any())
+            if (filter.UserIds is not null && filter.UserIds.Any())
             {
                 predicate = predicate.And(x => filter.UserIds.Contains(x.Id));
             }
@@ -159,7 +159,7 @@ namespace CashService.BusinessLogic.Services
         {
             var predicate = PredicateBuilderHelper.True<TransactionEntity>();
 
-            if (filter.UserIds != null && filter.UserIds.Any())
+            if (filter.UserIds is not null && filter.UserIds.Any())
             {
                 predicate = predicate.And(x => filter.UserIds.Contains(x.ProfileId));
             }
