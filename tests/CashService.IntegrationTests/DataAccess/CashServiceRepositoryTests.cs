@@ -4,6 +4,7 @@ using FluentAssertions;
 using CashService.BusinessLogic.Contracts;
 using CashService.BusinessLogic.Contracts.Repositories;
 using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Services;
 using static CashService.IntegrationTests.DataAccess.DataGenerator;
 
 namespace CashService.IntegrationTests.DataAccess
@@ -36,6 +37,71 @@ namespace CashService.IntegrationTests.DataAccess
             _transactionProvider = _scope.ServiceProvider.GetRequiredService<ITransactionProvider>();
 
             _context = _scope.ServiceProvider.GetRequiredService<IDataContext>();
+        }
+
+        [Fact]
+        public async Task Test_Transactions_Deposit()
+        {
+            // Arrange
+            var cashTransferService = new CashTransferService(
+                _transactionRepository,
+                _profileRepository,
+                _cashProvider,
+                _transactionProvider,
+                _profileProvider,
+                _context);
+
+            var cashTransferService2 = new CashTransferService(
+                _transactionRepository,
+                _profileRepository,
+                _cashProvider,
+                _transactionProvider,
+                _profileProvider,
+                _context);
+
+            var profileId = Guid.NewGuid();
+            ProfileEntity profileEntity = GenerateProfileEntity(profileId, 50, 0);
+            ProfileEntity profileEntity2 = GenerateProfileEntity(profileId, 40, 0);
+
+            // Act
+            await cashTransferService.Deposit(profileEntity, _ctoken);
+            await cashTransferService2.Deposit(profileEntity2, _ctoken);
+
+            var actualResult = await _profileProvider.Get(profileId, _ctoken);
+        }
+
+        [Fact]
+        public async Task Test_Transactions_Widthdraw()
+        {
+            // Arrange
+            var cashTransferService = new CashTransferService(
+                _transactionRepository,
+                _profileRepository,
+                _cashProvider,
+                _transactionProvider,
+                _profileProvider,
+                _context);
+
+            var cashTransferService2 = new CashTransferService(
+                _transactionRepository,
+                _profileRepository,
+                _cashProvider,
+                _transactionProvider,
+                _profileProvider,
+                _context);
+
+            var profileId = Guid.NewGuid();
+            var profileEntity = GenerateProfileEntity(profileId, 95, 50);
+            var profileEntity2 = GenerateProfileEntity(profileId, 50, 0);
+            var profileEntity3 = GenerateProfileEntity(profileId, 40, 00);
+
+            // Act
+            await cashTransferService.Deposit(profileEntity, _ctoken);
+
+            await cashTransferService.Withdraw(profileEntity2, _ctoken);
+            await cashTransferService2.Withdraw(profileEntity3, _ctoken);
+
+            var actualResult = await _profileProvider.Get(profileId, _ctoken);
         }
 
         [Fact]

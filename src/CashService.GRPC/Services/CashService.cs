@@ -1,6 +1,7 @@
 using AutoMapper;
 using CashService.BusinessLogic.Contracts.Services;
 using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Models;
 using CashService.GRPC.Enums;
 using CashService.GRPC.Extensions;
 using Grpc.Core;
@@ -51,7 +52,7 @@ namespace CashService.GRPC.Services
             AccessCheck.CheckIds(filterCriteria.UserIds, context.GetHttpContext().User);
 
             //profile service
-            var items = await _cashService.GetPagedTransactions(filterCriteria, token);
+            PagedResponse<TransactionEntity> items = await _cashService.GetPagedTransactions(filterCriteria, token);
 
             //map back
             IEnumerable<Transaction> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>(items.Data);
