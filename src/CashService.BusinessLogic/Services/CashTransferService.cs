@@ -1,4 +1,5 @@
-﻿using CashService.BusinessLogic.Contracts;
+﻿using System.Data;
+using CashService.BusinessLogic.Contracts;
 using CashService.BusinessLogic.Contracts.Providers;
 using CashService.BusinessLogic.Contracts.Repositories;
 using CashService.BusinessLogic.Contracts.Services;
@@ -9,6 +10,7 @@ using CashService.BusinessLogic.Models.Criterias;
 using CashService.BusinessLogic.Models.Enums;
 using System.Linq.Expressions;
 using CashService.BusinessLogic.Helpers;
+using static CashService.BusinessLogic.Helpers.Support;
 
 namespace CashService.BusinessLogic.Services
 {
@@ -58,7 +60,7 @@ namespace CashService.BusinessLogic.Services
             var pagedTransactions = await _transactionEntityProvider.GetPagedTransactions(
                 expressionTransaction,
                 orderTransaction,
-                skipTransaction, takeTransaction, 
+                skipTransaction, takeTransaction,
                 cancellationToken);
 
             var totalCount = await _transactionEntityProvider.GetCount(
@@ -82,17 +84,31 @@ namespace CashService.BusinessLogic.Services
 
         public async Task Deposit(ProfileEntity depositProfile, CancellationToken token)
         {
-            ProfileEntity balance = await _cashProvider.GetBalance(depositProfile.Id, token);
+            await using (var transaction = await _context.BeginTransaction(IsolationLevel.ReadCommitted, token))
+            {
+                try
+                {
+                    ProfileEntity balance = await _cashProvider.GetBalance(depositProfile.Id, token);
 
-            if (balance is null)
-            {
-                await _profileRepository.Add(depositProfile, token);
+                    if (balance is null)
+                    {
+                        await _profileRepository.Add(depositProfile, token);
+                    }
+                    else
+                    {
+                        await _transactionEntityRepository.AddRange(depositProfile.Transactions, token);
+                    }
+
+                    await _context.SaveChanges(token);
+
+                    await transaction.CommitAsync(token);
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync(token);
+                    throw;
+                }
             }
-            else
-            {
-                await _transactionEntityRepository.AddRange(depositProfile.Transactions, token);
-            }
-            await _context.SaveChanges(token);
         }
 
         public async Task<ProfileEntity> Withdraw(ProfileEntity withdrawProfile, CancellationToken token)
@@ -103,24 +119,36 @@ namespace CashService.BusinessLogic.Services
 
             if (balance is not null)
             {
-                balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
+                await using (var transaction = await _context.BeginTransaction(IsolationLevel.RepeatableRead, token))
+                {
+                    try
+                    {
+                        balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
 
-                withdrawProfile.CheckForUnite();
+                        withdrawProfile.CheckForUnite();
 
-                balance.CalsIntersectionByCashType(withdrawProfile);
+                        balance.CalsIntersectionByCashType(withdrawProfile);
 
-                var differenceList = withdrawProfile.DifferenceTransaction(balance);
+                        var differenceList = withdrawProfile.DifferenceTransaction(balance);
 
-                withdrawProfile.ReCalcBalanceAndWithDraw(differenceList, balance);
+                        withdrawProfile.ReCalcBalanceAndWithDraw(differenceList, balance);
 
-                await _transactionEntityRepository.AddRange(withdrawProfile.Transactions, token);
-                await _context.SaveChanges(token);
+                        await _transactionEntityRepository.AddRange(withdrawProfile.Transactions, token);
+                        await _context.SaveChanges(token);
+
+                        await transaction.CommitAsync(token);
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync(token);
+                        throw;
+                    }
+                }
             }
             else
             {
-                balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
+                balance = GenarateEmptyBalance(profileId);
             }
-
             return balance;
         }
 
@@ -128,7 +156,7 @@ namespace CashService.BusinessLogic.Services
         {
             foreach (var profileEntity in depositRangeProfileEntities)
             {
-               await Deposit(profileEntity, token);
+                await Deposit(profileEntity, token);
             }
         }
 
@@ -137,8 +165,8 @@ namespace CashService.BusinessLogic.Services
             List<ProfileEntity> transactionProfileEntities = new();
             foreach (var profileEntity in withdrawRangeProfileEntities)
             {
-               var result = await Withdraw(profileEntity, token);
-               transactionProfileEntities.Add(result);
+                var result = await Withdraw(profileEntity, token);
+                transactionProfileEntities.Add(result);
             }
             return transactionProfileEntities;
         }

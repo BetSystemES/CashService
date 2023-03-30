@@ -1,4 +1,7 @@
-﻿namespace CashService.BusinessLogic.Contracts
+﻿using System.Data;
+using Microsoft.EntityFrameworkCore.Storage;
+
+namespace CashService.BusinessLogic.Contracts
 {
     public interface IDataContext
     {
@@ -8,5 +11,6 @@
         ///   Task
         /// </returns>
         Task SaveChanges(CancellationToken token);
+        Task<IDbContextTransaction> BeginTransaction(IsolationLevel isolationLevel, CancellationToken token);
     }
 }
