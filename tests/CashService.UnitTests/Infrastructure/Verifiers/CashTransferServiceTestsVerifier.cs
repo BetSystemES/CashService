@@ -52,7 +52,7 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
         public CashTransferServiceTestsVerifier VerifyMockCashProviderGetBalance()
         {
             _mockCashProvider
-                .Verify(_ => _.GetBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+                .Verify(_ => _.GetTransactionsHistory(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
             return this;
         }

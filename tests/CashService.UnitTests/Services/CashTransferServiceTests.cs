@@ -18,7 +18,7 @@ namespace CashService.UnitTests.Services
                 .Build();
 
             //Act
-            var actualResult = await verifier.CashService.GetBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>());
+            var actualResult = await verifier.CashService.GetTransactionsHistory(It.IsAny<Guid>(), It.IsAny<CancellationToken>());
 
             //Assert
             verifier.ExpectedResult.Should().Be(actualResult);

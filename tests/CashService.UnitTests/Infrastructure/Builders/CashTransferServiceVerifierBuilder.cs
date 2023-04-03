@@ -118,7 +118,7 @@ namespace CashService.UnitTests.Infrastructure.Builders
         public CashTransferServiceVerifierBuilder SetupMockCashProviderGetBalance(bool isExpectedResultExists)
         {
             _mockCashProvider
-                .Setup(_ => _.GetBalance(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))!
+                .Setup(_ => _.GetTransactionsHistory(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))!
                 .ReturnsAsync(isExpectedResultExists ? _expectedResult! : default(ProfileEntity))
                 .Verifiable();
 

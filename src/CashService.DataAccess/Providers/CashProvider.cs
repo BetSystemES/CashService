@@ -22,7 +22,7 @@ namespace CashService.DataAccess.Providers
            _logger = logger;
         }
 
-        public async Task<ProfileEntity> GetBalance(Guid profileId, CancellationToken token)
+        public async Task<ProfileEntity> GetTransactionsHistory(Guid profileId, CancellationToken token)
         {
             var result = await _profileEntities
                 .AsNoTracking()

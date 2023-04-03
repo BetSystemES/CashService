@@ -31,7 +31,7 @@ namespace CashService.GRPC.Services
             Guid profileid = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
-            ProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
+            ProfileEntity balanceResult = await _cashService.GetTransactionsHistory(profileid, token);
 
             //map back
             TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
@@ -55,7 +55,7 @@ namespace CashService.GRPC.Services
             PagedResponse<TransactionEntity> items = await _cashService.GetPagedTransactions(filterCriteria, token);
 
             //map back
-            IEnumerable<Transaction> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>(items.Data);
+            IEnumerable<TransactionModel> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<TransactionModel>>(items.Data);
 
             GetPagedTransactionsHistoryResponse response = new GetPagedTransactionsHistoryResponse()
             {
@@ -97,9 +97,15 @@ namespace CashService.GRPC.Services
             depositProfile.EntityRemapper();
 
             //cashService
-            await _cashService.Deposit(depositProfile, token);
+            var result = await _cashService.Deposit(depositProfile, token);
 
-            return new DepositResponse();
+            //map back
+            var transactionModel = _mapper.Map<TransactionModel>(result);
+
+            return new DepositResponse()
+            {
+                Depositresponse = transactionModel
+            };
         }
 
         public override async Task<WithdrawResponse> Withdraw(WithdrawRequest request, ServerCallContext context)
@@ -113,8 +119,17 @@ namespace CashService.GRPC.Services
             withdrawProfile.EntityRemapper();
             withdrawProfile.WithdrawValueConverter();
 
-            //cashService
-            ProfileEntity withdrawResult = await _cashService.Withdraw(withdrawProfile, token);
+            ProfileEntity? withdrawResult = default;
+            try
+            {
+                //cashService
+                withdrawResult = await _cashService.Withdraw(withdrawProfile, token);
+            }
+            catch (Exception)
+            {
+                throw new RpcException(Status.DefaultCancelled, 
+                    $"An error occurred in widthdraw operation with ProfileId:{request.Withdrawrequest.ProfileId}");
+            }
 
             //map back
             TransactionModel withdrawResponse = _mapper.Map<TransactionModel>(withdrawResult);

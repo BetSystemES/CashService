@@ -1,14 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CashService.BusinessLogic.Contracts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Polly;
 
 namespace CashService.DataAccess.Repositories
 {
     public class SqlRepository<TEntity> where TEntity : class
     {
+        private readonly DbContext _dbContext;
         private readonly DbSet<TEntity> _entities;
 
-        protected SqlRepository(DbSet<TEntity> entities)
+        protected SqlRepository(DbContext dbContext)
         {
-            _entities = entities;
+            _entities = dbContext.Set<TEntity>();
+            _dbContext = dbContext;
+        }
+
+        public EntityEntry Attach(TEntity entity)
+        {
+            return _dbContext.Attach(entity);
         }
 
         public virtual async Task Add(TEntity entity, CancellationToken token)

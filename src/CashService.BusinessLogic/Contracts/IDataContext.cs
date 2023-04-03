@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CashService.BusinessLogic.Contracts
@@ -11,6 +12,8 @@ namespace CashService.BusinessLogic.Contracts
         ///   Task
         /// </returns>
         Task SaveChanges(CancellationToken token);
+
+        public IExecutionStrategy CreateExecutionStrategy();
         Task<IDbContextTransaction> BeginTransaction(IsolationLevel isolationLevel, CancellationToken token);
     }
 }
