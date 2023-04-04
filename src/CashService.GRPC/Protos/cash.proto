@@ -8,7 +8,7 @@ package cash;
 
 // The CashService definition.
 service CashService {
-
+  rpc CreateCashProfile (CreateCashProfileRequest) returns (CreateCashProfileResponse);
   rpc GetTransactionsHistory (GetTransactionsHistoryRequest) returns (GetTransactionsHistoryResponse);
   rpc GetPagedTransactionHistory (GetTransactionHistoryWithFilterRequest) returns (GetPagedTransactionsHistoryResponse);
   rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
@@ -18,6 +18,12 @@ service CashService {
   rpc WithdrawRange (WithdrawRangeRequest) returns (WithdrawRangeResponse);
 }
 
+message CreateCashProfileRequest {
+	string user_id = 1;
+}
+
+message CreateCashProfileResponse {
+}
 
 message GetTransactionsHistoryRequest {
 	string profile_id = 1;
