@@ -1,5 +1,3 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
 WORKDIR /app
 
@@ -20,4 +18,4 @@ RUN dotnet publish "CashService.FunctionalTests.csproj" -c Release -o /app/publi
 FROM publish AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CashService.FunctionalTests.dll"]
+ENTRYPOINT ["dotnet", "test", "CashService.FunctionalTests.dll"]
