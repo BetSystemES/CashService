@@ -18,6 +18,7 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
         private readonly Mock<ITransactionProvider> _mockTransactionProvider;
         private readonly Mock<IProfileProvider> _mockProfileProvider;
         private readonly Mock<IDataContext> _mockContext;
+        private readonly IResilientService _resilientService;
 
         public ProfileEntity? ExpectedResult;
         public PagedResponse<TransactionEntity>? ExpectedResponse;
@@ -35,7 +36,8 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
             ProfileEntity expectedResult,
             PagedResponse<TransactionEntity>? expectedResponse,
             FilterCriteria? filterCriteria,
-            ICashService cashService)
+            ICashService cashService,
+            IResilientService resilientService)
         {
             _mockTransactionRepository = mockTransactionRepository;
             _mockProfileRepository = mockProfileRepository;
@@ -47,6 +49,7 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
             ExpectedResponse = expectedResponse;
             FilterCriteria = filterCriteria;
             CashService = cashService;
+            _resilientService = resilientService;
         }
 
         public CashTransferServiceTestsVerifier VerifyMockCashProviderGetBalance()
@@ -69,6 +72,22 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
         {
             _mockProfileRepository
                 .Verify(_ => _.Add(It.IsAny<ProfileEntity>(), It.IsAny<CancellationToken>()), Times.Once);
+
+            return this;
+        }
+
+        public CashTransferServiceTestsVerifier VerifyMockProfileRepositoryUpdate()
+        {
+            _mockProfileRepository
+                .Verify(_ => _.Update(It.IsAny<ProfileEntity>(), It.IsAny<CancellationToken>()));
+
+            return this;
+        }
+
+        public CashTransferServiceTestsVerifier VerifyProfileProviderGet()
+        {
+            _mockProfileProvider
+                .Verify(_ => _.Get(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
             return this;
         }

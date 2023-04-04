@@ -53,7 +53,8 @@ namespace CashService.GRPC.Infrastructure.Mappings
                         opt.MapFrom(src => Guid.Parse(src.ProfileId)))
                 .ForMember(dest => dest.Transactions,
                     opt =>
-                        opt.MapFrom(src => src.Transactions));
+                        opt.MapFrom(src => src.Transactions))
+                .ForMember(x => x.RowVersion, opt => opt.Ignore());
             //.ForMember(x=>x.Id, opt=>opt.Ignore());
 
             //Entity->proto

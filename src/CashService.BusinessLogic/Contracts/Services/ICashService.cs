@@ -1,6 +1,6 @@
 ﻿using CashService.BusinessLogic.Entities;
-using CashService.BusinessLogic.Models.Criterias;
 using CashService.BusinessLogic.Models;
+using CashService.BusinessLogic.Models.Criterias;
 
 namespace CashService.BusinessLogic.Contracts.Services
 {

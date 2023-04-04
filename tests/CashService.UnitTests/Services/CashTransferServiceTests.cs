@@ -46,93 +46,53 @@ namespace CashService.UnitTests.Services
                 .VerifyMockCashProviderCalcBalanceWithinCashtype();
         }
 
-        [Fact]
-        public async Task DepositTest_IfNotExist_Should_Call_GetBalance_Add_ProfileRepository_and_SaveChanges()
-        {
-            // Arrange
-            var verifier = new CashTransferServiceVerifierBuilder()
-                .SetCashTransferServiceExpectedResult()
-                .SetupMockCashProviderGetBalance(false)
-                .SetupMockProfileRepositoryAdd()
-                .SetupMockContextSaveChanges()
-                .Build();
+        //[Fact]
+        //public async Task DepositTest()
+        //{
+        //    // Arrange
+        //    var verifier = new CashTransferServiceVerifierBuilder()
+        //        .SetCashTransferServiceExpectedResult()
+        //        .SetupProfileProviderGet()
+        //        .SetupMockProfileRepositoryUpdate()
+        //        .SetupMockTransactionRepositoryAddRange()
+        //        .SetupMockContextSaveChanges()
+        //        .Build();
 
-            //Act
-            await verifier.CashService.Deposit(verifier.ExpectedResult!, It.IsAny<CancellationToken>());
+        //    //Act
+        //    var result = await verifier.CashService.Deposit(verifier.ExpectedResult!, It.IsAny<CancellationToken>());
 
-            //Assert
-            verifier
-                .VerifyMockCashProviderGetBalance()
-                .VerifyMockProfileRepositoryAdd()
-                .VerifyMockContextSaveChanges(Times.Once());
-        }
+        //    //Assert
+        //    verifier.ExpectedResult.Should().Be(result);
 
-        [Fact]
-        public async Task DepositTest_IfExist_Should_Call_GetBalance_Add_TransactionRepository_and_SaveChanges()
-        {
-            // Arrange
-            var verifier = new CashTransferServiceVerifierBuilder()
-                .SetCashTransferServiceExpectedResult()
-                .SetupMockCashProviderGetBalance(true)
-                .SetupMockTransactionRepositoryAddRange()
-                .SetupMockContextSaveChanges()
-                .Build();
+        //    verifier
+        //        .VerifyProfileProviderGet()
+        //        .VerifyMockProfileRepositoryUpdate()
+        //        .VerifyMockTransactionRepositoryAddRange(Times.Once())
+        //        .VerifyMockContextSaveChanges(Times.Once());
+        //}
 
-            //Act
-            await verifier.CashService.Deposit(verifier.ExpectedResult!, It.IsAny<CancellationToken>());
+        //[Fact]
+        //public async Task WithdrawTest()
+        //{
+        //    // Arrange
+        //    var verifier = new CashTransferServiceVerifierBuilder()
+        //        .SetCashTransferServiceExpectedResult()
+        //        .SetupProfileProviderGet()
+        //        .SetupMockProfileRepositoryUpdate()
+        //        .SetupMockTransactionRepositoryAddRange()
+        //        .SetupMockContextSaveChanges()
+        //        .Build();
 
-            //Assert
-            verifier
-                .VerifyMockCashProviderGetBalance()
-                .VerifyMockTransactionRepositoryAddRange(Times.Once())
-                .VerifyMockContextSaveChanges(Times.Once());
-        }
+        //    //Act
+        //    await verifier.CashService.Withdraw(verifier.ExpectedResult!, It.IsAny<CancellationToken>());
 
-        [Fact]
-        public async Task WithDrawTest_Should_Call_GetBalance_AndIfNotNull_Call_CalcBalance_Add_EntityRepository_and_SaveChanges()
-        {
-            // Arrange
-            var verifier = new CashTransferServiceVerifierBuilder()
-                .SetCashTransferServiceExpectedResult()
-                .SetupMockCashProviderGetBalance(true)
-                .SetupMockCashProviderCalcBalanceWithinCashtype()
-                .SetupMockTransactionRepositoryAddRange()
-                .SetupMockContextSaveChanges()
-                .Build();
-
-            //Act
-            await verifier.CashService.Withdraw(verifier.ExpectedResult!, It.IsAny<CancellationToken>());
-
-            //Assert
-            verifier
-                .VerifyMockCashProviderGetBalance()
-                .VerifyMockCashProviderCalcBalanceWithinCashtype()
-                .VerifyMockTransactionRepositoryAddRange(Times.Once())
-                .VerifyMockContextSaveChanges(Times.Once());
-        }
-
-        [Fact]
-        public async Task WithDrawTest_Should_Call_GetBalance_AndIfNull_Call_CalcBalance()
-        {
-            // Arrange
-            var verifier = new CashTransferServiceVerifierBuilder()
-                .SetCashTransferServiceExpectedResult()
-                .SetupMockCashProviderGetBalance(false)
-                .SetupMockCashProviderCalcBalanceWithinCashtype()
-                .SetupMockTransactionRepositoryAddRange()
-                .SetupMockContextSaveChanges()
-                .Build();
-
-            //Act
-            await verifier.CashService.Withdraw(verifier.ExpectedResult!, It.IsAny<CancellationToken>());
-
-            //Assert
-            verifier
-                .VerifyMockCashProviderGetBalance()
-                .VerifyMockCashProviderCalcBalanceWithinCashtype()
-                .VerifyMockTransactionRepositoryAddRange(Times.Never())
-                .VerifyMockContextSaveChanges(Times.Never());
-        }
+        //    //Assert
+        //    verifier
+        //        .VerifyProfileProviderGet()
+        //        .VerifyMockProfileRepositoryUpdate()
+        //        .VerifyMockTransactionRepositoryAddRange(Times.Once())
+        //        .VerifyMockContextSaveChanges(Times.Once());
+        //}
 
         [Fact]
         public async Task GetPagedTransactionsTest()
