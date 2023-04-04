@@ -15,6 +15,7 @@ namespace CashService.GRPC.Infrastructure.Configurations
                 config.AddProfile<DataAccessProfile>();
             });
             services.AddScoped<ICashService, CashTransferService>();
+            services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IResilientService, ResilientService>();
             return services;
         }

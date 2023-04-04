@@ -16,11 +16,24 @@ namespace CashService.GRPC.Services
         private readonly IMapper _mapper;
 
         private readonly ICashService _cashService;
-        public CashService(ILogger<CashService> logger, IMapper mapper, ICashService cashService)
+        private readonly IProfileService _profileService;
+
+        public CashService(ILogger<CashService> logger, IMapper mapper, ICashService cashService, IProfileService profileService)
         {
             _logger = logger;
             _mapper = mapper;
             _cashService = cashService;
+            _profileService = profileService;
+        }
+
+        public override async Task<CreateCashProfileResponse> CreateCashProfile(CreateCashProfileRequest request, ServerCallContext context)
+        {
+            var cancellationToken = context.CancellationToken;
+            var userId = _mapper.Map<Guid>(request.UserId);
+
+            await _profileService.CreateProfile(userId, cancellationToken);
+
+            return new CreateCashProfileResponse();
         }
 
         public override async Task<GetTransactionsHistoryResponse> GetTransactionsHistory(GetTransactionsHistoryRequest request, ServerCallContext context)

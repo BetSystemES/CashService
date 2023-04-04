@@ -66,10 +66,10 @@ namespace CashService.GRPC.Infrastructure.Mappings
                     opt =>
                         opt.MapFrom(src => src.Transactions));
 
-            CreateMap<Guid, string>()
-                .ConvertUsing(s => s.ToString());
             CreateMap<string, Guid>()
-                .ConvertUsing(s => Guid.Parse(s));
+                .ConvertUsing((x, res) => res = Guid.TryParse(x, out var id) ? id : Guid.Empty);
+            CreateMap<Guid?, string>()
+                .ConvertUsing((x, res) => res = x?.ToString() ?? string.Empty);
 
 
             CreateMap<CashType, BusinessLogic.Models.Enums.CashType>().ReverseMap();
