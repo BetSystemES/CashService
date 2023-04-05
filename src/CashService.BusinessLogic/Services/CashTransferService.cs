@@ -209,17 +209,7 @@ namespace CashService.BusinessLogic.Services
 
         public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
-            //await using (var transaction = await _context.BeginTransaction(IsolationLevel.ReadCommitted, token))
-            //{
-            //    ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
-            //    return balance;
-            //}
-            ProfileEntity balance = default;
-
-            await _resilientService.ExecuteAsync(async () =>
-            {
-                balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
-            }, IsolationLevel.ReadCommitted, token);
+            var balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
 
             return balance;
         }

@@ -391,7 +391,7 @@ namespace CashService.FunctionalTests.Scenaries
                     });
 
             var getBalanceResponse1 = await scenario
-                .Step($"GetBalance",
+                .Step($"GetBalance1",
                     async () =>
                     {
                         var request = new GetBalanceRequest()
@@ -411,6 +411,10 @@ namespace CashService.FunctionalTests.Scenaries
                         };
                         return await _client.GetBalanceAsync(request);
                     });
+
+            // get balance()
+            // get profile entity
+            // return cash amount value
 
             var balance1 = getBalanceResponse1.Balance;
 
