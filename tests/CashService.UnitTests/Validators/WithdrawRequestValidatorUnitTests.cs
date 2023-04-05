@@ -17,12 +17,12 @@ namespace CashService.UnitTests.Validators
 
         [Theory]
         [MemberData(nameof(TransactionModelRequestData.TransactionModelRequestDataValid), MemberType = typeof(TransactionModelRequestData))]
-        public async Task WithdrawRequest_Should_Be_Valid(TransactionModel transactionModel)
+        public async Task WithdrawRequest_Should_Be_Valid(TransactionRequestModel transactionRequestModel)
         {
             // Arrange
             var model = new WithdrawRequest()
             {
-                Withdrawrequest = transactionModel
+                Withdrawrequest = transactionRequestModel
             };
 
             // Act
@@ -36,12 +36,12 @@ namespace CashService.UnitTests.Validators
 
         [Theory]
         [MemberData(nameof(TransactionModelRequestData.TransactionModelRequestDataInvalid), MemberType = typeof(TransactionModelRequestData))]
-        public async Task WithdrawRequest_Should_Be_Invalid(TransactionModel transactionModel)
+        public async Task WithdrawRequest_Should_Be_Invalid(TransactionRequestModel transactionRequestModel)
         {
             // Arrange
             var model = new WithdrawRequest()
             {
-                Withdrawrequest = transactionModel
+                Withdrawrequest = transactionRequestModel
             };
 
             // Act

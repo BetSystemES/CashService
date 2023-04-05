@@ -49,14 +49,14 @@ message GetBalanceResponse {
 }
 
 message DepositRequest {
-	TransactionModel deposit = 1;
+	TransactionRequestModel deposit = 1;
 }
 message DepositResponse {
 	TransactionModel depositresponse = 1;
 }
 
 message WithdrawRequest {
-	TransactionModel withdrawrequest = 1;
+	TransactionRequestModel withdrawrequest = 1;
 }
 message WithdrawResponse {
 	TransactionModel withdrawresponse = 1;
@@ -77,6 +77,19 @@ message WithdrawRangeResponse {
 
 
 message TransactionModel
+{
+	string profile_id = 1;
+	double cash_amount = 2;
+	repeated Transaction transactions = 3;
+}
+
+message TransactionRequestModel
+{
+	string profile_id = 1;
+	repeated Transaction transactions = 2;
+}
+
+message TransactionResponseModel
 {
 	string profile_id = 1;
 	double cash_amount = 2;

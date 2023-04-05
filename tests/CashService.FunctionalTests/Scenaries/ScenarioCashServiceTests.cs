@@ -25,7 +25,7 @@ namespace CashService.FunctionalTests.Scenaries
         public async Task ScenarioGetBalance()
         {
             var profileId = Guid.NewGuid().ToString();
-            var transactionModel = TransactionModelGenerator(profileId, 95,50);
+            var transactionModel = TransactionRequestModelGenerator(profileId, 95,50);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
@@ -68,7 +68,7 @@ namespace CashService.FunctionalTests.Scenaries
         {
             var profileId = Guid.NewGuid().ToString();
 
-            var withDrawModel = TransactionModelGenerator(profileId, 100, 60);
+            var withDrawModel = TransactionRequestModelGenerator(profileId, 100, 60);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
@@ -102,9 +102,9 @@ namespace CashService.FunctionalTests.Scenaries
         {
             var profileId = Guid.NewGuid().ToString();
 
-            var transactionModel = TransactionModelGenerator(profileId, 140, 50);
+            var transactionModel = TransactionRequestModelGenerator(profileId, 140, 50);
 
-            var withDrawModel = TransactionModelGenerator(profileId, 100, 60);
+            var withDrawModel = TransactionRequestModelGenerator(profileId, 100, 60);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
@@ -150,9 +150,9 @@ namespace CashService.FunctionalTests.Scenaries
         {
             var profileId = Guid.NewGuid().ToString();
 
-            var transactionModel = TransactionModelGenerator(profileId, 40, 50);
+            var transactionModel = TransactionRequestModelGenerator(profileId, 40, 50);
 
-            var withDrawModel = TransactionModelGenerator(profileId, 100, 60);
+            var withDrawModel = TransactionRequestModelGenerator(profileId, 100, 60);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),

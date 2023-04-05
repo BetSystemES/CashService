@@ -20,7 +20,6 @@ namespace CashService.BusinessLogic.Services
         {
             await _profileRepository.Add(new ProfileEntity() { Id = userId }, token);
             await _context.SaveChanges(token);
-
         }
     }
 }
