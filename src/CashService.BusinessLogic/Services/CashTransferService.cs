@@ -175,7 +175,7 @@ namespace CashService.BusinessLogic.Services
                             profile = await _profileProvider.Get(withdrawProfile.Id, retryToken);
 
                         if (profile is null)
-                            throw new Exception("entity was not found for id");
+                            throw new Exception($"Entity with id={withdrawProfile.Id} was not found.");
 
                         profile.CashAmount -= withdrawProfile.Transactions
                             .Where(x => x.CashType == CashType.Cash)
@@ -183,7 +183,7 @@ namespace CashService.BusinessLogic.Services
 
                         if (profile.CashAmount < 0)
                         {
-                            throw new Exception("not enough money");
+                            throw new Exception($"Not enough money to process operation. ProfileId={profile.Id}.");
                         }
 
                         await _profileRepository.Update(profile, retryToken);
@@ -209,11 +209,19 @@ namespace CashService.BusinessLogic.Services
 
         public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
-            await using (var transaction = await _context.BeginTransaction(IsolationLevel.ReadCommitted, token))
+            //await using (var transaction = await _context.BeginTransaction(IsolationLevel.ReadCommitted, token))
+            //{
+            //    ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
+            //    return balance;
+            //}
+            ProfileEntity balance = default;
+
+            await _resilientService.ExecuteAsync(async () =>
             {
-                ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
-                return balance;
-            }
+                balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
+            }, IsolationLevel.ReadCommitted, token);
+
+            return balance;
         }
 
         public async Task<List<ProfileEntity>> DepositRange(List<ProfileEntity> depositRangeProfileEntities, CancellationToken token)
