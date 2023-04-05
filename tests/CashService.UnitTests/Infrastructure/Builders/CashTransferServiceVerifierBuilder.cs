@@ -48,9 +48,9 @@ namespace CashService.UnitTests.Infrastructure.Builders
                 _mockTransactionRepository.Object,
                 _mockCashProvider.Object,
                 _mockTransactionProvider.Object,
+                _mockProfileService.Object,
                 _mockContext.Object,
-                _mockResilientService.Object,
-                _mockProfileService.Object);
+                _mockResilientService.Object);
         }
 
         public CashTransferServiceVerifierBuilder SetCashTransferServiceExpectedResult()

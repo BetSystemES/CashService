@@ -88,12 +88,29 @@ namespace CashService.GRPC.Services
             Guid profileId = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
+            var balanceResult = await _cashService.GetBalance(profileId, token);
+
+            return new GetBalanceResponse
+            {
+                ProfileId = profileId.ToString(),
+                Balance = (double)balanceResult
+            };
+        }
+
+        public override async Task<CalcBalanceWithinCashtypeResponse> CalcBalanceWithinCashtype(CalcBalanceWithinCashtypeRequest request, ServerCallContext context)
+        {
+            var token = context.CancellationToken;
+
+            //map
+            Guid profileId = _mapper.Map<Guid>(request.ProfileId);
+
+            //cashService
             ProfileEntity balanceResult = await _cashService.CalcBalanceWithinCashtype(profileId, token);
 
             //map back
             TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
 
-            return new GetBalanceResponse
+            return new CalcBalanceWithinCashtypeResponse
             {
                 Balance = balanceResponse
             };

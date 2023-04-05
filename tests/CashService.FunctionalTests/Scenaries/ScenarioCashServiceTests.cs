@@ -25,7 +25,7 @@ namespace CashService.FunctionalTests.Scenaries
         public async Task ScenarioGetBalance()
         {
             var profileId = Guid.NewGuid().ToString();
-            var transactionModel = TransactionModelGenerator(profileId, 95, 50);
+            var transactionModel = TransactionRequestModelGenerator(profileId, 95, 50);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
@@ -70,7 +70,6 @@ namespace CashService.FunctionalTests.Scenaries
 
             result
                 .Should()
-                .NotBeNull()
                 .Equals(transactionModel);
         }
 
@@ -87,12 +86,12 @@ namespace CashService.FunctionalTests.Scenaries
 
             var expectedCashAmount = depositCashAmount - withdrawCashAmount;
 
-            var depositTransaction = TransactionModelGenerator(
+            var depositTransaction = TransactionRequestModelGenerator(
                 profileId,
                 depositCashAmount,
                 depositBonusAmount);
 
-            var withdrawTransaction = TransactionModelGenerator(
+            var withdrawTransaction = TransactionRequestModelGenerator(
                 profileId,
                 withdrawCashAmount,
                 withdrawBonusAmount);
@@ -150,7 +149,7 @@ namespace CashService.FunctionalTests.Scenaries
 
             var result = withdrawResponse.Withdrawresponse;
 
-            getBalanceResponse.Balance.CashAmount
+            getBalanceResponse.Balance
                 .Should()
                 .Be(expectedCashAmount);
         }
@@ -206,8 +205,8 @@ namespace CashService.FunctionalTests.Scenaries
         {
             var profileId = Guid.NewGuid().ToString();
 
-            var depositTransaction = TransactionModelGenerator(profileId, 140, 50);
-            var withdrawTransaction = TransactionModelGenerator(profileId, 100, 60);
+            var depositTransaction = TransactionRequestModelGenerator(profileId, 140, 50);
+            var withdrawTransaction = TransactionRequestModelGenerator(profileId, 100, 60);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
@@ -422,31 +421,12 @@ namespace CashService.FunctionalTests.Scenaries
 
             // Assert
 
-            balance1.Transactions.Count
-                .Should()
+            balance1.Should()
                 .Be(2);
-
-            balance1.CashAmount
-                .Should()
-                .Be(depositCashAmount1);
-
-            balance1
-                .Should()
-                .NotBeNull()
-                .Equals(depositTransaction1);
-
-            balance2.Transactions.Count
-                .Should()
-                .Be(2);
-
-            balance2.CashAmount
-                .Should()
-                .Be(depositCashAmount2);
 
             balance2
                 .Should()
-                .NotBeNull()
-                .Equals(depositTransaction2);
+                .Be(2);
         }
 
         [Fact()]

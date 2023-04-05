@@ -12,6 +12,7 @@ service CashService {
   rpc GetTransactionsHistory (GetTransactionsHistoryRequest) returns (GetTransactionsHistoryResponse);
   rpc GetPagedTransactionHistory (GetTransactionHistoryWithFilterRequest) returns (GetPagedTransactionsHistoryResponse);
   rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
+  rpc CalcBalanceWithinCashtype (CalcBalanceWithinCashtypeRequest) returns (CalcBalanceWithinCashtypeResponse);
   rpc Deposit (DepositRequest) returns (DepositResponse);
   rpc Withdraw (WithdrawRequest) returns (WithdrawResponse);
   rpc DepositRange (DepositRangeRequest) returns (DepositRangeResponse);
@@ -45,6 +46,15 @@ message GetBalanceRequest {
 	string profile_id = 1;
 }
 message GetBalanceResponse {
+	string profile_id = 1;
+	double balance = 2;
+}
+
+message CalcBalanceWithinCashtypeRequest {
+	string profile_id = 1;
+}
+
+message CalcBalanceWithinCashtypeResponse {
 	TransactionModel balance = 1;
 }
 

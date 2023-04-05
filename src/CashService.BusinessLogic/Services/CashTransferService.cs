@@ -33,9 +33,9 @@ namespace CashService.BusinessLogic.Services
             ITransactionRepository transactionEntityRepository,
             ICashProvider cashProvider,
             ITransactionProvider transactionEntityProvider,
+            IProfileService profileService,
             IDataContext context,
-            IResilientService resilientService,
-            IProfileService profileService)
+            IResilientService resilientService)
         {
             _transactionEntityRepository = transactionEntityRepository;
             _cashProvider = cashProvider;
@@ -92,52 +92,7 @@ namespace CashService.BusinessLogic.Services
             ProfileEntity? profile = default;
             EntityEntry? entry = default;
 
-            var policyResult = await Policy
-                .Handle<DBConcurrencyException>()
-                .Or<DbUpdateConcurrencyException>()
-                .WaitAndRetryAsync(3, retryAttempt =>
-                        TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
-                    (_, _) =>
-                    {
-                        Console.WriteLine("WaitAndRetryAsync");
-
-                        if (profile is not null)
-                        {
-                            _profileService.Detach(profile);
-                            entry = _profileService.Entry(profile);
-                        }
-                    }
-                )
-                .ExecuteAndCaptureAsync(async retryToken =>
-                {
-                    await _resilientService.ExecuteAsync(async () =>
-                        {
-                            if (profile is null || entry?.State == EntityState.Detached)
-                                profile = await _profileService.Get(depositProfile.Id, retryToken);
-
-                            if (profile is null)
-                                throw new Exception("entity was not found for id");
-
-                            profile.CashAmount += depositProfile.Transactions
-                                .Where(x => x.CashType == CashType.Cash)
-                                .Sum(x => x.Amount);
-
-                            await _profileService.Update(profile, retryToken);
-
-                            await _transactionEntityRepository.AddRange(depositProfile.Transactions, retryToken);
-
-                            await _context.SaveChanges(retryToken);
-
-                            depositProfile.CashAmount = profile.CashAmount;
-                        },
-                        IsolationLevel.ReadCommitted, retryToken);
-                }, token);
-
-            if (policyResult.FinalException is not null)
-            {
-                Console.WriteLine(policyResult.FinalException.Message);
-                // throw policyResult.FinalException;
-            }
+            await PollyTransaction(depositProfile, token, profile, entry);
 
             return depositProfile;
         }
@@ -147,66 +102,14 @@ namespace CashService.BusinessLogic.Services
             ProfileEntity? profile = default;
             EntityEntry? entry = default;
 
-            var policyResult = await Policy
-                .Handle<DBConcurrencyException>()
-                .Or<DbUpdateConcurrencyException>()
-                .WaitAndRetryAsync(3, retryAttempt =>
-                        TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
-                    (_, _) =>
-                    {
-                        Console.WriteLine("WaitAndRetryAsync");
-
-                        if (profile is not null)
-                        {
-                            _profileService.Detach(profile);
-                            entry = _profileService.Entry(profile);
-                        }
-                    }
-                )
-                .ExecuteAndCaptureAsync(async retryToken =>
-                {
-                    await _resilientService.ExecuteAsync(async () =>
-                    {
-                        if (profile is null || entry?.State == EntityState.Detached)
-                            profile = await _profileService.Get(withdrawProfile.Id, retryToken);
-
-                        if (profile is null)
-                            throw new Exception($"Entity with id={withdrawProfile.Id} was not found.");
-
-                        profile.CashAmount -= withdrawProfile.Transactions
-                            .Where(x => x.CashType == CashType.Cash)
-                            .Sum(x => x.Amount);
-
-                        if (profile.CashAmount < 0)
-                        {
-                            throw new Exception($"Not enough money to process operation. ProfileId={profile.Id}.");
-                        }
-
-                        await _profileService.Update(profile, retryToken);
-
-                        await _transactionEntityRepository.AddRange(withdrawProfile.Transactions, retryToken);
-
-                        await _context.SaveChanges(retryToken);
-
-                        withdrawProfile.CashAmount = profile.CashAmount;
-                    },
-                        IsolationLevel.ReadCommitted, retryToken);
-                }, token);
-
-            if (policyResult.FinalException is not null)
-            {
-                Console.WriteLine(policyResult.FinalException.Message);
-                // throw policyResult.FinalException;
-            }
+            await PollyTransaction(withdrawProfile, token, profile, entry);
 
             return withdrawProfile;
         }
 
-
         public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
-            var balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
-
+            ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
             return balance;
         }
 
@@ -276,6 +179,59 @@ namespace CashService.BusinessLogic.Services
             }
 
             return orderByExpression;
+        }
+
+        private async Task PollyTransaction(ProfileEntity depWithProfile, CancellationToken token, ProfileEntity? profile, EntityEntry? entry)
+        {
+            var policyResult = await Policy
+                .Handle<DBConcurrencyException>()
+                .Or<DbUpdateConcurrencyException>()
+                .WaitAndRetryAsync(3, retryAttempt =>
+                        TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
+                    (_, _) =>
+                    {
+                        Console.WriteLine("WaitAndRetryAsync");
+
+                        if (profile is not null)
+                        {
+                            _profileService.Detach(profile);
+                            entry = _profileService.Entry(profile);
+                        }
+                    }
+                )
+                .ExecuteAndCaptureAsync(async retryToken =>
+                {
+                    await _resilientService.ExecuteAsync(async () =>
+                    {
+                        if (profile is null || entry?.State == EntityState.Detached)
+                            profile = await _profileService.Get(depWithProfile.Id, retryToken);
+
+                        if (profile is null)
+                            throw new Exception("entity was not found for id");
+
+                        profile.SumCashAmountForProfileEntity(depWithProfile, CashType.Cash);
+
+                        if (profile.CashAmount < 0)
+                        {
+                            throw new Exception("not enough money");
+                        }
+
+                        await _profileService.Update(profile, retryToken);
+
+                        await _transactionEntityRepository.AddRange(depWithProfile.Transactions, retryToken);
+
+                        await _context.SaveChanges(retryToken);
+
+                        depWithProfile.CashAmount = profile.CashAmount;
+                    },
+                        IsolationLevel.ReadCommitted, retryToken);
+                }, token);
+
+            if (policyResult.FinalException is not null)
+            {
+                Console.WriteLine(policyResult.FinalException.Message);
+                // throw policyResult.FinalException;
+            }
         }
     }
 }
