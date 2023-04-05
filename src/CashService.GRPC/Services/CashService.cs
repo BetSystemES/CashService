@@ -31,7 +31,7 @@ namespace CashService.GRPC.Services
             var cancellationToken = context.CancellationToken;
             var userId = _mapper.Map<Guid>(request.UserId);
 
-            await _profileService.CreateProfile(userId, cancellationToken);
+            await _profileService.Create(userId, cancellationToken);
 
             return new CreateCashProfileResponse();
         }
