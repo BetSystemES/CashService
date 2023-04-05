@@ -26,7 +26,9 @@ namespace CashService.IntegrationTests.DataAccess
         private readonly IDataContext _context;
 
         private readonly IResilientService _resilientService;
-        
+
+        private readonly ICashService _cashService;
+
         public CashServiceRepositoryTests(GrpcAppFactory factory)
         {
             _scope = factory.Services.CreateScope();
@@ -40,6 +42,8 @@ namespace CashService.IntegrationTests.DataAccess
             _context = _scope.ServiceProvider.GetRequiredService<IDataContext>();
 
             _resilientService = _scope.ServiceProvider.GetRequiredService<IResilientService>();
+
+            _cashService = _scope.ServiceProvider.GetRequiredService<ICashService>();
         }
 
         [Fact]
@@ -112,7 +116,7 @@ namespace CashService.IntegrationTests.DataAccess
         {
             // Arrange
             var profileId = Guid.NewGuid();
-            ProfileEntity expectedResult = GenerateProfileEntity(profileId, 95,50);
+            ProfileEntity expectedResult = GenerateEmptyProfileEntity(profileId);
 
             // Act
             await _profileService.Create(expectedResult.Id, _ctoken);
@@ -130,34 +134,46 @@ namespace CashService.IntegrationTests.DataAccess
         {
             // Arrange
             var profileId = Guid.NewGuid();
-            ProfileEntity expectedResult = GenerateProfileEntity(profileId, 95, 50);
 
-            // Act
-            await _profileService.Create(expectedResult.Id, _ctoken);
+            var initProfileEntity = GenerateEmptyProfileEntity(profileId);
+            await _profileService.Create(initProfileEntity.Id, _ctoken);
 
-            var actualResult = await _profileService.Get(profileId, _ctoken);
+            var depositProfileEntity = GenerateCashProfileEntity(profileId, 100, 50);
+            await _cashService.Deposit(depositProfileEntity, _ctoken);
 
-            // Assert
-            actualResult.Should()
-                .NotBeNull().And
-                .BeEquivalentTo(expectedResult);
+            //Act
+            var actualResult = await _cashService.GetBalance(profileId, _ctoken);
+            var result = await _profileService.Get(profileId, _ctoken);
+
+            //Assert
+            actualResult.Should().Be(150);
+            result.CashAmount.Should().Be(150);
         }
 
         [Fact]
-        public async Task CalcBalance_Should_Return_Result()
+        public async Task CalcBalanceWithinCashtype_Should_Return_Result()
         {
             // Arrange
             var profileId = Guid.NewGuid();
-            ProfileEntity expectedResult = GenerateCashProfileEntity(profileId, 100, 50);
+
+            var initProfileEntity = GenerateEmptyProfileEntity(profileId);
+            await _profileService.Create(initProfileEntity.Id, _ctoken);
+
+            ProfileEntity depositCashProfileEntity = GenerateCashProfileEntity(profileId, 100, 50);
+            await _cashService.Deposit(depositCashProfileEntity, _ctoken);
+
+            ProfileEntity depositBonusProfileEntity = GenerateBonusProfileEntity(profileId, 30, 20);
+            await _cashService.Deposit(depositBonusProfileEntity, _ctoken);
 
             // Act
-            await _profileService.Create(expectedResult.Id, _ctoken);
-
             var actualResult = await _cashProvider.CalcBalanceWithinCashtype(profileId, _ctoken);
 
             // Assert
             actualResult.Transactions[0].Amount.Should()
                 .Be(150);
+
+            actualResult.Transactions[1].Amount.Should()
+                .Be(50);
         }
 
         public void Dispose()
