@@ -1,4 +1,5 @@
-﻿using CashService.FunctionalTests.Adapters;
+﻿using AutoMapper;
+using CashService.FunctionalTests.Adapters;
 using CashService.GRPC;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -22,14 +23,20 @@ namespace CashService.FunctionalTests.Scenaries
         }
 
         [Fact()]
-        public async Task ScenarioGetBalance()
+        public async Task ScenarioGetBalanceAfterDeposit()
         {
+            var depositCashAmount = 95;
+            var depositBonusAmount = 50;
             var profileId = Guid.NewGuid().ToString();
-            var transactionModel = TransactionRequestModelGenerator(profileId, 95, 50);
+
+            var depositTransaction = TransactionRequestModelGenerator(
+                profileId,
+                depositCashAmount,
+                depositBonusAmount);
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
-                testMethodName: $"GetBalance");
+                testMethodName: $"GetBalanceAfterDeposit");
 
             await scenario
                 .Step($"Create CashService Profile",
@@ -49,7 +56,7 @@ namespace CashService.FunctionalTests.Scenaries
                 {
                     var request = new DepositRequest()
                     {
-                        Deposit = transactionModel,
+                        Deposit = depositTransaction,
                     };
 
                     return await _client.DepositAsync(request);
@@ -66,11 +73,9 @@ namespace CashService.FunctionalTests.Scenaries
                     return await _client.GetBalanceAsync(request);
                 });
 
-            var result = getBalanceResponse.Balance;
+            var cashBalance = getBalanceResponse.Balance;
 
-            result
-                .Should()
-                .Equals(transactionModel);
+            cashBalance.Should().Be(depositCashAmount);
         }
 
         [Fact()]
@@ -152,171 +157,6 @@ namespace CashService.FunctionalTests.Scenaries
             getBalanceResponse.Balance
                 .Should()
                 .Be(expectedCashAmount);
-        }
-
-        [Fact()]
-        public async Task ScenarioWithDraw0()
-        {
-            var profileId = Guid.NewGuid().ToString();
-
-            var withDrawModel = TransactionRequestModelGenerator(profileId, 100, 60);
-
-            var scenario = TestScenarioFactory.Default(
-                new XUnitOutputAdapter(_outputHelper),
-                testMethodName: $"WithDraw0");
-
-            await scenario
-                .Step($"Create CashService Profile",
-                async () =>
-                {
-                    var request = new CreateCashProfileRequest()
-                    {
-                        UserId = profileId,
-                    };
-
-                    return await _client.CreateCashProfileAsync(request);
-                });
-
-            var withdrawResponse = await scenario
-                .Step($"WithDraw",
-                    async () =>
-                    {
-                        var request = new WithdrawRequest()
-                        {
-                            Withdrawrequest = withDrawModel,
-                        };
-
-                        return await _client.WithdrawAsync(request);
-                    });
-
-            var result = withdrawResponse.Withdrawresponse;
-
-            result.Transactions[0].Amount
-                .Should()
-                .Be(0);
-
-            result.Transactions[1].Amount
-                .Should()
-                .Be(0);
-        }
-
-        [Fact()]
-        public async Task ScenarioWithDraw()
-        {
-            var profileId = Guid.NewGuid().ToString();
-
-            var depositTransaction = TransactionRequestModelGenerator(profileId, 140, 50);
-            var withdrawTransaction = TransactionRequestModelGenerator(profileId, 100, 60);
-
-            var scenario = TestScenarioFactory.Default(
-                new XUnitOutputAdapter(_outputHelper),
-                testMethodName: $"WithDraw");
-
-            await scenario
-                .Step($"Create CashService Profile",
-                async () =>
-                {
-                    var request = new CreateCashProfileRequest()
-                    {
-                        UserId = profileId,
-                    };
-
-                    return await _client.CreateCashProfileAsync(request);
-                });
-
-            var addDepositResponse = await scenario
-                .Step($"Deposit",
-                    async () =>
-                    {
-                        var request = new DepositRequest()
-                        {
-                            Deposit = depositTransaction,
-                        };
-
-                        return await _client.DepositAsync(request);
-                    });
-
-            var withdrawResponse = await scenario
-                .Step($"WithDraw",
-                    async () =>
-                    {
-                        var request = new WithdrawRequest()
-                        {
-                            Withdrawrequest = withdrawTransaction,
-                        };
-
-                        return await _client.WithdrawAsync(request);
-                    });
-
-            var result = withdrawResponse.Withdrawresponse;
-
-            result.Transactions[0].Amount
-                .Should()
-                .Be(100);
-
-            result.Transactions[1].Amount
-                .Should()
-                .Be(50);
-        }
-
-        [Fact()]
-        public async Task ScenarioWithDraw2()
-        {
-            var profileId = Guid.NewGuid().ToString();
-
-            var transactionModel = TransactionRequestModelGenerator(profileId, 40, 50);
-
-            var withDrawModel = TransactionRequestModelGenerator(profileId, 100, 60);
-
-            var scenario = TestScenarioFactory.Default(
-                new XUnitOutputAdapter(_outputHelper),
-                testMethodName: $"WithDraw2");
-
-            await scenario
-                .Step($"Create CashService Profile",
-                async () =>
-                {
-                    var request = new CreateCashProfileRequest()
-                    {
-                        UserId = profileId,
-                    };
-
-                    return await _client.CreateCashProfileAsync(request);
-                });
-
-            var addDepositResponse = await scenario
-                .Step($"Deposit",
-                    async () =>
-                    {
-                        var request = new DepositRequest()
-                        {
-                            Deposit = transactionModel,
-                        };
-
-                        return await _client.DepositAsync(request);
-                    });
-
-            var withdrawResponse = await scenario
-                .Step($"WithDraw",
-                    async () =>
-                    {
-                        var request = new WithdrawRequest()
-                        {
-                            Withdrawrequest = withDrawModel,
-                        };
-
-                        return await _client.WithdrawAsync(request);
-                    });
-
-            var result = withdrawResponse.Withdrawresponse;
-
-            result.Transactions[0].Amount
-                .Should()
-                .Be(40);
-
-            result.Transactions[1].Amount
-                .Should()
-                .Be(50);
         }
 
         [Fact()]
@@ -411,10 +251,6 @@ namespace CashService.FunctionalTests.Scenaries
                         return await _client.GetBalanceAsync(request);
                     });
 
-            // get balance()
-            // get profile entity
-            // return cash amount value
-
             var balance1 = getBalanceResponse1.Balance;
 
             var balance2 = getBalanceResponse2.Balance;
@@ -422,37 +258,66 @@ namespace CashService.FunctionalTests.Scenaries
             // Assert
 
             balance1.Should()
-                .Be(2);
+                .Be(depositCashAmount1);
 
             balance2
                 .Should()
-                .Be(2);
+                .Be(depositCashAmount2);
         }
 
         [Fact()]
-        public async Task ScenarioWithDrawRange()
+        public async Task ScenarioWithdrawAllAfterDepositRange()
         {
-            var profileId = Guid.NewGuid().ToString();
-            var transactionModel = TransactionModelGenerator(profileId, 140, 50);
-
+            var profileId1 = Guid.NewGuid().ToString();
             var profileId2 = Guid.NewGuid().ToString();
-            var transactionModel2 = TransactionModelGenerator(profileId2, 100, 60);
 
-            var withDrawModel = TransactionModelGenerator(profileId, 100, 30);
+            var depositCashAmount1 = 140;
+            var depositBonusAmount1 = 50;
 
-            var withDrawModel2 = TransactionModelGenerator(profileId2, 50, 10);
+            var depositTransaction1 = TransactionModelGenerator(
+                profileId1,
+                depositCashAmount1,
+                depositBonusAmount1);
+
+            var depositCashAmount2 = 100;
+            var depositBonusAmount2 = 60;
+
+            var depositTransaction2 = TransactionModelGenerator(
+                profileId2,
+                depositCashAmount2,
+                depositBonusAmount2);
+
+            var withdrawCashAmount1 = 140;
+            var withdrawBonusAmount1 = 50;
+
+            var withDrawModel = TransactionModelGenerator(
+                profileId1,
+                withdrawCashAmount1,
+                withdrawBonusAmount1);
+
+            var withdrawCashAmount2 = 100;
+            var withdrawBonusAmount2 = 60;
+
+            var withDrawModel2 = TransactionModelGenerator(
+                profileId2,
+                withdrawCashAmount2,
+                withdrawBonusAmount2);
+
+            var expectedCashBalance1 = depositCashAmount1 - withdrawCashAmount1;
+            var expectedCashBalance2 = depositCashAmount2 - withdrawCashAmount2;
+
 
             var scenario = TestScenarioFactory.Default(
                 new XUnitOutputAdapter(_outputHelper),
                 testMethodName: $"WithDrawRange");
 
             await scenario
-                .Step($"Create CashService Profile with userId={profileId}",
+                .Step($"Create CashService Profile with userId={profileId1}",
                 async () =>
                 {
                     var request = new CreateCashProfileRequest()
                     {
-                        UserId = profileId,
+                        UserId = profileId1,
                     };
 
                     return await _client.CreateCashProfileAsync(request);
@@ -464,25 +329,25 @@ namespace CashService.FunctionalTests.Scenaries
                {
                    var request = new CreateCashProfileRequest()
                    {
-                       UserId = profileId,
+                       UserId = profileId2,
                    };
 
                    return await _client.CreateCashProfileAsync(request);
                });
 
-            var addDepositRangeResponse = await scenario
+            var depositRangeResponse = await scenario
                 .Step($"DepositRange",
                     async () =>
                     {
                         var request = new DepositRangeRequest();
 
-                        IEnumerable<TransactionModel> transactionModels = new[]
+                        IEnumerable<TransactionModel> depositTransactions = new[]
                         {
-                            transactionModel,
-                            transactionModel2
+                            depositTransaction1,
+                            depositTransaction2
                         };
 
-                        request.DepositRangeRequests.AddRange(transactionModels);
+                        request.DepositRangeRequests.AddRange(depositTransactions);
 
                         string json = JsonConvert.SerializeObject(request).ToLower();
 
@@ -490,7 +355,7 @@ namespace CashService.FunctionalTests.Scenaries
                     });
 
             var withdrawRangeResponse = await scenario
-                .Step($"WithDrawRange",
+                .Step($"WithdrawRange",
                     async () =>
                     {
                         var request = new WithdrawRangeRequest()
@@ -507,32 +372,37 @@ namespace CashService.FunctionalTests.Scenaries
                         return await _client.WithdrawRangeAsync(request);
                     });
 
-            var result = withdrawRangeResponse.WithdrawRangeResponses[0];
-            var result2 = withdrawRangeResponse.WithdrawRangeResponses[1];
+            var getBalance1Response = await scenario
+                .Step($"GetBalance1",
+                async () =>
+                {
+                    var request = new GetBalanceRequest()
+                    {
+                        ProfileId = profileId1
+                    };
+                    return await _client.GetBalanceAsync(request);
+                });
 
-            result.Transactions.Count
-                .Should()
-                .Be(2);
+            var getBalance2Response = await scenario
+                .Step($"GetBalance2",
+                async () =>
+                {
+                    var request = new GetBalanceRequest()
+                    {
+                        ProfileId = profileId2
+                    };
+                    return await _client.GetBalanceAsync(request);
+                });
 
-            result.Transactions[0].Amount
-                .Should()
-                .Be(100);
 
-            result.Transactions[1].Amount
+            getBalance2Response.Balance
                 .Should()
-                .Be(30);
+                .Be(expectedCashBalance2);
 
-            result2.Transactions.Count
-                .Should()
-                .Be(2);
 
-            result2.Transactions[0].Amount
+            getBalance1Response.Balance
                 .Should()
-                .Be(50);
-
-            result2.Transactions[1].Amount
-                .Should()
-                .Be(10);
+                .Be(expectedCashBalance1);
         }
     }
 }
