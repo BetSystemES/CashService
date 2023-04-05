@@ -9,7 +9,7 @@ namespace CashService.UnitTests.Validators.TestData
         {
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d", 100,50),
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d", 100,50),
             };
         }
 
@@ -17,52 +17,52 @@ namespace CashService.UnitTests.Validators.TestData
         {
             yield return new object[]
             {
-                TransactionModelGenerator("", 100,50),
+                TransactionRequestModelGenerator("", 100,50),
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
                     GenerateTransaction("", CashType.Cash, 100),
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd-fa4c02a2508e", CashType.Bonus, 50))
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
                     GenerateTransaction("f54ed206-3c36-48f4-ae06-a63d07ace692", CashType.Cash, 100),
                     GenerateTransaction("", CashType.Bonus, 50))
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa", 100,50),
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa", 100,50),
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd", CashType.Cash, 100),
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd-fa4c02a2508e", CashType.Bonus, 50))
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd-fa4c02a2508e", CashType.Cash, 100),
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd-", CashType.Bonus, 50))
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
                     GenerateTransaction("f54ed206-3c36-48f4-ae06-a63d07ace692", CashType.Unspecified, 100),
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd-fa4c02a2508e", CashType.Bonus, 50))
             };
 
             yield return new object[]
             {
-                TransactionModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
+                TransactionRequestModelGenerator("34c92d2c-1f47-4a04-bffa-71101718b56d",
                     GenerateTransaction("f54ed206-3c36-48f4-ae06-a63d07ace692", CashType.Cash, 100),
                     GenerateTransaction("a73fd2b1-33f3-4241-b7fd-fa4c02a2508e", CashType.Unspecified, 50))
             };

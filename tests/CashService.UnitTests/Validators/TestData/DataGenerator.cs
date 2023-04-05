@@ -18,6 +18,19 @@ namespace CashService.UnitTests.Validators.TestData
             return transactionModel;
         }
 
+        public static TransactionRequestModel TransactionRequestModelGenerator(string profileId, double cashAmount, double bonusAmount)
+        {
+            var transaction1 = GenerateTransaction(Guid.NewGuid().ToString(), CashType.Cash, cashAmount);
+            var transaction2 = GenerateTransaction(Guid.NewGuid().ToString(), CashType.Bonus, bonusAmount);
+            var transactionRequestModel = Builder<TransactionRequestModel>
+                .CreateNew()
+                .With(x => x.ProfileId = profileId)
+                .Do(x => x.Transactions.Add(transaction1))
+                .And(x => x.Transactions.Add(transaction2))
+                .Build();
+            return transactionRequestModel;
+        }
+
         public static Transaction GenerateCashTransaction(double cashAmount)
         {
             return GenerateTransaction(Guid.NewGuid().ToString(), CashType.Cash, cashAmount);
@@ -47,6 +60,17 @@ namespace CashService.UnitTests.Validators.TestData
                 .And(x => x.Transactions.Add(transaction2))
                 .Build();
             return transactionModel;
+        }
+
+        public static TransactionRequestModel TransactionRequestModelGenerator(string profileId, Transaction transaction1, Transaction transaction2)
+        {
+            TransactionRequestModel transactionRequestModel = Builder<TransactionRequestModel>
+                .CreateNew()
+                .With(x => x.ProfileId = profileId)
+                .Do(x => x.Transactions.Add(transaction1))
+                .And(x => x.Transactions.Add(transaction2))
+                .Build();
+            return transactionRequestModel;
         }
 
     }

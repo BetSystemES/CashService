@@ -13,6 +13,10 @@ namespace CashService.GRPC.Infrastructure.Configurations
             services.AddAutoMapper(config =>
             {
                 config.AddProfile<DataAccessProfile>();
+                config.AddProfile<TransactionProfile>();
+                config.AddProfile<TransactionModelProfile>();
+                config.AddProfile<TransactionRequestModelProfile>();
+                config.AddProfile<FilterCriteriaProfile>();
             });
             services.AddScoped<ICashService, CashTransferService>();
             services.AddScoped<IProfileService, ProfileService>();

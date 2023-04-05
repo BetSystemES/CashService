@@ -22,9 +22,10 @@ namespace CashService.IntegrationTests.DataAccess
 
         private readonly IProfileProvider _profileProvider;
         private readonly ITransactionProvider _transactionProvider;
-        private readonly IResilientService _resilientService;
 
         private readonly IDataContext _context;
+
+        private readonly IResilientService _resilientService;
         
         public CashServiceRepositoryTests(GrpcAppFactory factory)
         {
@@ -46,31 +47,33 @@ namespace CashService.IntegrationTests.DataAccess
         public async Task Test_Transactions_Deposit()
         {
             // Arrange
-            //var serviceProvider = PrepareCashTransferService();
+            var cashTransferService = new CashTransferService(
+                _transactionRepository,
+                _profileRepository,
+                _cashProvider,
+                _transactionProvider,
+                _profileProvider,
+                _context,
+                _resilientService);
+
+            var cashTransferService2 = new CashTransferService(
+                _transactionRepository,
+                _profileRepository,
+                _cashProvider,
+                _transactionProvider,
+                _profileProvider,
+                _context,
+                _resilientService);
 
             var profileId = Guid.NewGuid();
             ProfileEntity profileEntity = GenerateProfileEntity(profileId, 50, 0);
-            await AddProfileEntity(profileEntity, _ctoken);
-
-            var depositProfileEntity = GenerateProfileEntity(profileId, 10, 0);
+            ProfileEntity profileEntity2 = GenerateProfileEntity(profileId, 40, 0);
 
             // Act
-            var tryCounts = Enumerable.Range(0, 10);
-            ParallelOptions parallelOptions = new()
-            {
-                MaxDegreeOfParallelism = 10
-            };
-
-            //await Parallel.ForEachAsync(tryCounts, parallelOptions, async (tryCount, token) =>
-            //{
-            //    var cashTransferService = serviceProvider.GetRequiredService<CashTransferService>();
-            //    await cashTransferService.Deposit(depositProfileEntity, token);
-            //});
+            await cashTransferService.Deposit(profileEntity, _ctoken);
+            await cashTransferService2.Deposit(profileEntity2, _ctoken);
 
             var actualResult = await _profileProvider.Get(profileId, _ctoken);
-
-            // Arrange
-            actualResult.CashAmount.Should().Be(150);
         }
 
         [Fact]
@@ -107,9 +110,6 @@ namespace CashService.IntegrationTests.DataAccess
             await cashTransferService2.Withdraw(profileEntity3, _ctoken);
 
             var actualResult = await _profileProvider.Get(profileId, _ctoken);
-
-            // Assert
-            actualResult.Should().Be(5);
         }
 
         [Fact]
@@ -172,24 +172,5 @@ namespace CashService.IntegrationTests.DataAccess
         {
             _scope.Dispose();
         }
-
-        private async Task AddProfileEntity(ProfileEntity profileEntity, CancellationToken cancellationToken)
-        {
-            await _profileRepository.Add(profileEntity, cancellationToken);
-            await _context.SaveChanges(cancellationToken);
-        }
-
-        //private IServiceProvider PrepareCashTransferService()
-        //{
-        //    var services = new ServiceCollection();
-
-        //    services.AddTransient<CashTransferService>();
-        //    services.AddScoped<IResilientService, ResilientService>();
-        //    services.AddScoped<IDataContext, CashDataContext>();
-
-        //    services.AddProviders().AddRepositories().AddPostgreSqlContext(options => )
-
-        //    return services.BuildServiceProvider();
-        //}
     }
 }

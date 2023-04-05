@@ -17,12 +17,12 @@ namespace CashService.UnitTests.Validators
 
         [Theory]
         [MemberData(nameof(TransactionModelRequestData.TransactionModelRequestDataValid), MemberType = typeof(TransactionModelRequestData))]
-        public async Task DepositRequest_Should_Be_Valid(TransactionModel transactionModel)
+        public async Task DepositRequest_Should_Be_Valid(TransactionRequestModel transactionRequestModel)
         {
             // Arrange
             var model = new DepositRequest()
             {
-                Deposit = transactionModel
+                Deposit = transactionRequestModel
             };
 
             // Act
@@ -36,12 +36,12 @@ namespace CashService.UnitTests.Validators
 
         [Theory]
         [MemberData(nameof(TransactionModelRequestData.TransactionModelRequestDataInvalid), MemberType = typeof(TransactionModelRequestData))]
-        public async Task DepositRequest_Should_Be_Invalid(TransactionModel transactionModel)
+        public async Task DepositRequest_Should_Be_Invalid(TransactionRequestModel transactionRequestModel)
         {
             // Arrange
             var model = new DepositRequest()
             {
-                Deposit = transactionModel
+                Deposit = transactionRequestModel
             };
 
             // Act
