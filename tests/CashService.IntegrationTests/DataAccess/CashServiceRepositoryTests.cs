@@ -6,6 +6,7 @@ using CashService.BusinessLogic.Contracts.Repositories;
 using CashService.BusinessLogic.Entities;
 using CashService.BusinessLogic.Services;
 using static CashService.IntegrationTests.DataAccess.DataGenerator;
+using CashService.BusinessLogic.Contracts.Services;
 
 namespace CashService.IntegrationTests.DataAccess
 {
@@ -15,12 +16,11 @@ namespace CashService.IntegrationTests.DataAccess
 
         private readonly IServiceScope _scope;
 
-        private readonly IProfileRepository _profileRepository;
         private readonly ITransactionRepository _transactionRepository;
 
         private readonly ICashProvider _cashProvider;
+        private readonly IProfileService _profileService;
 
-        private readonly IProfileProvider _profileProvider;
         private readonly ITransactionProvider _transactionProvider;
 
         private readonly IDataContext _context;
@@ -31,11 +31,10 @@ namespace CashService.IntegrationTests.DataAccess
         {
             _scope = factory.Services.CreateScope();
 
-            _profileRepository = _scope.ServiceProvider.GetRequiredService<IProfileRepository>();
             _transactionRepository = _scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
             _cashProvider = _scope.ServiceProvider.GetRequiredService<ICashProvider>();
+            _profileService = _scope.ServiceProvider.GetRequiredService<IProfileService>();
 
-            _profileProvider = _scope.ServiceProvider.GetRequiredService<IProfileProvider>();
             _transactionProvider = _scope.ServiceProvider.GetRequiredService<ITransactionProvider>();
 
             _context = _scope.ServiceProvider.GetRequiredService<IDataContext>();
@@ -49,19 +48,17 @@ namespace CashService.IntegrationTests.DataAccess
             // Arrange
             var cashTransferService = new CashTransferService(
                 _transactionRepository,
-                _profileRepository,
                 _cashProvider,
                 _transactionProvider,
-                _profileProvider,
+                _profileService,
                 _context,
                 _resilientService);
 
             var cashTransferService2 = new CashTransferService(
                 _transactionRepository,
-                _profileRepository,
                 _cashProvider,
                 _transactionProvider,
-                _profileProvider,
+                _profileService,
                 _context,
                 _resilientService);
 
@@ -73,7 +70,7 @@ namespace CashService.IntegrationTests.DataAccess
             await cashTransferService.Deposit(profileEntity, _ctoken);
             await cashTransferService2.Deposit(profileEntity2, _ctoken);
 
-            var actualResult = await _profileProvider.Get(profileId, _ctoken);
+            var actualResult = await _profileService.Get(profileId, _ctoken);
         }
 
         [Fact]
@@ -82,19 +79,17 @@ namespace CashService.IntegrationTests.DataAccess
             // Arrange
             var cashTransferService = new CashTransferService(
                 _transactionRepository,
-                _profileRepository,
                 _cashProvider,
                 _transactionProvider,
-                _profileProvider,
+                _profileService,
                 _context,
                 _resilientService);
 
             var cashTransferService2 = new CashTransferService(
                 _transactionRepository,
-                _profileRepository,
                 _cashProvider,
                 _transactionProvider,
-                _profileProvider,
+                _profileService,
                 _context,
                 _resilientService);
 
@@ -109,7 +104,7 @@ namespace CashService.IntegrationTests.DataAccess
             await cashTransferService.Withdraw(profileEntity2, _ctoken);
             await cashTransferService2.Withdraw(profileEntity3, _ctoken);
 
-            var actualResult = await _profileProvider.Get(profileId, _ctoken);
+            var actualResult = await _profileService.Get(profileId, _ctoken);
         }
 
         [Fact]
@@ -120,10 +115,9 @@ namespace CashService.IntegrationTests.DataAccess
             ProfileEntity expectedResult = GenerateProfileEntity(profileId, 95,50);
 
             // Act
-            await _profileRepository.Add(expectedResult, _ctoken);
-            await _context.SaveChanges(_ctoken);
+            await _profileService.Create(expectedResult.Id, _ctoken);
 
-            var actualResult = await _profileProvider.Get(profileId, _ctoken);
+            var actualResult = await _profileService.Get(profileId, _ctoken);
 
             // Assert
             actualResult.Should()
@@ -139,10 +133,9 @@ namespace CashService.IntegrationTests.DataAccess
             ProfileEntity expectedResult = GenerateProfileEntity(profileId, 95, 50);
 
             // Act
-            await _profileRepository.Add(expectedResult, _ctoken);
-            await _context.SaveChanges(_ctoken);
+            await _profileService.Create(expectedResult.Id, _ctoken);
 
-            var actualResult = await _profileProvider.Get(profileId, _ctoken);
+            var actualResult = await _profileService.Get(profileId, _ctoken);
 
             // Assert
             actualResult.Should()
@@ -158,8 +151,7 @@ namespace CashService.IntegrationTests.DataAccess
             ProfileEntity expectedResult = GenerateCashProfileEntity(profileId, 100, 50);
 
             // Act
-            await _profileRepository.Add(expectedResult, _ctoken);
-            await _context.SaveChanges(_ctoken);
+            await _profileService.Create(expectedResult.Id, _ctoken);
 
             var actualResult = await _cashProvider.CalcBalanceWithinCashtype(profileId, _ctoken);
 

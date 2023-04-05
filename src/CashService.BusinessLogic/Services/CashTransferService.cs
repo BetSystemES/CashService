@@ -20,36 +20,32 @@ namespace CashService.BusinessLogic.Services
     public class CashTransferService : ICashService
     {
         private readonly ITransactionRepository _transactionEntityRepository;
-        private readonly IProfileRepository _profileRepository;
         private readonly ICashProvider _cashProvider;
 
         private readonly ITransactionProvider _transactionEntityProvider;
-        private readonly IProfileProvider _profileProvider;
 
         private readonly IDataContext _context;
 
         private readonly IResilientService _resilientService;
-
+        private readonly IProfileService _profileService;
 
         public CashTransferService(
             ITransactionRepository transactionEntityRepository,
-            IProfileRepository profileRepository,
             ICashProvider cashProvider,
             ITransactionProvider transactionEntityProvider,
-            IProfileProvider profileProvider,
+            IProfileService profileService,
             IDataContext context,
             IResilientService resilientService)
         {
             _transactionEntityRepository = transactionEntityRepository;
-            _profileRepository = profileRepository;
             _cashProvider = cashProvider;
 
             _transactionEntityProvider = transactionEntityProvider;
-            _profileProvider = profileProvider;
 
             _context = context;
 
             _resilientService = resilientService;
+            _profileService = profileService;
         }
 
         public async Task<ProfileEntity> GetTransactionsHistory(Guid profileId, CancellationToken token)
@@ -87,7 +83,7 @@ namespace CashService.BusinessLogic.Services
 
         public async Task<decimal> GetBalance(Guid profileId, CancellationToken token)
         {
-            var profile = await _profileProvider.Get(profileId, token);
+            var profile = await _profileService.Get(profileId, token);
             return profile.CashAmount;
         }
 
@@ -198,8 +194,8 @@ namespace CashService.BusinessLogic.Services
 
                         if (profile is not null)
                         {
-                            _profileRepository.Detach(profile);
-                            entry = _profileRepository.Entry(profile);
+                            _profileService.Detach(profile);
+                            entry = _profileService.Entry(profile);
                         }
                     }
                 )
@@ -208,7 +204,7 @@ namespace CashService.BusinessLogic.Services
                     await _resilientService.ExecuteAsync(async () =>
                     {
                         if (profile is null || entry?.State == EntityState.Detached)
-                            profile = await _profileProvider.Get(depWithProfile.Id, retryToken);
+                            profile = await _profileService.Get(depWithProfile.Id, retryToken);
 
                         if (profile is null)
                             throw new Exception("entity was not found for id");
@@ -220,7 +216,7 @@ namespace CashService.BusinessLogic.Services
                             throw new Exception("not enough money");
                         }
 
-                        await _profileRepository.Update(profile, retryToken);
+                        await _profileService.Update(profile, retryToken);
 
                         await _transactionEntityRepository.AddRange(depWithProfile.Transactions, retryToken);
 

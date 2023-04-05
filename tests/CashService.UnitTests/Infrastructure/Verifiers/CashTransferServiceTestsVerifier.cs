@@ -13,10 +13,9 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
     public class CashTransferServiceTestsVerifier
     {
         private readonly Mock<ITransactionRepository> _mockTransactionRepository;
-        private readonly Mock<IProfileRepository> _mockProfileRepository;
+        private readonly Mock<IProfileService> _mockProfileService;
         private readonly Mock<ICashProvider> _mockCashProvider;
         private readonly Mock<ITransactionProvider> _mockTransactionProvider;
-        private readonly Mock<IProfileProvider> _mockProfileProvider;
         private readonly Mock<IDataContext> _mockContext;
         private readonly IResilientService _resilientService;
 
@@ -28,10 +27,9 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
 
         public CashTransferServiceTestsVerifier(
             Mock<ITransactionRepository> mockTransactionRepository,
-            Mock<IProfileRepository> mockProfileRepository,
+            Mock<IProfileService> mockProfileService,
             Mock<ICashProvider> mockCashProvider,
             Mock<ITransactionProvider> mockTransactionProvider,
-            Mock<IProfileProvider> mockProfileProvider,
             Mock<IDataContext> mockContext,
             ProfileEntity expectedResult,
             PagedResponse<TransactionEntity>? expectedResponse,
@@ -40,10 +38,9 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
             IResilientService resilientService)
         {
             _mockTransactionRepository = mockTransactionRepository;
-            _mockProfileRepository = mockProfileRepository;
+            _mockProfileService = mockProfileService;
             _mockCashProvider = mockCashProvider;
             _mockTransactionProvider = mockTransactionProvider;
-            _mockProfileProvider = mockProfileProvider;
             _mockContext = mockContext;
             ExpectedResult = expectedResult;
             ExpectedResponse = expectedResponse;
@@ -70,15 +67,15 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
 
         public CashTransferServiceTestsVerifier VerifyMockProfileRepositoryAdd()
         {
-            _mockProfileRepository
-                .Verify(_ => _.Add(It.IsAny<ProfileEntity>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mockProfileService
+                .Verify(_ => _.Create(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
 
             return this;
         }
 
         public CashTransferServiceTestsVerifier VerifyMockProfileRepositoryUpdate()
         {
-            _mockProfileRepository
+            _mockProfileService
                 .Verify(_ => _.Update(It.IsAny<ProfileEntity>(), It.IsAny<CancellationToken>()));
 
             return this;
@@ -86,7 +83,7 @@ namespace CashService.UnitTests.Infrastructure.Verifiers
 
         public CashTransferServiceTestsVerifier VerifyProfileProviderGet()
         {
-            _mockProfileProvider
+            _mockProfileService
                 .Verify(_ => _.Get(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
             return this;
