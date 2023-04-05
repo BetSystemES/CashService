@@ -96,52 +96,7 @@ namespace CashService.BusinessLogic.Services
             ProfileEntity? profile = default;
             EntityEntry? entry = default;
 
-            var policyResult = await Policy
-                .Handle<DBConcurrencyException>()
-                .Or<DbUpdateConcurrencyException>()
-                .WaitAndRetryAsync(3, retryAttempt =>
-                        TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
-                    (_, _) =>
-                    {
-                        Console.WriteLine("WaitAndRetryAsync");
-
-                        if (profile is not null)
-                        {
-                            _profileRepository.Detach(profile);
-                            entry = _profileRepository.Entry(profile);
-                        }
-                    }
-                )
-                .ExecuteAndCaptureAsync(async retryToken =>
-                {
-                    await _resilientService.ExecuteAsync(async () =>
-                        {
-                            if (profile is null || entry?.State == EntityState.Detached)
-                                profile = await _profileProvider.Get(depositProfile.Id, retryToken);
-
-                            if (profile is null)
-                                throw new Exception("entity was not found for id");
-
-                            profile.CashAmount += depositProfile.Transactions
-                                .Where(x => x.CashType == CashType.Cash)
-                                .Sum(x => x.Amount);
-
-                            await _profileRepository.Update(profile, retryToken);
-
-                            await _transactionEntityRepository.AddRange(depositProfile.Transactions, retryToken);
-
-                            await _context.SaveChanges(retryToken);
-
-                            depositProfile.CashAmount = profile.CashAmount;
-                        },
-                        IsolationLevel.ReadCommitted, retryToken);
-                }, token);
-
-            if (policyResult.FinalException is not null)
-            {
-                Console.WriteLine(policyResult.FinalException.Message);
-                // throw policyResult.FinalException;
-            }
+            await PollyTransaction(depositProfile, token, profile, entry);
 
             return depositProfile;
         }
@@ -151,69 +106,15 @@ namespace CashService.BusinessLogic.Services
             ProfileEntity? profile = default;
             EntityEntry? entry = default;
 
-            var policyResult = await Policy
-                .Handle<DBConcurrencyException>()
-                .Or<DbUpdateConcurrencyException>()
-                .WaitAndRetryAsync(3, retryAttempt =>
-                        TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
-                    (_, _) =>
-                    {
-                        Console.WriteLine("WaitAndRetryAsync");
-
-                        if (profile is not null)
-                        {
-                            _profileRepository.Detach(profile);
-                            entry = _profileRepository.Entry(profile);
-                        }
-                    }
-                )
-                .ExecuteAndCaptureAsync(async retryToken =>
-                {
-                    await _resilientService.ExecuteAsync(async () =>
-                    {
-                        if (profile is null || entry?.State == EntityState.Detached)
-                            profile = await _profileProvider.Get(withdrawProfile.Id, retryToken);
-
-                        if (profile is null)
-                            throw new Exception("entity was not found for id");
-
-                        profile.CashAmount -= withdrawProfile.Transactions
-                            .Where(x => x.CashType == CashType.Cash)
-                            .Sum(x => x.Amount);
-
-                        if (profile.CashAmount < 0)
-                        {
-                            throw new Exception("not enough money");
-                        }
-
-                        await _profileRepository.Update(profile, retryToken);
-
-                        await _transactionEntityRepository.AddRange(withdrawProfile.Transactions, retryToken);
-
-                        await _context.SaveChanges(retryToken);
-
-                        withdrawProfile.CashAmount = profile.CashAmount;
-                    },
-                        IsolationLevel.ReadCommitted, retryToken);
-                }, token);
-
-            if (policyResult.FinalException is not null)
-            {
-                Console.WriteLine(policyResult.FinalException.Message);
-                // throw policyResult.FinalException;
-            }
+            await PollyTransaction(withdrawProfile, token, profile, entry);
 
             return withdrawProfile;
         }
 
-
         public async Task<ProfileEntity> CalcBalanceWithinCashtype(Guid profileId, CancellationToken token)
         {
-            await using (var transaction = await _context.BeginTransaction(IsolationLevel.ReadCommitted, token))
-            {
-                ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
-                return balance;
-            }
+            ProfileEntity balance = await _cashProvider.CalcBalanceWithinCashtype(profileId, token);
+            return balance;
         }
 
         public async Task<List<ProfileEntity>> DepositRange(List<ProfileEntity> depositRangeProfileEntities, CancellationToken token)
@@ -282,6 +183,59 @@ namespace CashService.BusinessLogic.Services
             }
 
             return orderByExpression;
+        }
+
+        private async Task PollyTransaction(ProfileEntity depWithProfile, CancellationToken token, ProfileEntity? profile, EntityEntry? entry)
+        {
+            var policyResult = await Policy
+                .Handle<DBConcurrencyException>()
+                .Or<DbUpdateConcurrencyException>()
+                .WaitAndRetryAsync(3, retryAttempt =>
+                        TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
+                    (_, _) =>
+                    {
+                        Console.WriteLine("WaitAndRetryAsync");
+
+                        if (profile is not null)
+                        {
+                            _profileRepository.Detach(profile);
+                            entry = _profileRepository.Entry(profile);
+                        }
+                    }
+                )
+                .ExecuteAndCaptureAsync(async retryToken =>
+                {
+                    await _resilientService.ExecuteAsync(async () =>
+                    {
+                        if (profile is null || entry?.State == EntityState.Detached)
+                            profile = await _profileProvider.Get(depWithProfile.Id, retryToken);
+
+                        if (profile is null)
+                            throw new Exception("entity was not found for id");
+
+                        profile.SumCashAmountForProfileEntity(depWithProfile, CashType.Cash);
+
+                        if (profile.CashAmount < 0)
+                        {
+                            throw new Exception("not enough money");
+                        }
+
+                        await _profileRepository.Update(profile, retryToken);
+
+                        await _transactionEntityRepository.AddRange(depWithProfile.Transactions, retryToken);
+
+                        await _context.SaveChanges(retryToken);
+
+                        depWithProfile.CashAmount = profile.CashAmount;
+                    },
+                        IsolationLevel.ReadCommitted, retryToken);
+                }, token);
+
+            if (policyResult.FinalException is not null)
+            {
+                Console.WriteLine(policyResult.FinalException.Message);
+                // throw policyResult.FinalException;
+            }
         }
     }
 }

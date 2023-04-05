@@ -116,7 +116,8 @@ namespace CashService.UnitTests.Infrastructure.Builders
                 _expectedResult,
                 _expectedResponse,
                 _filterCriteria,
-                _cashService);
+                _cashService,
+                _mockResilientService.Object);
         }
 
         public CashTransferServiceVerifierBuilder SetupMockCashProviderGetBalance(bool isExpectedResultExists)

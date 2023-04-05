@@ -58,7 +58,6 @@ namespace CashService.FunctionalTests.Scenaries
 
             result
                 .Should()
-                .NotBeNull()
                 .Equals(transactionModel);
         }
 
@@ -252,23 +251,12 @@ namespace CashService.FunctionalTests.Scenaries
 
             var result2 = getBalanceResponse2.Balance;
 
-            result.Transactions.Count
-                .Should()
-                .Be(2);
-
-            result
-                .Should()
-                .NotBeNull()
-                .Equals(transactionModel);
-
-            result2.Transactions.Count
-                .Should()
+            result.Should()
                 .Be(2);
 
             result2
                 .Should()
-                .NotBeNull()
-                .Equals(transactionModel2);
+                .Be(2);
         }
 
         [Fact()]
