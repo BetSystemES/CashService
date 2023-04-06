@@ -186,7 +186,7 @@ namespace CashService.BusinessLogic.Services
             var policyResult = await Policy
                 .Handle<DBConcurrencyException>()
                 .Or<DbUpdateConcurrencyException>()
-                .WaitAndRetryAsync(3, retryAttempt =>
+                .WaitAndRetryAsync(10, retryAttempt =>
                         TimeSpan.FromMilliseconds(Math.Pow(5, retryAttempt)),
                     (_, _) =>
                     {
