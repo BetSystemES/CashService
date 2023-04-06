@@ -21,6 +21,8 @@ namespace CashService.DataAccess.Configuration
                 .WithOne(y => y.ProfileEntity)
                 .HasForeignKey(z => z.ProfileId);
 
+            builder.UseXminAsConcurrencyToken();
+
             builder.ToTable("TransactionProfile");
         }
     }

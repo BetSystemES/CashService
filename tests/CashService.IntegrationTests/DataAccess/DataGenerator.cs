@@ -96,5 +96,26 @@ namespace CashService.IntegrationTests.DataAccess
 
             return expectedResult;
         }
+
+        public static ProfileEntity GenerateCashProfileEntity(Guid profileId, decimal cashAmount)
+        {
+            var transaction = Builder<TransactionEntity>
+                .CreateNew()
+                .With(x => x.Id = Guid.NewGuid())
+                .With(x => x.ProfileId = profileId)
+                .With(x => x.CashType = CashType.Cash)
+                .And(x => x.Amount = cashAmount)
+                .Build();
+
+            var expectedResult = Builder<ProfileEntity>
+                .CreateNew()
+                .With(x => x.Id = profileId)
+                .With(x => x.CashAmount = cashAmount)
+                .With(x => x.Transactions = new List<TransactionEntity>())
+                .Do(x => x.Transactions.Add(transaction))
+                .Build();
+
+            return expectedResult;
+        }
     }
 }
