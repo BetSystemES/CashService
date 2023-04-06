@@ -1,5 +1,7 @@
-﻿using CashService.BusinessLogic.Contracts.Services;
+﻿using CashService.BusinessLogic.Contracts;
+using CashService.BusinessLogic.Contracts.Services;
 using CashService.BusinessLogic.Services;
+using CashService.DataAccess;
 using CashService.GRPC.Infrastructure.Mappings;
 
 namespace CashService.GRPC.Infrastructure.Configurations
@@ -11,8 +13,14 @@ namespace CashService.GRPC.Infrastructure.Configurations
             services.AddAutoMapper(config =>
             {
                 config.AddProfile<DataAccessProfile>();
+                config.AddProfile<TransactionProfile>();
+                config.AddProfile<TransactionModelProfile>();
+                config.AddProfile<TransactionRequestModelProfile>();
+                config.AddProfile<FilterCriteriaProfile>();
             });
             services.AddScoped<ICashService, CashTransferService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IResilientService, ResilientService>();
             return services;
         }
     }

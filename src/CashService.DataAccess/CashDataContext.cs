@@ -1,4 +1,8 @@
-﻿using CashService.BusinessLogic.Contracts;
+﻿using System.Data;
+using CashService.BusinessLogic.Contracts;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CashService.DataAccess
 {
@@ -20,6 +24,19 @@ namespace CashService.DataAccess
         {
             return _profileDbContext.SaveChangesAsync(token);
         }
-    }
+        public IExecutionStrategy CreateExecutionStrategy()
+        {
+            return _profileDbContext.Database.CreateExecutionStrategy();
+        }
 
+        public EntityEntry<T> Entry<T>(T entity) where T : class
+        {
+           return _profileDbContext.Entry(entity);
+        }
+        
+        public async Task<IDbContextTransaction> BeginTransaction(IsolationLevel isolationLevel, CancellationToken token)
+        {
+           return await _profileDbContext.Database.BeginTransactionAsync(isolationLevel, token);
+        }
+    }
 }

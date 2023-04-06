@@ -8,16 +8,23 @@ package cash;
 
 // The CashService definition.
 service CashService {
-
+  rpc CreateCashProfile (CreateCashProfileRequest) returns (CreateCashProfileResponse);
   rpc GetTransactionsHistory (GetTransactionsHistoryRequest) returns (GetTransactionsHistoryResponse);
   rpc GetPagedTransactionHistory (GetTransactionHistoryWithFilterRequest) returns (GetPagedTransactionsHistoryResponse);
   rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
+  rpc CalcBalanceWithinCashtype (CalcBalanceWithinCashtypeRequest) returns (CalcBalanceWithinCashtypeResponse);
   rpc Deposit (DepositRequest) returns (DepositResponse);
   rpc Withdraw (WithdrawRequest) returns (WithdrawResponse);
   rpc DepositRange (DepositRangeRequest) returns (DepositRangeResponse);
   rpc WithdrawRange (WithdrawRangeRequest) returns (WithdrawRangeResponse);
 }
 
+message CreateCashProfileRequest {
+	string user_id = 1;
+}
+
+message CreateCashProfileResponse {
+}
 
 message GetTransactionsHistoryRequest {
 	string profile_id = 1;
@@ -32,24 +39,34 @@ message GetTransactionHistoryWithFilterRequest {
 }
 message GetPagedTransactionsHistoryResponse {
 	int32 total_count = 1;
-	repeated Transaction transactions = 2;
+	repeated TransactionModel transactions = 2;
 }
 
 message GetBalanceRequest {
 	string profile_id = 1;
 }
 message GetBalanceResponse {
+	string profile_id = 1;
+	double balance = 2;
+}
+
+message CalcBalanceWithinCashtypeRequest {
+	string profile_id = 1;
+}
+
+message CalcBalanceWithinCashtypeResponse {
 	TransactionModel balance = 1;
 }
 
 message DepositRequest {
-	TransactionModel deposit = 1;
+	TransactionRequestModel deposit = 1;
 }
 message DepositResponse {
+	TransactionModel depositresponse = 1;
 }
 
 message WithdrawRequest {
-	TransactionModel withdrawrequest = 1;
+	TransactionRequestModel withdrawrequest = 1;
 }
 message WithdrawResponse {
 	TransactionModel withdrawresponse = 1;
@@ -72,7 +89,21 @@ message WithdrawRangeResponse {
 message TransactionModel
 {
 	string profile_id = 1;
+	double cash_amount = 2;
+	repeated Transaction transactions = 3;
+}
+
+message TransactionRequestModel
+{
+	string profile_id = 1;
 	repeated Transaction transactions = 2;
+}
+
+message TransactionResponseModel
+{
+	string profile_id = 1;
+	double cash_amount = 2;
+	repeated Transaction transactions = 3;
 }
 
 message Transaction

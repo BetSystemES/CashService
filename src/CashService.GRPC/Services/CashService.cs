@@ -1,6 +1,7 @@
 using AutoMapper;
 using CashService.BusinessLogic.Contracts.Services;
 using CashService.BusinessLogic.Entities;
+using CashService.BusinessLogic.Models;
 using CashService.GRPC.Enums;
 using CashService.GRPC.Extensions;
 using Grpc.Core;
@@ -15,11 +16,24 @@ namespace CashService.GRPC.Services
         private readonly IMapper _mapper;
 
         private readonly ICashService _cashService;
-        public CashService(ILogger<CashService> logger, IMapper mapper, ICashService cashService)
+        private readonly IProfileService _profileService;
+
+        public CashService(ILogger<CashService> logger, IMapper mapper, ICashService cashService, IProfileService profileService)
         {
             _logger = logger;
             _mapper = mapper;
             _cashService = cashService;
+            _profileService = profileService;
+        }
+
+        public override async Task<CreateCashProfileResponse> CreateCashProfile(CreateCashProfileRequest request, ServerCallContext context)
+        {
+            var cancellationToken = context.CancellationToken;
+            var userId = _mapper.Map<Guid>(request.UserId);
+
+            await _profileService.Create(userId, cancellationToken);
+
+            return new CreateCashProfileResponse();
         }
 
         public override async Task<GetTransactionsHistoryResponse> GetTransactionsHistory(GetTransactionsHistoryRequest request, ServerCallContext context)
@@ -30,7 +44,7 @@ namespace CashService.GRPC.Services
             Guid profileid = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
-            ProfileEntity balanceResult = await _cashService.GetBalance(profileid, token);
+            ProfileEntity balanceResult = await _cashService.GetTransactionsHistory(profileid, token);
 
             //map back
             TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
@@ -51,10 +65,10 @@ namespace CashService.GRPC.Services
             AccessCheck.CheckIds(filterCriteria.UserIds, context.GetHttpContext().User);
 
             //profile service
-            var items = await _cashService.GetPagedTransactions(filterCriteria, token);
+            PagedResponse<TransactionEntity> items = await _cashService.GetPagedTransactions(filterCriteria, token);
 
             //map back
-            IEnumerable<Transaction> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<Transaction>>(items.Data);
+            IEnumerable<TransactionModel> transactionEntities = _mapper.Map<IEnumerable<TransactionEntity>, IEnumerable<TransactionModel>>(items.Data);
 
             GetPagedTransactionsHistoryResponse response = new GetPagedTransactionsHistoryResponse()
             {
@@ -74,12 +88,29 @@ namespace CashService.GRPC.Services
             Guid profileId = _mapper.Map<Guid>(request.ProfileId);
 
             //cashService
+            var balanceResult = await _cashService.GetBalance(profileId, token);
+
+            return new GetBalanceResponse
+            {
+                ProfileId = profileId.ToString(),
+                Balance = (double)balanceResult
+            };
+        }
+
+        public override async Task<CalcBalanceWithinCashtypeResponse> CalcBalanceWithinCashtype(CalcBalanceWithinCashtypeRequest request, ServerCallContext context)
+        {
+            var token = context.CancellationToken;
+
+            //map
+            Guid profileId = _mapper.Map<Guid>(request.ProfileId);
+
+            //cashService
             ProfileEntity balanceResult = await _cashService.CalcBalanceWithinCashtype(profileId, token);
 
             //map back
             TransactionModel balanceResponse = _mapper.Map<TransactionModel>(balanceResult);
 
-            return new GetBalanceResponse
+            return new CalcBalanceWithinCashtypeResponse
             {
                 Balance = balanceResponse
             };
@@ -96,9 +127,15 @@ namespace CashService.GRPC.Services
             depositProfile.EntityRemapper();
 
             //cashService
-            await _cashService.Deposit(depositProfile, token);
+            var result = await _cashService.Deposit(depositProfile, token);
 
-            return new DepositResponse();
+            //map back
+            var transactionModel = _mapper.Map<TransactionModel>(result);
+
+            return new DepositResponse()
+            {
+                Depositresponse = transactionModel
+            };
         }
 
         public override async Task<WithdrawResponse> Withdraw(WithdrawRequest request, ServerCallContext context)
@@ -112,8 +149,17 @@ namespace CashService.GRPC.Services
             withdrawProfile.EntityRemapper();
             withdrawProfile.WithdrawValueConverter();
 
-            //cashService
-            ProfileEntity withdrawResult = await _cashService.Withdraw(withdrawProfile, token);
+            ProfileEntity? withdrawResult = default;
+            try
+            {
+                //cashService
+                withdrawResult = await _cashService.Withdraw(withdrawProfile, token);
+            }
+            catch (Exception)
+            {
+                throw new RpcException(Status.DefaultCancelled, 
+                    $"An error occurred in widthdraw operation with ProfileId:{request.Withdrawrequest.ProfileId}");
+            }
 
             //map back
             TransactionModel withdrawResponse = _mapper.Map<TransactionModel>(withdrawResult);

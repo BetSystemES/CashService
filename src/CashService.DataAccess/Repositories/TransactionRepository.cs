@@ -6,8 +6,7 @@ namespace CashService.DataAccess.Repositories
 {
     public class TransactionRepository : SqlRepository<TransactionEntity>, ITransactionRepository
     {
-
-        public TransactionRepository(DbSet<TransactionEntity> entities) : base(entities)
+        public TransactionRepository(CashDbContext context) : base(context)
         {
         }
     }

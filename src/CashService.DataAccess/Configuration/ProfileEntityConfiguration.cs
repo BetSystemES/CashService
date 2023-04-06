@@ -13,9 +13,15 @@ namespace CashService.DataAccess.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
 
+            builder.Property(x => x.CashAmount);
+
+            builder.Property(x => x.RowVersion).IsRowVersion();
+
             builder.HasMany(x => x.Transactions)
                 .WithOne(y => y.ProfileEntity)
                 .HasForeignKey(z => z.ProfileId);
+
+            builder.UseXminAsConcurrencyToken();
 
             builder.ToTable("TransactionProfile");
         }

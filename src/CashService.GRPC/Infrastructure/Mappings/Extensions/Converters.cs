@@ -2,7 +2,7 @@
 
 namespace CashService.GRPC.Infrastructure.Mappings.Extensions
 {
-    public  static class Converters
+    public static class Converters
     {
         public static Timestamp ToTimestamp(this DateTimeOffset dateTimeOffset)
         {

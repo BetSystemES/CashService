@@ -1,4 +1,6 @@
-﻿namespace CashService.BusinessLogic.Contracts.Repositories
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace CashService.BusinessLogic.Contracts.Repositories
 {
     public interface IDataRepository<in TEntity>
     {
@@ -11,5 +13,11 @@
         Task Update(TEntity entity, CancellationToken token);
 
         Task UpdateRange(IEnumerable<TEntity> entities, CancellationToken token);
+
+        public EntityEntry Attach(TEntity entity);
+
+        public void Detach(TEntity entity);
+
+        public EntityEntry Entry(TEntity entity);
     }
 }

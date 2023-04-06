@@ -7,12 +7,12 @@ namespace CashService.DataAccess.Providers
 {
     public class ProfileProvider : IProfileProvider
     {
+
         private readonly DbSet<ProfileEntity> _entities;
 
         private readonly ILogger<ProfileProvider> _logger;
 
-        public ProfileProvider(DbSet<ProfileEntity> entities,
-            ILogger<ProfileProvider> logger)
+        public ProfileProvider(DbSet<ProfileEntity> entities, ILogger<ProfileProvider> logger)
         {
             _entities = entities;
             _logger = logger;
