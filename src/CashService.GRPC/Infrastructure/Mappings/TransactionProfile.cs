@@ -12,7 +12,7 @@ namespace CashService.GRPC.Infrastructure.Mappings
             CreateMap<Transaction, TransactionEntity>()
                 .ForMember(dest => dest.Id,
                     opt =>
-                        opt.MapFrom(src => Guid.Parse(src.TransactionId)))
+                        opt.Ignore())
                 .ForMember(dest => dest.CashType,
                     opt =>
                         opt.MapFrom(src => src.CashType))
@@ -27,9 +27,6 @@ namespace CashService.GRPC.Infrastructure.Mappings
 
             //Entity->proto
             CreateMap<TransactionEntity, Transaction>()
-                .ForMember(dest => dest.TransactionId,
-                    opt =>
-                        opt.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.CashType,
                     opt =>
                         opt.MapFrom(src => src.CashType))

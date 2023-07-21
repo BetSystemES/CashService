@@ -32,11 +32,11 @@ namespace CashService.GRPC.Extensions
             return builderOptions;
         }
 
-        public static IRuleBuilderOptions<T, Transaction> MustBeValidGuidInTransaction<T>(this IRuleBuilder<T, Transaction> ruleBuilder)
-        {
-            var builderOptions = ruleBuilder.SetValidator(new TransactionGuidValidator());
-
-            return builderOptions;
-        }
+        //public static IRuleBuilderOptions<T, Transaction> MustBeValidGuidInTransaction<T>(this IRuleBuilder<T, Transaction> ruleBuilder)
+        //{
+        //    var builderOptions = ruleBuilder.SetValidator(new TransactionGuidValidator());
+        //
+        //    return builderOptions;
+        //}
     }
 }

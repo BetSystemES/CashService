@@ -89,7 +89,7 @@ message WithdrawRangeResponse {
 message TransactionModel
 {
 	string profile_id = 1;
-	double cash_amount = 2;
+	double amount = 2;
 	repeated Transaction transactions = 3;
 }
 
@@ -108,7 +108,7 @@ message TransactionResponseModel
 
 message Transaction
 {
-	string transaction_id = 1; 
+	string id = 1; 
 	CashType cash_type = 2;
 	double amount = 3;
 	google.protobuf.Timestamp date = 4;

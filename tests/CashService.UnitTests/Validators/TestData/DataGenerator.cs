@@ -44,7 +44,7 @@ namespace CashService.UnitTests.Validators.TestData
         {
             var transaction = Builder<Transaction>
                 .CreateNew()
-                .With(x => x.TransactionId = transactionId)
+                .With(x => x.Id = transactionId)
                 .With(x => x.CashType = cashType)
                 .And(x => x.Amount = amount)
                 .Build();

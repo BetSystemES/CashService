@@ -17,9 +17,6 @@ namespace CashService.GRPC.Infrastructure.Validators
                 .MustBeValidGuid();
 
             RuleForEach(e => e.Withdrawrequest.Transactions)
-                .MustBeValidGuidInTransaction();
-
-            RuleForEach(e => e.Withdrawrequest.Transactions)
                 .MustBeValidCashTypeInTransaction();
         }
     }

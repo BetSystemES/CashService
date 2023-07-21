@@ -9,9 +9,6 @@ namespace CashService.GRPC.Infrastructure.Validators
         {
             RuleFor(x => x.ProfileId)
                 .MustBeValidGuid();
-
-            RuleForEach(x => x.Transactions)
-                .MustBeValidGuidInTransaction();
         }
     }
 }

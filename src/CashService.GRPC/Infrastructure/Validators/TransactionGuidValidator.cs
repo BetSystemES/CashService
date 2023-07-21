@@ -7,7 +7,7 @@ namespace CashService.GRPC.Infrastructure.Validators
     {
         public TransactionGuidValidator()
         {
-            RuleFor(x => x.TransactionId)
+            RuleFor(x => x.Id)
                 .MustBeValidGuid();
         }
     }

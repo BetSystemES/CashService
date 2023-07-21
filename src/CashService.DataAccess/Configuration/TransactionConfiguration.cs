@@ -11,7 +11,7 @@ namespace CashService.DataAccess.Configuration
         public void Configure(EntityTypeBuilder<TransactionEntity> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedNever();
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
             builder.Property(x => x.ProfileId).IsRequired();
 
@@ -21,7 +21,9 @@ namespace CashService.DataAccess.Configuration
 
             builder.Property(x => x.CashType);
             builder.Property(x => x.Amount);
-            builder.Property(x => x.Date);
+            builder.Property(x => x.Date)
+                .HasDefaultValueSql("NOW()")
+                .ValueGeneratedOnAdd();
 
             builder.ToTable("Transaction");
         }

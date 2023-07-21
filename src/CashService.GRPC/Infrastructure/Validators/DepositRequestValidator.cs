@@ -17,9 +17,6 @@ namespace CashService.GRPC.Infrastructure.Validators
                 .MustBeValidGuid();
 
             RuleForEach(e => e.Deposit.Transactions)
-                .MustBeValidGuidInTransaction();
-
-            RuleForEach(e => e.Deposit.Transactions)
                 .MustBeValidCashTypeInTransaction();
         }
     }

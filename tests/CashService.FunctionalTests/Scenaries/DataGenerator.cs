@@ -9,13 +9,13 @@ namespace CashService.FunctionalTests.Scenaries
         {
             var transaction1 = Builder<Transaction>
                 .CreateNew()
-                .With(x => x.TransactionId = Guid.NewGuid().ToString())
+                .With(x => x.Id = Guid.NewGuid().ToString())
                 .With(x => x.CashType = CashType.Cash)
                 .And(x => x.Amount = cashAmout)
                 .Build();
             var transaction2 = Builder<Transaction>
                 .CreateNew()
-                .With(x => x.TransactionId = Guid.NewGuid().ToString())
+                .With(x => x.Id = Guid.NewGuid().ToString())
                 .With(x => x.CashType = CashType.Bonus)
                 .And(x => x.Amount = bonusAmount)
                 .Build();
@@ -32,13 +32,13 @@ namespace CashService.FunctionalTests.Scenaries
         {
             var transaction1 = Builder<Transaction>
                 .CreateNew()
-                .With(x => x.TransactionId = Guid.NewGuid().ToString())
+                .With(x => x.Id = Guid.NewGuid().ToString())
                 .With(x => x.CashType = CashType.Cash)
                 .And(x => x.Amount = cashAmout)
                 .Build();
             var transaction2 = Builder<Transaction>
                 .CreateNew()
-                .With(x => x.TransactionId = Guid.NewGuid().ToString())
+                .With(x => x.Id = Guid.NewGuid().ToString())
                 .With(x => x.CashType = CashType.Bonus)
                 .And(x => x.Amount = bonusAmount)
                 .Build();

@@ -41,6 +41,11 @@ namespace CashService.GRPC.Infrastructure.Mappings
                 .ForMember(dest => dest.EndDate,
                     opt =>
                         opt.MapFrom(src => src.EndDate == (DateTimeOffset.MinValue).ToTimestamp() ? (DateTimeOffset?)null : src.EndDate.ToDateTimeOffset()));
+        
+            CreateMap<DateTimeOffset, Timestamp>()
+                .ConvertUsing((x, res) => res = x.ToTimestamp());
+            CreateMap<Timestamp, DateTimeOffset>()
+                .ConvertUsing((x, res) => res = x.ToDateTimeOffset());
         }
     }
 }
